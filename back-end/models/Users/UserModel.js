@@ -2,7 +2,7 @@ const  { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const AutoGeneratePlugin = require('./schema_plugins')
+const AutoGeneratePlugin = require('../schema_plugins')
 
 
 const userSchema = new Schema({
@@ -18,9 +18,28 @@ const userSchema = new Schema({
   password: {
     type: String
   },
-  userType: {
-    type: String, // customer, user
-    required: [true, 'Please Add User Role']
+  fullName: {
+    type: String,
+  },
+  username: {
+    type: String,
+    unique: true,
+  },
+  phoneNumber: {
+    type: String,
+    unique: true,
+  },
+  referal: {
+    type: String,
+  },
+  country: {
+    type: String,
+  },
+  state: {
+    type: String,
+  },
+  address: {
+    type: String,
   },
   resetPasswordToken: {
     type: String,
@@ -34,10 +53,10 @@ const userSchema = new Schema({
     type: String,
     optional: true,
   },
-  savedStockQuotes: [{
+  account: {
     type: Schema.Types.String,
-    ref: 'Stock'
-  }]
+    ref: 'Account'
+  }
 },{versionKey: false});
 
 userSchema.pre('save', async (next) => {
