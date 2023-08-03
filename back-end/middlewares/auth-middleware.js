@@ -2,7 +2,6 @@ const ApplicationError = require('../libs/application-error');
 const User = require('../models/Users/UserModel');
 const jwt = require('jsonwebtoken');
 
-
 exports.protect = async (req, res, next) => {
   try {
     const adminRoutes = ['/stats']
