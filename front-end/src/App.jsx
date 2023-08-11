@@ -38,19 +38,8 @@ import { DashboardLayouts } from "./containers/DashboardLayouts";
 
 
 export const App = () => { 
-  //  const [token, setToken] = useState();
 
-  // if(!token) {
-  //   return  { path: "/login", element: <Login setToken={setToken} /> }
-  // }
-
-  // Dashboard routes
-
-  const routes = useRoutes([
-    {
-      path: '/',
-      element: <PublicLayouts />, // Use PublicLayout for public routes
-      children: [
+      const routes = useRoutes([
         { path: "/", element: <Home /> },
         { path: "/company", element: <Company /> },
         { path: "/crypto", element: <Crypto /> },
@@ -63,14 +52,7 @@ export const App = () => {
         { path: "/login", element: <Login /> },
         { path: "/forgot-password", element: <ForgotPassword /> },
         { path: "/support", element: <Contact /> },
-      ],
-    },
-
-
-    {
-      path: '/dashboard',
-      element: <DashboardLayouts />, // Use DashboardLayout for dashboard routes
-      children: [
+  
         { path: "/dashboard", element: <DHome /> },
         { path: "/dashboard/invest", element: <Invest /> },
         { path: "/dashboard/invest-form", element: <InvestForm /> },
@@ -86,19 +68,26 @@ export const App = () => {
         { path: "/dashboard/profile-setting", element: <ProfileSetting /> },
         { path: "/dashboard/profile-activity", element: <ProfileActivity /> },
         { path: "/dashboard/profile-notify", element: <ProfileNotify /> },
+
         { path: "/dashboard/profile-connected", element: <ProfileConnected /> },
-      ],
-    },
-
-  ]);
+      ]);
 
 
-  return  routes
-      {/* Dashboard routes */}
-      {/* <DashboardLayouts>
+  return (
+    <>
+      // Public routes 
+      <PublicLayouts>
+        {routes}
+      </PublicLayouts>
+
+
+      // Dashboard routes 
+       {/* <DashboardLayouts>
         <DataProvider/>
-          {dashRoutes}
+          {routes}
         <DataProvider/>
-      </DashboardLayouts> */}
- }
+      </DashboardLayouts>  */}
+    </>
+    )}
+
 
