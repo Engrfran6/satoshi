@@ -12,36 +12,36 @@
 -----------------------------------------------------------------*/
 
 /* == bootstrap == */
-@import url("plugins/bootstrap.min.css");
+@import url("./plugins/bootstrap.min.css");
 
 /* == animate css == */
-@import url("plugins/animate.css");
+@import url("./plugins/animate.css");
 
-@import url("plugins/animated-headline.css");
+@import url("./plugins/animated-headline.css");
 
 /* == font awesome css == */
-@import url("plugins/fontawesome-all.min.css");
+@import url("./plugins/fontawesome-all.min.css");
 
 /* == et-line icon font == */
-@import url("plugins/et-line.css");
+@import url("./plugins/et-line.css");
 
 /* == et-line icon font == */
-@import url("plugins/themify-icons.css");
+@import url("./plugins/themify-icons.css");
 
 /* == magnific-popup == */
-@import url("plugins/magnific-popup.css");
+@import url("./plugins/magnific-popup.css");
 
 /* == owl.carousel == */
-@import url("plugins/owl.carousel.css");
+@import url("./plugins/owl.carousel.css");
 
 /* == zoom css == */
-@import url("plugins/xzoom.css");
+@import url("./plugins/xzoom.css");
         
 /* == default classes == */
-@import url("plugins/default.css");
+@import url("./plugins/default.css");
 
 /* == navigation == */
-@import url("plugins/nav-menu.css");
+@import url("./plugins/nav-menu.css");
 
 /* == prism css == */
-@import url("plugins/prism.css");
+@import url("./plugins/prism.css");
