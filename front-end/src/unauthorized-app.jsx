@@ -1,18 +1,37 @@
-
-import { useRoutes } from "react-router-dom";
-import { Home } from "./pages/Public/Home";
-import { Header } from "./components/Public/Header/Header";
+import {useRoutes} from 'react-router-dom';
+import {PublicLayouts} from './containers/PublicLayouts';
+import {PublicHome} from './pages/Public/PublicHome';
+import {Crypto} from './pages/Public/Crypto';
+import {RealEstate} from './pages/Public/RealEstate';
+import {Loan} from './pages/Public/Loan';
+import {Pricing} from './pages/Public/Pricing';
+import {Company} from './pages/Public/Company';
+import {Terms} from './pages/Public/Terms';
+import {Contact} from './pages/Public/Contact';
+import {Information} from './pages/Public/Information';
+import {Login} from './pages/Public/account/Login';
+import {Register} from './pages/Public/account/Register';
+import {ForgotPassword} from './pages/Public/account/ForgotPassword';
 
 export const UnauthorizedApp = () => {
-
   const routes = useRoutes([
-    { path: "/", element: <Home /> },
+    {path: '/', element: <PublicHome />},
+    {path: '/crypto', element: <Crypto />},
+    {path: '/realestate', element: <RealEstate />},
+    {path: '/loans', element: <Loan />},
+    {path: '/pricing', element: <Pricing />},
+    {path: '/company', element: <Company />},
+    {path: '/teams', element: <Terms />},
+    {path: '/information', element: <Information />},
+    {path: '/contact', element: <Contact />},
+    {path: '/account/login', element: <Login />},
+    {path: '/account/register', element: <Register />},
+    {path: '/account/forgot-password', element: <ForgotPassword />},
   ]);
 
   return (
     <div className="main-wrapper">
-      <Header/>
-        { routes }
+      <PublicLayouts>{routes}</PublicLayouts>
     </div>
-  )
-}
+  );
+};
