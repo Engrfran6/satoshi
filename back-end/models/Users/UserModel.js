@@ -53,9 +53,9 @@ const userSchema = new Schema({
     type: String,
     optional: true,
   },
-  account: {
+  package: {
     type: Schema.Types.String,
-    ref: 'Account'
+    ref: 'Package'
   }
 },{versionKey: false});
 
