@@ -38,6 +38,7 @@ export const PublicHome = () => {
       {/* <Testimonies /> */}
       {/* <Teams /> */}
       <Contact />
+      <script src="https://code.tidio.co/8pjb9tbo4ecsqppx2tjg8ldio0soouz9.js" async></script>
     </div>
   );
 };

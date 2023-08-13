@@ -1,7 +1,7 @@
 // api.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000'; //My backend URL
+const API_URL = 'http://localhost:8000'; //My backend URL
 
 const api = axios.create({
   baseURL: API_URL,
@@ -46,4 +46,3 @@ export const updateUserData = async (alias, userId) => {
     throw error;
   }
 };
-
