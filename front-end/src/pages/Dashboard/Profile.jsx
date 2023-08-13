@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import {NavLink} from 'react-router-dom';
 
 export const Profile = () => {
   return (
@@ -15,7 +15,7 @@ export const Profile = () => {
                   <h2 className="nk-block-title fw-normal">Account Info</h2>
                   <div className="nk-block-des">
                     <p>
-                      You have full control to manage your own account setting.{" "}
+                      You have full control to manage your own account setting.{' '}
                       <span className="text-primary">
                         <em className="icon ni ni-info" />
                       </span>
@@ -50,10 +50,7 @@ export const Profile = () => {
                   <div className="nk-block-head-content">
                     <h5 className="nk-block-title">Personal Information</h5>
                     <div className="nk-block-des">
-                      <p>
-                        Basic info, like your name and address, that you use on
-                        Nio Platform.
-                      </p>
+                      <p>Basic info, like your name and address, that you use on Nio Platform.</p>
                     </div>
                   </div>
                 </div>
@@ -62,8 +59,7 @@ export const Profile = () => {
                     <div
                       className="data-item"
                       data-bs-toggle="modal"
-                      data-bs-target="#profile-edit"
-                    >
+                      data-bs-target="#profile-edit">
                       <div className="data-col">
                         <span className="data-label">Full Name</span>
                         <span className="data-value">Abu Bin Ishtiyak</span>
@@ -88,13 +84,10 @@ export const Profile = () => {
                     <div
                       className="data-item"
                       data-bs-toggle="modal"
-                      data-bs-target="#profile-edit"
-                    >
+                      data-bs-target="#profile-edit">
                       <div className="data-col">
                         <span className="data-label">Phone Number</span>
-                        <span className="data-value text-soft">
-                          Not add yet
-                        </span>
+                        <span className="data-value text-soft">Not add yet</span>
                       </div>
                       <div className="data-col data-col-end">
                         <span className="data-more">
@@ -105,8 +98,7 @@ export const Profile = () => {
                     <div
                       className="data-item"
                       data-bs-toggle="modal"
-                      data-bs-target="#profile-edit"
-                    >
+                      data-bs-target="#profile-edit">
                       <div className="data-col">
                         <span className="data-label">Date of Birth</span>
                         <span className="data-value">29 Feb, 1986</span>
@@ -121,8 +113,7 @@ export const Profile = () => {
                       className="data-item"
                       data-bs-toggle="modal"
                       data-bs-target="#profile-edit"
-                      data-tab-target="#address"
-                    >
+                      data-tab-target="#address">
                       <div className="data-col">
                         <span className="data-label">Address</span>
                         <span className="data-value">
@@ -152,9 +143,7 @@ export const Profile = () => {
                     <div className="data-item">
                       <div className="data-col">
                         <span className="data-label">Language</span>
-                        <span className="data-value">
-                          English (United State)
-                        </span>
+                        <span className="data-value">English (United State)</span>
                       </div>
                       <div className="data-col data-col-end">
                         <NavLink to="/dashboard/profile#" className="link link-primary">
@@ -192,6 +181,5 @@ export const Profile = () => {
         </div>
       </div>
     </>
-
-  )
-}
+  );
+};

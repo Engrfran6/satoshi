@@ -4,7 +4,7 @@ export const Loan = () => {
       <section
         className="bg-img full-screen cover-background line-banner"
         data-overlay-dark={6}
-        data-background="img/content/loan-1.jpg">
+        style={{background: 'url(img/content/loan-1.jpg)'}}>
         <div className="header-text">
           <div className="container">
             <div className="row">

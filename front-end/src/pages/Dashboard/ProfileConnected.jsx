@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import {NavLink} from 'react-router-dom';
 
 export const ProfileConnected = () => {
   return (
@@ -18,7 +18,7 @@ export const ProfileConnected = () => {
                   <h2 className="nk-block-title fw-normal">Social Connect</h2>
                   <div className="nk-block-des">
                     <p>
-                      You have full control to manage your own account setting.{" "}
+                      You have full control to manage your own account setting.{' '}
                       <span className="text-primary">
                         <em className="icon ni ni-info" />
                       </span>
@@ -51,14 +51,11 @@ export const ProfileConnected = () => {
               <div className="nk-block">
                 <div className="nk-block-head">
                   <div className="nk-block-head-content">
-                    <h5 className="nk-block-title">
-                      Connected with Social Account
-                    </h5>
+                    <h5 className="nk-block-title">Connected with Social Account</h5>
                     <div className="nk-block-des">
                       <p>
-                        You can connect with your social account such as
-                        facebook, google etc to make easier to login into
-                        account.
+                        You can connect with your social account such as facebook, google etc to
+                        make easier to login into account.
                       </p>
                     </div>
                   </div>
@@ -73,17 +70,15 @@ export const ProfileConnected = () => {
                         </div>
                         <div className="media-content">
                           <p>
-                            You have successfully connected with your facebook
-                            account, you can easily log in using your account
-                            too.
+                            You have successfully connected with your facebook account, you can
+                            easily log in using your account too.
                           </p>
                         </div>
                       </div>
                       <div className="nk-block-actions flex-shrink-0">
                         <NavLink
                           to="/dashboard/profile-connected#"
-                          className="btn btn-lg btn-danger"
-                        >
+                          className="btn btn-lg btn-danger">
                           Revoke Access
                         </NavLink>
                       </div>
@@ -100,18 +95,15 @@ export const ProfileConnected = () => {
                         </div>
                         <div className="media-content">
                           <p>
-                            You can connect with your google account.{" "}
-                            <em className="d-block text-soft">
-                              Not connected yet
-                            </em>
+                            You can connect with your google account.{' '}
+                            <em className="d-block text-soft">Not connected yet</em>
                           </p>
                         </div>
                       </div>
                       <div className="nk-block-actions flex-shrink-0">
                         <NavLink
                           to="/dashboard/profile-connected#"
-                          className="btn btn-lg btn-dim btn-primary"
-                        >
+                          className="btn btn-lg btn-dim btn-primary">
                           Connect
                         </NavLink>
                       </div>
@@ -121,18 +113,15 @@ export const ProfileConnected = () => {
                 <div className="nk-block-head nk-block-head-sm">
                   <div className="nk-block-head-content">
                     <h6 className="nk-block-title">
-                      Import Contacts{" "}
+                      Import Contacts{' '}
                       <NavLink
                         to="/dashboard/profile-connected#"
-                        className="link link-primary ms-auto"
-                      >
+                        className="link link-primary ms-auto">
                         Import from Google
                       </NavLink>
                     </h6>
                     <div className="nk-block-des">
-                      <p>
-                        You have not imported contacts from your mobile phone.
-                      </p>
+                      <p>You have not imported contacts from your mobile phone.</p>
                     </div>
                   </div>
                 </div>
@@ -142,5 +131,5 @@ export const ProfileConnected = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};

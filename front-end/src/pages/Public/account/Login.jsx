@@ -25,15 +25,12 @@ export const Login = () => {
     try {
       const response = await userRequest('/auth/login', formData);
 
-      if (response.isVerified == true) {
-        // setData(data); // Login successful
-        // localStorage.setItem('token', token);
-        navigate('/dash'); // <-- redirect
+      if (response.status === 200 && response.isVerified == true) {
+        navigate('/dashboard');
       } else {
-        navigate('/dash/welcome'); // <-- redirect
+        navigate('/dashboard/welcome');
       }
     } catch (error) {
-      // Handle the error, show an error message, etc.
       console.error(error);
     }
   };
@@ -77,7 +74,6 @@ export const Login = () => {
         </div>
       </header>
 
-      {/* <title>satoshitradepro | Login</title> */}
       <div
         style={{
           display: 'flex',
@@ -85,6 +81,7 @@ export const Login = () => {
           alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
+          height: '90vh',
         }}>
         <form
           onSubmit={handleSubmit}

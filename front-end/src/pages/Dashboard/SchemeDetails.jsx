@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import {NavLink} from 'react-router-dom';
 
 export const SchemeDetails = () => {
   return (
@@ -17,34 +17,24 @@ export const SchemeDetails = () => {
                   </div>
                   <div className="nk-block-between-md g-4">
                     <div className="nk-block-head-content">
-                      <h2 className="nk-block-title fw-normal">
-                        Silver - Daily 4.76% for 21 Days
-                      </h2>
+                      <h2 className="nk-block-title fw-normal">Silver - Daily 4.76% for 21 Days</h2>
                       <div className="nk-block-des">
                         <p>
-                          INV-498238{" "}
-                          <span className="badge bg-outline bg-primary">
-                            Running
-                          </span>
+                          INV-498238 <span className="badge bg-outline bg-primary">Running</span>
                         </p>
                       </div>
                     </div>
                     <div className="nk-block-head-content">
                       <ul className="nk-block-tools gx-3">
                         <li className="order-md-last">
-                          <NavLink
-                            to="/dashboard/scheme-details#"
-                            className="btn btn-danger"
-                          >
-                            <em className="icon ni ni-cross" />{" "}
-                            <span>Cancel this plan</span>{" "}
+                          <NavLink to="/dashboard/scheme-details#" className="btn btn-danger">
+                            <em className="icon ni ni-cross" /> <span>Cancel this plan</span>{' '}
                           </NavLink>
                         </li>
                         <li>
                           <NavLink
                             to="/dashboard/scheme-details#"
-                            className="btn btn-icon btn-light"
-                          >
+                            className="btn btn-icon btn-light">
                             <em className="icon ni ni-reload" />
                           </NavLink>
                         </li>
@@ -64,9 +54,7 @@ export const SchemeDetails = () => {
                               <div className="nk-iv-wg3-amount">
                                 <div className="number">2,500.00</div>
                               </div>
-                              <div className="nk-iv-wg3-subtitle">
-                                Invested Amount
-                              </div>
+                              <div className="nk-iv-wg3-subtitle">Invested Amount</div>
                             </div>
                             <div className="nk-iv-wg3-sub">
                               <span className="nk-iv-wg3-plus text-soft">
@@ -74,13 +62,10 @@ export const SchemeDetails = () => {
                               </span>
                               <div className="nk-iv-wg3-amount">
                                 <div className="number">
-                                  1,643.76{" "}
-                                  <span className="number-up">4.76 %</span>
+                                  1,643.76 <span className="number-up">4.76 %</span>
                                 </div>
                               </div>
-                              <div className="nk-iv-wg3-subtitle">
-                                Profit Earned
-                              </div>
+                              <div className="nk-iv-wg3-subtitle">Profit Earned</div>
                             </div>
                           </div>
                         </div>
@@ -91,9 +76,9 @@ export const SchemeDetails = () => {
                             <div className="nk-iv-wg3-sub">
                               <div className="nk-iv-wg3-amount">
                                 <div className="number">
-                                  4,999.90{" "}
+                                  4,999.90{' '}
                                   <span className="number-down">
-                                    1017.14{" "}
+                                    1017.14{' '}
                                     <em
                                       className="icon ni ni-info-fill"
                                       data-bs-toggle="tooltip"
@@ -103,9 +88,7 @@ export const SchemeDetails = () => {
                                   </span>
                                 </div>
                               </div>
-                              <div className="nk-iv-wg3-subtitle">
-                                Total Return
-                              </div>
+                              <div className="nk-iv-wg3-subtitle">Total Return</div>
                             </div>
                           </div>
                         </div>
@@ -149,8 +132,7 @@ export const SchemeDetails = () => {
                           Paid <small>(fee include)</small>
                         </div>
                         <div className="lead-text">
-                          <span className="currency currency-usd">USD</span>{" "}
-                          2,535.75
+                          <span className="currency currency-usd">USD</span> 2,535.75
                         </div>
                       </li>
                     </ul>
@@ -158,29 +140,25 @@ export const SchemeDetails = () => {
                       <li>
                         <div className="sub-text">Captial invested</div>
                         <div className="lead-text">
-                          <span className="currency currency-usd">USD</span>{" "}
-                          2,500.00
+                          <span className="currency currency-usd">USD</span> 2,500.00
                         </div>
                       </li>
                       <li>
                         <div className="sub-text">Daily profit</div>
                         <div className="lead-text">
-                          <span className="currency currency-usd">USD</span>{" "}
-                          119.10
+                          <span className="currency currency-usd">USD</span> 119.10
                         </div>
                       </li>
                       <li>
                         <div className="sub-text">Net profit</div>
                         <div className="lead-text">
-                          <span className="currency currency-usd">USD</span>{" "}
-                          2,499.90
+                          <span className="currency currency-usd">USD</span> 2,499.90
                         </div>
                       </li>
                       <li>
                         <div className="sub-text">Total return</div>
                         <div className="lead-text">
-                          <span className="currency currency-usd">USD</span>{" "}
-                          4,999.90
+                          <span className="currency currency-usd">USD</span> 4,999.90
                         </div>
                       </li>
                     </ul>
@@ -231,7 +209,7 @@ export const SchemeDetails = () => {
                           <div className="nk-iv-wg5-head">
                             <h5 className="nk-iv-wg5-title">Net Profit</h5>
                             <div className="nk-iv-wg5-subtitle">
-                              Earn so far <strong>1,643.76</strong>{" "}
+                              Earn so far <strong>1,643.76</strong>{' '}
                               <span className="currency currency-usd">USD</span>
                             </div>
                           </div>
@@ -267,7 +245,7 @@ export const SchemeDetails = () => {
                           <div className="nk-iv-wg5-head">
                             <h5 className="nk-iv-wg5-title">Day Remain</h5>
                             <div className="nk-iv-wg5-subtitle">
-                              Earn so far <strong>1,643.76</strong>{" "}
+                              Earn so far <strong>1,643.76</strong>{' '}
                               <span className="currency currency-usd">USD</span>
                             </div>
                           </div>
@@ -326,9 +304,7 @@ export const SchemeDetails = () => {
                           <span className="sub-text">04 Nov, 2018</span>
                         </td>
                         <td className="tb-col-time tb-col-end">
-                          <span className="lead-text text-danger">
-                            - 2,500.00
-                          </span>
+                          <span className="lead-text text-danger">- 2,500.00</span>
                         </td>
                       </tr>
                       <tr>
@@ -362,5 +338,5 @@ export const SchemeDetails = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};

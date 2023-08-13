@@ -1,5 +1,4 @@
 import {useState} from 'react';
-import axios from 'axios';
 import {NavLink, useNavigate} from 'react-router-dom';
 import {userRequest} from '../../../components/Commons/HandleRequest';
 
@@ -12,7 +11,7 @@ export const Register = () => {
   const premium = {name: 'Premium', value: 100000, percent: 10};
 
   const navigate = useNavigate();
-  const [message, setMessage] = useState();
+  const [message, setMessage] = useState('Pending');
   const [formData, setFormData] = useState({
     fullname: '',
     username: '',
@@ -23,7 +22,6 @@ export const Register = () => {
     country: '',
     state: '',
     address: '',
-    investment: '',
     portfolio: '',
   });
 
@@ -37,16 +35,19 @@ export const Register = () => {
     try {
       const response = await userRequest('/auth/register', formData);
 
-      if (response.Ok) {
-        setMessage('Registration successful');
+      if (response.status == 200) {
+        setMessage('success');
+      } else {
+        setMessage('failed');
       }
 
-      navigate('/login'); // <-- redirect
+      navigate('/account/login');
     } catch (error) {
-      // Handle the error, show an error message, etc.
-      console.error(error);
+      console.error('Error', error);
+      setMessage('failed');
     }
   };
+
   return (
     <div style={{width: '100%'}}>
       <header
@@ -56,6 +57,7 @@ export const Register = () => {
           justifyContent: 'space-between',
           padding: '1rem',
           width: '100%',
+          zIndex: '999',
         }}>
         <div style={{width: '100rem', height: '4rem', paddingLeft: '30px'}}>
           <NavLink to="/#">
@@ -85,495 +87,518 @@ export const Register = () => {
         </div>
       </header>
 
-      <div className="side_signing_full" style={{width: '100%', marginBottom: '5rem'}}>
-        <form
-          onSubmit={handleSubmit}
-          style={{marginTop: '0', paddingTop: '8rem', width: '35%', margin: '0 auto'}}>
-          <span>
-            <h3 style={{color: 'crimson', textAlign: 'center'}} />
-          </span>
-          <span>
-            <h3 style={{color: 'green', textAlign: 'center'}} />
-          </span>
-          <h2 style={{width: 'max-content', padding: '0 0 2rem 0', color: '#253978'}}>
-            Create an account with Us!
-          </h2>
+      <div className="side_signing_full" style={{padding: '.1rem 0 5rem 0'}}>
+        {message === 'success' ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              height: '80vh',
+            }}>
+            <p style={{color: 'green', fontSize: '1.1rem'}}>
+              Registration successful! You can now log in.
+            </p>
+          </div>
+        ) : message === 'failed' ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '100%',
+              height: '80vh',
+            }}>
+            <p style={{color: 'red', fontSize: '1.1rem'}}>
+              Registration failed. Please try again later.
+            </p>
+          </div>
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              marginTop: '0',
+              paddingTop: '8rem',
+              width: '35%',
+              margin: '0 auto',
+            }}>
+            <span>
+              <h3 style={{color: 'crimson', textAlign: 'center'}} />
+            </span>
+            <span>
+              <h3 style={{color: 'green', textAlign: 'center'}} />
+            </span>
+            <h2 style={{width: 'max-content', padding: '0 0 2rem 0', color: '#253978'}}>
+              Create an account with Us!
+            </h2>
 
-          <label style={{color: 'black'}} className="font-weight-bold">
-            Full Name
-          </label>
-          <input
-            type="text"
-            style={{color: 'black'}}
-            className="form-control"
-            id="name"
-            name="fullname"
-            value={formData.fullname}
-            onChange={handleInputChange}
-            placeholder="Enter full name"
-            required
-          />
-          <span style={{color: 'crimson'}} />
-          <br />
+            <label style={{color: 'black'}} className="font-weight-bold">
+              Full Name
+            </label>
+            <input
+              type="text"
+              style={{color: 'black'}}
+              className="form-control"
+              name="fullname"
+              value={formData.fullname}
+              onChange={handleInputChange}
+              placeholder="Enter full name"
+              required
+            />
+            <span style={{color: 'crimson'}} />
+            <br />
 
-          <label style={{color: 'black'}} className="font-weight-bold">
-            Username
-          </label>
-          <input
-            type="text"
-            style={{color: 'black'}}
-            className="form-control"
-            name="username"
-            id="username"
-            value={formData.username}
-            onChange={handleInputChange}
-            placeholder="Enter Unique Username"
-            required
-          />
-          <span style={{color: 'crimson'}} />
-          <br />
+            <label style={{color: 'black'}} className="font-weight-bold">
+              Username
+            </label>
+            <input
+              type="text"
+              style={{color: 'black'}}
+              className="form-control"
+              name="username"
+              value={formData.username}
+              onChange={handleInputChange}
+              placeholder="Enter Unique Username"
+              required
+            />
+            <span style={{color: 'crimson'}} />
+            <br />
 
-          <label style={{color: 'black'}} className="font-weight-bold">
-            Email address
-          </label>
-          <input
-            type="text"
-            style={{color: 'black'}}
-            className="form-control"
-            name="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            id="email"
-            placeholder="name@example.com"
-            required
-          />
-          <span style={{color: 'crimson'}} />
-          <br />
+            <label style={{color: 'black'}} className="font-weight-bold">
+              Email address
+            </label>
+            <input
+              type="text"
+              style={{color: 'black'}}
+              className="form-control"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="name@example.com"
+              required
+            />
+            <span style={{color: 'crimson'}} />
+            <br />
 
-          <label style={{color: 'black'}} className="font-weight-bold">
-            Password
-          </label>
-          <input
-            type="password"
-            style={{color: 'black'}}
-            className="form-control"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange}
-            id="password"
-            placeholder="Enter Password"
-            required
-          />
-          <span style={{color: 'crimson'}} />
-          <br />
+            <label style={{color: 'black'}} className="font-weight-bold">
+              Password
+            </label>
+            <input
+              type="password"
+              style={{color: 'black'}}
+              className="form-control"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              placeholder="Enter Password"
+              required
+            />
+            <span style={{color: 'crimson'}} />
+            <br />
 
-          <label style={{color: 'black'}} className="font-weight-bold">
-            Retype Password
-          </label>
-          <input
-            type="password"
-            style={{color: 'black'}}
-            className="form-control"
-            name="comfirmPassword"
-            id="confirmPassword"
-            placeholder="Confirm Password"
-            required
-          />
-          <span style={{color: 'crimson'}} />
-          <br />
+            <label style={{color: 'black'}} className="font-weight-bold">
+              Retype Password
+            </label>
+            <input
+              type="password"
+              style={{color: 'black'}}
+              className="form-control"
+              name="comfirmPassword"
+              placeholder="Confirm Password"
+              required
+            />
+            <span style={{color: 'crimson'}} />
+            <br />
 
-          <label style={{color: 'black'}} className="font-weight-bold">
-            Phone Number
-          </label>
-          <input
-            type="text"
-            style={{color: 'black'}}
-            className="form-control"
-            name="phone"
-            value={formData.phone}
-            onChange={handleInputChange}
-            id="phone"
-            placeholder="Enter Phone number"
-            required
-          />
-          <span style={{color: 'crimson'}} />
-          <br />
+            <label style={{color: 'black'}} className="font-weight-bold">
+              Phone Number
+            </label>
+            <input
+              type="text"
+              style={{color: 'black'}}
+              className="form-control"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              placeholder="Enter Phone number"
+              required
+            />
+            <span style={{color: 'crimson'}} />
+            <br />
 
-          <label style={{color: 'black'}} className="font-weight-bold">
-            Referral
-          </label>
-          <input
-            type="text"
-            style={{color: 'black'}}
-            className="form-control"
-            id="referral"
-            name="referral"
-            value={formData.referral}
-            onChange={handleInputChange}
-            placeholder="Optional"
-          />
-          <span style={{color: 'crimson'}} />
-          <br />
+            <label style={{color: 'black'}} className="font-weight-bold">
+              Referral
+            </label>
+            <input
+              type="text"
+              style={{color: 'black'}}
+              className="form-control"
+              name="referral"
+              value={formData.referral}
+              onChange={handleInputChange}
+              placeholder="Optional"
+            />
+            <span style={{color: 'crimson'}} />
+            <br />
 
-          <label style={{color: 'black'}} className="font-weight-bold">
-            Country
-          </label>
-          <select
-            style={{color: '#252d47'}}
-            className="form-control "
-            name="country"
-            value={formData.country}
-            onChange={handleInputChange}
-            id="country"
-            data-live-search="true"
-            tabIndex={-1}
-            aria-hidden="true"
-            required>
-            <option value>Your Country</option>
-            <option>Afghanistan</option>
-            <option>Albania</option>
-            <option>Algeria</option>
-            <option>American Samoa</option>
-            <option>Andorra</option>
-            <option>Angola</option>
-            <option>Anguilla</option>
-            <option>Antarctica</option>
-            <option>Antigua and Barbuda</option>
-            <option>Argentina</option>
-            <option>Armenia</option>
-            <option>Aruba</option>
-            <option>Australia</option>
-            <option>Austria</option>
-            <option>Azerbaidjan</option>
-            <option>Bahamas</option>
-            <option>Bahrain</option>
-            <option>Bangladesh</option>
-            <option>Barbados</option>
-            <option>Belarus</option>
-            <option>Belgium</option>
-            <option>Belize</option>
-            <option>Benin</option>
-            <option>Bermuda</option>
-            <option>Bhutan</option>
-            <option>Bolivia</option>
-            <option>Bosnia-Herzegovina</option>
-            <option>Botswana</option>
-            <option>Bouvet Island</option>
-            <option>Brazil</option>
-            <option>British Indian Ocean Territory</option>
-            <option>Brunei Darussalam</option>
-            <option>Bulgaria</option>
-            <option>Burkina Faso</option>
-            <option>Burundi</option>
-            <option>Cambodia</option>
-            <option>Cameroon</option>
-            <option>Canada</option>
-            <option>Cape Verde</option>
-            <option>Cayman Islands</option>
-            <option>Central African Republic</option>
-            <option>Chad</option>
-            <option>Chile</option>
-            <option>China</option>
-            <option>Christmas Island</option>
-            <option>Cocos (Keeling) Islands</option>
-            <option>Colombia</option>
-            <option>Comoros</option>
-            <option>Congo</option>
-            <option>Congo (Democratic Republic)</option>
-            <option>Cook Islands</option>
-            <option>Costa Rica</option>
-            <option>Croatia</option>
-            <option>Cuba</option>
-            <option>Cyprus</option>
-            <option>Czech Republic</option>
-            <option>Denmark</option>
-            <option>Djibouti</option>
-            <option>Dominica</option>
-            <option>Dominican Republic</option>
-            <option>East Timor</option>
-            <option>Ecuador</option>
-            <option>Egypt</option>
-            <option>El Salvador</option>
-            <option>Equatorial Guinea</option>
-            <option>Eritrea</option>
-            <option>Estonia</option>
-            <option>Ethiopia</option>
-            <option>Falkland Islands</option>
-            <option>Faroe Islands</option>
-            <option>Fiji</option>
-            <option>Finland</option>
-            <option>France</option>
-            <option>France (European Territory)</option>
-            <option>French Guiana</option>
-            <option>French Southern Territories</option>
-            <option>Gabon</option>
-            <option>Gambia</option>
-            <option>Georgia</option>
-            <option>Germany</option>
-            <option>Ghana</option>
-            <option>Gibraltar</option>
-            <option>Great Britain</option>
-            <option>Greece</option>
-            <option>Greenland</option>
-            <option>Grenada</option>
-            <option>Guadeloupe</option>
-            <option>Guam</option>
-            <option>Guatemala</option>
-            <option>Guinea</option>
-            <option>Guinea Bissau</option>
-            <option>Guyana</option>
-            <option>Haiti</option>
-            <option>Heard and McDonald Islands</option>
-            <option>Holy See (Vatican City State)</option>
-            <option>Honduras</option>
-            <option>Hong Kong</option>
-            <option>Hungary</option>
-            <option>Iceland</option>
-            <option>India</option>
-            <option>Indonesia</option>
-            <option>Iran</option>
-            <option>Iraq</option>
-            <option>Ireland</option>
-            <option>Israel</option>
-            <option>Italy</option>
-            <option>Ivory Coast (Cote D`Ivoire)</option>
-            <option>Jamaica</option>
-            <option>Japan</option>
-            <option>Jordan</option>
-            <option>Kazakhstan</option>
-            <option>Kenya</option>
-            <option>Kiribati</option>
-            <option>Kuwait</option>
-            <option>Kyrgyz Republic (Kyrgyzstan)</option>
-            <option>Laos</option>
-            <option>Latvia</option>
-            <option>Lebanon</option>
-            <option>Lesotho</option>
-            <option>Liberia</option>
-            <option>Libya</option>
-            <option>Liechtenstein</option>
-            <option>Lithuania</option>
-            <option>Luxembourg</option>
-            <option>Macau</option>
-            <option>Macedonia</option>
-            <option>Madagascar</option>
-            <option>Malawi</option>
-            <option>Malaysia</option>
-            <option>Maldives</option>
-            <option>Mali</option>
-            <option>Malta</option>
-            <option>Marshall Islands</option>
-            <option>Martinique</option>
-            <option>Mauritania</option>
-            <option>Mauritius</option>
-            <option>Mayotte</option>
-            <option>Mexico</option>
-            <option>Micronesia</option>
-            <option>Moldavia</option>
-            <option>Monaco</option>
-            <option>Mongolia</option>
-            <option>Montserrat</option>
-            <option>Morocco</option>
-            <option>Mozambique</option>
-            <option>Myanmar</option>
-            <option>Namibia</option>
-            <option>Nauru</option>
-            <option>Nepal</option>
-            <option>Netherlands</option>
-            <option>Netherlands Antilles</option>
-            <option>New Caledonia</option>
-            <option>New Zealand</option>
-            <option>Nicaragua</option>
-            <option>Niger</option>
-            <option>Nigeria</option>
-            <option>Niue</option>
-            <option>Norfolk Island</option>
-            <option>North Korea</option>
-            <option>Northern Mariana Islands</option>
-            <option>Norway</option>
-            <option>Oman</option>
-            <option>Pakistan</option>
-            <option>Palau</option>
-            <option>Panama</option>
-            <option>Papua New Guinea</option>
-            <option>Paraguay</option>
-            <option>Peru</option>
-            <option>Philippines</option>
-            <option>Pitcairn Island</option>
-            <option>Poland</option>
-            <option>Polynesia</option>
-            <option>Portugal</option>
-            <option>Puerto Rico</option>
-            <option>Qatar</option>
-            <option>Reunion</option>
-            <option>Romania</option>
-            <option>Russian Federation</option>
-            <option>Rwanda</option>
-            <option>S. Georgia &amp; S. Sandwich Isls.</option>
-            <option>Saint Helena</option>
-            <option>Saint Kitts &amp; Nevis Anguilla</option>
-            <option>Saint Lucia</option>
-            <option>Saint Pierre and Miquelon</option>
-            <option>Saint Vincent &amp; Grenadines</option>
-            <option>Samoa</option>
-            <option>San Marino</option>
-            <option>Sao Tome and Principe</option>
-            <option>Saudi Arabia</option>
-            <option>Serbia</option>
-            <option>Senegal</option>
-            <option>Seychelles</option>
-            <option>Sierra Leone</option>
-            <option>Singapore</option>
-            <option>Slovak Republic</option>
-            <option>Slovenia</option>
-            <option>Solomon Islands</option>
-            <option>Somalia</option>
-            <option>South Africa</option>
-            <option>South Korea</option>
-            <option>Spain</option>
-            <option>Sri Lanka</option>
-            <option>Sudan</option>
-            <option>Suriname</option>
-            <option>Svalbard and Jan Mayen Islands</option>
-            <option>Swaziland</option>
-            <option>Sweden</option>
-            <option>Switzerland</option>
-            <option>Syria</option>
-            <option>Taiwan</option>
-            <option>Tajikistan</option>
-            <option>Tanzania</option>
-            <option>Thailand</option>
-            <option>Togo</option>
-            <option>Tokelau</option>
-            <option>Tonga</option>
-            <option>Trinidad and Tobago</option>
-            <option>Tunisia</option>
-            <option>Turkey</option>
-            <option>Turkmenistan</option>
-            <option>Turks and Caicos Islands</option>
-            <option>Tuvalu</option>
-            <option>USA Minor Outlying Islands</option>
-            <option>Uganda</option>
-            <option>Ukraine</option>
-            <option>United Arab Emirates</option>
-            <option>United Kingdom</option>
-            <option>United States</option>
-            <option>Uruguay</option>
-            <option>Uzbekistan</option>
-            <option>Vanuatu</option>
-            <option>Venezuela</option>
-            <option>Vietnam</option>
-            <option>Virgin Islands (British)</option>
-            <option>Virgin Islands (USA)</option>
-            <option>Wallis and Futuna Islands</option>
-            <option>Weather Stations</option>
-            <option>Western Sahara</option>
-            <option>Yemen</option>
-            <option>Yugoslavia</option>
-            <option>Zaire</option>
-            <option>Zambia</option>
-            <option>Zimbabwe</option>
-          </select>
-          <span style={{color: 'crimson'}} />
-          <br />
+            <label style={{color: 'black'}} className="font-weight-bold">
+              Country
+            </label>
+            <select
+              style={{color: '#252d47'}}
+              className="form-control "
+              name="country"
+              value={formData.country}
+              onChange={handleInputChange}
+              data-live-search="true"
+              tabIndex={-1}
+              aria-hidden="true"
+              required>
+              <option value>Your Country</option>
+              <option>Afghanistan</option>
+              <option>Albania</option>
+              <option>Algeria</option>
+              <option>American Samoa</option>
+              <option>Andorra</option>
+              <option>Angola</option>
+              <option>Anguilla</option>
+              <option>Antarctica</option>
+              <option>Antigua and Barbuda</option>
+              <option>Argentina</option>
+              <option>Armenia</option>
+              <option>Aruba</option>
+              <option>Australia</option>
+              <option>Austria</option>
+              <option>Azerbaidjan</option>
+              <option>Bahamas</option>
+              <option>Bahrain</option>
+              <option>Bangladesh</option>
+              <option>Barbados</option>
+              <option>Belarus</option>
+              <option>Belgium</option>
+              <option>Belize</option>
+              <option>Benin</option>
+              <option>Bermuda</option>
+              <option>Bhutan</option>
+              <option>Bolivia</option>
+              <option>Bosnia-Herzegovina</option>
+              <option>Botswana</option>
+              <option>Bouvet Island</option>
+              <option>Brazil</option>
+              <option>British Indian Ocean Territory</option>
+              <option>Brunei Darussalam</option>
+              <option>Bulgaria</option>
+              <option>Burkina Faso</option>
+              <option>Burundi</option>
+              <option>Cambodia</option>
+              <option>Cameroon</option>
+              <option>Canada</option>
+              <option>Cape Verde</option>
+              <option>Cayman Islands</option>
+              <option>Central African Republic</option>
+              <option>Chad</option>
+              <option>Chile</option>
+              <option>China</option>
+              <option>Christmas Island</option>
+              <option>Cocos (Keeling) Islands</option>
+              <option>Colombia</option>
+              <option>Comoros</option>
+              <option>Congo</option>
+              <option>Congo (Democratic Republic)</option>
+              <option>Cook Islands</option>
+              <option>Costa Rica</option>
+              <option>Croatia</option>
+              <option>Cuba</option>
+              <option>Cyprus</option>
+              <option>Czech Republic</option>
+              <option>Denmark</option>
+              <option>Djibouti</option>
+              <option>Dominica</option>
+              <option>Dominican Republic</option>
+              <option>East Timor</option>
+              <option>Ecuador</option>
+              <option>Egypt</option>
+              <option>El Salvador</option>
+              <option>Equatorial Guinea</option>
+              <option>Eritrea</option>
+              <option>Estonia</option>
+              <option>Ethiopia</option>
+              <option>Falkland Islands</option>
+              <option>Faroe Islands</option>
+              <option>Fiji</option>
+              <option>Finland</option>
+              <option>France</option>
+              <option>France (European Territory)</option>
+              <option>French Guiana</option>
+              <option>French Southern Territories</option>
+              <option>Gabon</option>
+              <option>Gambia</option>
+              <option>Georgia</option>
+              <option>Germany</option>
+              <option>Ghana</option>
+              <option>Gibraltar</option>
+              <option>Great Britain</option>
+              <option>Greece</option>
+              <option>Greenland</option>
+              <option>Grenada</option>
+              <option>Guadeloupe</option>
+              <option>Guam</option>
+              <option>Guatemala</option>
+              <option>Guinea</option>
+              <option>Guinea Bissau</option>
+              <option>Guyana</option>
+              <option>Haiti</option>
+              <option>Heard and McDonald Islands</option>
+              <option>Holy See (Vatican City State)</option>
+              <option>Honduras</option>
+              <option>Hong Kong</option>
+              <option>Hungary</option>
+              <option>Iceland</option>
+              <option>India</option>
+              <option>Indonesia</option>
+              <option>Iran</option>
+              <option>Iraq</option>
+              <option>Ireland</option>
+              <option>Israel</option>
+              <option>Italy</option>
+              <option>Ivory Coast (Cote D`Ivoire)</option>
+              <option>Jamaica</option>
+              <option>Japan</option>
+              <option>Jordan</option>
+              <option>Kazakhstan</option>
+              <option>Kenya</option>
+              <option>Kiribati</option>
+              <option>Kuwait</option>
+              <option>Kyrgyz Republic (Kyrgyzstan)</option>
+              <option>Laos</option>
+              <option>Latvia</option>
+              <option>Lebanon</option>
+              <option>Lesotho</option>
+              <option>Liberia</option>
+              <option>Libya</option>
+              <option>Liechtenstein</option>
+              <option>Lithuania</option>
+              <option>Luxembourg</option>
+              <option>Macau</option>
+              <option>Macedonia</option>
+              <option>Madagascar</option>
+              <option>Malawi</option>
+              <option>Malaysia</option>
+              <option>Maldives</option>
+              <option>Mali</option>
+              <option>Malta</option>
+              <option>Marshall Islands</option>
+              <option>Martinique</option>
+              <option>Mauritania</option>
+              <option>Mauritius</option>
+              <option>Mayotte</option>
+              <option>Mexico</option>
+              <option>Micronesia</option>
+              <option>Moldavia</option>
+              <option>Monaco</option>
+              <option>Mongolia</option>
+              <option>Montserrat</option>
+              <option>Morocco</option>
+              <option>Mozambique</option>
+              <option>Myanmar</option>
+              <option>Namibia</option>
+              <option>Nauru</option>
+              <option>Nepal</option>
+              <option>Netherlands</option>
+              <option>Netherlands Antilles</option>
+              <option>New Caledonia</option>
+              <option>New Zealand</option>
+              <option>Nicaragua</option>
+              <option>Niger</option>
+              <option>Nigeria</option>
+              <option>Niue</option>
+              <option>Norfolk Island</option>
+              <option>North Korea</option>
+              <option>Northern Mariana Islands</option>
+              <option>Norway</option>
+              <option>Oman</option>
+              <option>Pakistan</option>
+              <option>Palau</option>
+              <option>Panama</option>
+              <option>Papua New Guinea</option>
+              <option>Paraguay</option>
+              <option>Peru</option>
+              <option>Philippines</option>
+              <option>Pitcairn Island</option>
+              <option>Poland</option>
+              <option>Polynesia</option>
+              <option>Portugal</option>
+              <option>Puerto Rico</option>
+              <option>Qatar</option>
+              <option>Reunion</option>
+              <option>Romania</option>
+              <option>Russian Federation</option>
+              <option>Rwanda</option>
+              <option>S. Georgia &amp; S. Sandwich Isls.</option>
+              <option>Saint Helena</option>
+              <option>Saint Kitts &amp; Nevis Anguilla</option>
+              <option>Saint Lucia</option>
+              <option>Saint Pierre and Miquelon</option>
+              <option>Saint Vincent &amp; Grenadines</option>
+              <option>Samoa</option>
+              <option>San Marino</option>
+              <option>Sao Tome and Principe</option>
+              <option>Saudi Arabia</option>
+              <option>Serbia</option>
+              <option>Senegal</option>
+              <option>Seychelles</option>
+              <option>Sierra Leone</option>
+              <option>Singapore</option>
+              <option>Slovak Republic</option>
+              <option>Slovenia</option>
+              <option>Solomon Islands</option>
+              <option>Somalia</option>
+              <option>South Africa</option>
+              <option>South Korea</option>
+              <option>Spain</option>
+              <option>Sri Lanka</option>
+              <option>Sudan</option>
+              <option>Suriname</option>
+              <option>Svalbard and Jan Mayen Islands</option>
+              <option>Swaziland</option>
+              <option>Sweden</option>
+              <option>Switzerland</option>
+              <option>Syria</option>
+              <option>Taiwan</option>
+              <option>Tajikistan</option>
+              <option>Tanzania</option>
+              <option>Thailand</option>
+              <option>Togo</option>
+              <option>Tokelau</option>
+              <option>Tonga</option>
+              <option>Trinidad and Tobago</option>
+              <option>Tunisia</option>
+              <option>Turkey</option>
+              <option>Turkmenistan</option>
+              <option>Turks and Caicos Islands</option>
+              <option>Tuvalu</option>
+              <option>USA Minor Outlying Islands</option>
+              <option>Uganda</option>
+              <option>Ukraine</option>
+              <option>United Arab Emirates</option>
+              <option>United Kingdom</option>
+              <option>United States</option>
+              <option>Uruguay</option>
+              <option>Uzbekistan</option>
+              <option>Vanuatu</option>
+              <option>Venezuela</option>
+              <option>Vietnam</option>
+              <option>Virgin Islands (British)</option>
+              <option>Virgin Islands (USA)</option>
+              <option>Wallis and Futuna Islands</option>
+              <option>Weather Stations</option>
+              <option>Western Sahara</option>
+              <option>Yemen</option>
+              <option>Yugoslavia</option>
+              <option>Zaire</option>
+              <option>Zambia</option>
+              <option>Zimbabwe</option>
+            </select>
+            <span style={{color: 'crimson'}} />
+            <br />
 
-          <label style={{color: 'black'}} className="font-weight-bold">
-            State
-          </label>
-          <input
-            type="text"
-            style={{color: 'black'}}
-            className="form-control"
-            name="state"
-            value={formData.state}
-            onChange={handleInputChange}
-            placeholder="State"
-            required
-          />
-          <span style={{color: 'crimson'}} />
-          <br />
+            <label style={{color: 'black'}} className="font-weight-bold">
+              State
+            </label>
+            <input
+              type="text"
+              style={{color: 'black'}}
+              className="form-control"
+              name="state"
+              value={formData.state}
+              onChange={handleInputChange}
+              placeholder="State"
+              required
+            />
+            <span style={{color: 'crimson'}} />
+            <br />
 
-          <label style={{color: 'black'}} className="font-weight-bold">
-            Address
-          </label>
-          <input
-            type="text"
-            style={{color: 'black'}}
-            className="form-control"
-            name="address"
-            value={formData.address}
-            onChange={handleInputChange}
-            placeholder="Address"
-            required
-          />
-          <span style={{color: 'crimson'}} />
-          <br />
+            <label style={{color: 'black'}} className="font-weight-bold">
+              Address
+            </label>
+            <input
+              type="text"
+              style={{color: 'black'}}
+              className="form-control"
+              name="address"
+              value={formData.address}
+              onChange={handleInputChange}
+              placeholder="Address"
+              required
+            />
+            <span style={{color: 'crimson'}} />
+            <br />
 
-          <label style={{color: 'black'}} className="font-weight-bold">
-            Account Type
-          </label>
-          <select
+            <label style={{color: 'black'}} className="font-weight-bold">
+              Account Type
+            </label>
+            {/* <select
             style={{color: '#252d47'}}
             className="form-control"
             name="investment"
             value={formData.investment}
             onChange={handleInputChange}
-            id="investment"
             required>
             <option>Select investment type</option>
             <option>CryptoCurrency & NFT Investment</option>
-          </select>
-          <span style={{color: 'crimson'}} />
-          <br />
+          </select> */}
+            <span style={{color: 'crimson'}} />
+            <br />
 
-          <label style={{color: 'black'}} className="font-weight-bold">
-            Portfolio
-          </label>
-          <select
-            style={{color: '#252d47'}}
-            className="form-control"
-            name="portfolio"
-            value={formData.portfolio}
-            onChange={handleInputChange}
-            id="investment"
-            required>
-            <option>Select invvestment package</option>
-            <option>
-              {beginer.name} - $ {beginer.value} {beginer.percent}% ROI
-            </option>
-            <option>
-              {standard.name} - $ {standard.value} {standard.percent}% ROI
-            </option>
-            <option>
-              {proffesional.name} - $ {proffesional.value} {proffesional.percent}% ROI
-            </option>
-            <option>
-              {ultimate.name} - $ {ultimate.value} {ultimate.percent}% ROI
-            </option>
-            <option>
-              {premium.name} - $ {premium.value} {premium.percent}% ROI
-            </option>
-          </select>
-          <span style={{color: 'crimson'}} />
-          <br />
+            <label style={{color: 'black'}} className="font-weight-bold">
+              Portfolio
+            </label>
+            <select
+              style={{color: '#252d47'}}
+              className="form-control"
+              name="portfolio"
+              value={formData.portfolio}
+              onChange={handleInputChange}
+              required>
+              <option>Select invvestment package</option>
+              <option>
+                {beginer.name} - $ {beginer.value} {beginer.percent}% ROI
+              </option>
+              <option>
+                {standard.name} - $ {standard.value} {standard.percent}% ROI
+              </option>
+              <option>
+                {proffesional.name} - $ {proffesional.value} {proffesional.percent}% ROI
+              </option>
+              <option>
+                {ultimate.name} - $ {ultimate.value} {ultimate.percent}% ROI
+              </option>
+              <option>
+                {premium.name} - $ {premium.value} {premium.percent}% ROI
+              </option>
+            </select>
+            <span style={{color: 'crimson'}} />
+            <br />
 
-          {/* <div className="checkbox">
+            {/* <div className="checkbox">
           <input type="checkbox" name="agree" className="form-check-input" defaultChecked required />
           <i className="fa fa-pencil" />
           <b style={{color: 'black' }}>You agree to our <a style={{color: 'green' }}>Terms and
               Conditions</a></b>
         </div> */}
-          <div className="message" style={{color: 'green'}}>
+            {/* <div className="message" style={{color: message == 'success' ? 'green' : 'red'}}>
             <p>{message}</p>
-          </div>
+          </div> */}
 
-          <button
-            className="btn btn-lg btn-primary btn-round"
-            style={{background: 'rgb(38,155,72)', color: 'white'}}
-            type="submit">
-            Register
-          </button>
-        </form>
+            <button
+              className="btn btn-lg btn-primary btn-round"
+              style={{background: 'rgb(38,155,72)', color: 'white'}}
+              type="submit">
+              Register
+            </button>
+          </form>
+        )}
       </div>
 
       {/* IE10 viewport hack for Surface/desktop Windows 8 bug */}

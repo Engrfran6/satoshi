@@ -18,7 +18,7 @@ export const UnauthorizedApp = () => {
     {path: '/', element: <PublicHome />},
     {path: '/crypto', element: <Crypto />},
     {path: '/realestate', element: <RealEstate />},
-    {path: '/loans', element: <Loan />},
+    {path: '/loan', element: <Loan />},
     {path: '/pricing', element: <Pricing />},
     {path: '/company', element: <Company />},
     {path: '/teams', element: <Terms />},
