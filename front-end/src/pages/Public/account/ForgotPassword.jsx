@@ -1,12 +1,12 @@
 import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
-import axios from 'axios';
 import {userRequest} from '../../../components/Commons/HandleRequest';
 
 export const ForgotPassword = () => {
-  const [data, setData] = useState();
+  const [message, setMessage] = useState('pending');
   const [error, setError] = useState();
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: '',
   });
@@ -21,96 +21,118 @@ export const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await userRequest('/auth/login', formData);
-      if (response) {
-        setData(data); // Login successful
-        // localStorage.setItem('token', token);
-        navigate('/login'); // <-- redirect to login
+      const response = await userRequest('/auth/reset-password', formData);
+
+      if (response.status === 200) {
+        setMessage('success');
+
+        navigate('/account/login');
       } else {
-        setError('Email does not exist, Please try again !.');
+        setMessage('failed');
       }
     } catch (error) {
-      // Handle the error, show an error message, etc.
-      console.error(error);
+      console.error('Error', error);
     }
   };
+
   return (
-    <section className=" auth">
-      <div className="container">
-        <div className="pb-3 row justify-content-center">
-          <div className="col-12 col-md-6 col-lg-6 col-sm-10 col-xl-6">
-            <div className="bg-white shadow card login-page roundedd border-1 ">
-              <div className="card-body">
-                <h4 className="text-center card-title">Password Reset</h4>
-
-                <form onSubmit={handleSubmit} className="mt-4 login-form">
-                  {/* <input type="hidden" name="_token" defaultValue="0lzuR8IXOjDwctugkO9GB9KEt1xGMy1NnPBZHLLk" />                    */}
-                  <div className="row">
-                    <div className="col-lg-12">
-                      <div className="form-group">
-                        <label>
-                          Your Email <span className="text-danger">*</span>
-                        </label>
-                        <div className="position-relative">
-                          <i data-feather="mail" className="fea icon-sm icons" />
-                          <input
-                            type="email"
-                            className="pl-5 form-control"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            placeholder="name@example.com"
-                            required
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    {/*end col*/}
-
-                    {/* display error message */}
-                    <div>
-                      <p>{error}</p>
-                    </div>
-
-                    <div className="mb-0 col-lg-12">
-                      <button
-                        style={{
-                          background: 'rgb(38,155,72)',
-                          color: 'white',
-                          fontWeight: 'bold',
-                          border: 'none',
-                          width: '',
-                          padding: '.5rem 2rem',
-                          borderRadius: '2rem',
-                        }}
-                        className="btn-block pad"
-                        type="submit">
-                        Email Password Reset Link
-                      </button>
-                    </div>
-                    {/*end col*/}
-
-                    <div className="text-center col-12">
-                      <p className="mt-3 mb-0">
-                        <small className="mr-2 text-dark"> Repeat Login ?</small>{' '}
-                        <NavLink to="//account/login" className="text-dark font-weight-bold">
-                          Login
-                        </NavLink>
-                      </p>
-                    </div>
-                    {/*end col*/}
-                  </div>
-                  {/*end row*/}
-                </form>
-              </div>
-            </div>
-            {/**/}
-          </div>
-          {/*end col*/}
+    <section
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '110vh',
+      }}>
+      {message === 'success' ? (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: '80vh',
+          }}>
+          <p style={{color: 'green', fontSize: '1.1rem'}}>Verification link sent to your email.</p>
         </div>
-        {/*end row*/}
+      ) : message === 'failed' ? (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: '80vh',
+          }}>
+          <p style={{color: 'red', fontSize: '1.1rem'}}>
+            'Email does not exist, Please try again !.
+          </p>
+        </div>
+      ) : (
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            width: '25%',
+          }}>
+          <span>
+            <h3 style={{color: 'crimson', textAlign: 'center'}} />
+          </span>
+          <span>
+            <h3 style={{color: 'green', textAlign: 'center'}} />
+          </span>
+
+          <h2 className="tex-black mb-4 font-weight-bold">Password Reset</h2>
+
+          <label style={{color: 'black'}} className="font-weight-bold">
+            Your Email <span className="text-danger">*</span>
+          </label>
+          <input
+            style={{color: 'black'}}
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            className="form-control font-weight-bold"
+            id="email"
+            placeholder="name@example.com"
+            required
+          />
+          <span style={{color: 'crimson'}} />
+          <br />
+          <div className="input-group">
+            <div className="input-group-append"></div>
+          </div>
+          <span style={{color: 'crimson'}} />
+          <br />
+
+          <button
+            className="btn btn-lg btn-primary btn-round"
+            style={{background: 'rgb(38,155,72)', color: 'white'}}
+            type="submit">
+            Email password rest link
+          </button>
+          <br />
+        </form>
+      )}
+      <br />
+      <div className="text-center col-12">
+        <p className="mt-3 mb-0">
+          <small className="mr-2 text-dark"> Repeat Login ? </small>
+          <NavLink to="/account/login" className="text-dark font-weight-bold">
+            Login
+          </NavLink>
+        </p>
       </div>
-      {/*end container*/}
+
+      <div className="footer" style={{textAlign: 'center', paddingTop: '25vh'}}>
+        <p>
+          <small>| Privacy, Cookies, Security & Legal |</small>
+          <small>Notice of Data Collection |</small>
+          <small>Ad Choices |</small>
+          <small>Give Us Feedback |</small>
+        </p>
+        <p>© 1999 - 2023 Satochi Trade Pro. All rights reserved. NMLSR ID 323801 </p>
+      </div>
     </section>
   );
 };

@@ -5,6 +5,7 @@ import {Banner} from '../../components/Public/banner/Banner';
 import {Contact} from '../../components/Public/contacts/Contact';
 import {NewIdea2} from '../../components/Public/ideas/NewIdea2';
 import {NewIdeas} from '../../components/Public/ideas/NewIdeas';
+import {LiveDisplay} from '../../components/Public/liveCryptoDisplay/LiveDisplay';
 import {OtherServices} from '../../components/Public/otherservices/OtherServices';
 import {Passions} from '../../components/Public/passions/Passions';
 import {Services} from '../../components/Public/services/Services';
@@ -20,6 +21,7 @@ export const PublicHome = () => {
   return (
     <div className="main-wrapper">
       <Header />
+      <LiveDisplay />
       <About />
       <Services />
       <OtherServices />
@@ -33,9 +35,10 @@ export const PublicHome = () => {
       <Tabs2 />
       <About2 />
       <Tabs />
-      <Testimonies />
-      <Teams />
+      {/* <Testimonies /> */}
+      {/* <Teams /> */}
       <Contact />
+      <script src="https://code.tidio.co/8pjb9tbo4ecsqppx2tjg8ldio0soouz9.js" async></script>
     </div>
   );
 };

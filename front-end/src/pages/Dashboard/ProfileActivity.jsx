@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import {NavLink} from 'react-router-dom';
 
 export const ProfileActivity = () => {
   return (
@@ -18,7 +18,7 @@ export const ProfileActivity = () => {
                   <h2 className="nk-block-title fw-normal">Login Activity</h2>
                   <div className="nk-block-des">
                     <p>
-                      Here is your last 20 login activities log.{" "}
+                      Here is your last 20 login activities log.{' '}
                       <span className="text-soft">
                         <em className="icon ni ni-info" />
                       </span>
@@ -28,9 +28,7 @@ export const ProfileActivity = () => {
               </div>
               <div className="nk-block">
                 <div className="nk-block-title-group mb-3">
-                  <h6 className="nk-block-title title">
-                    Activity on your account
-                  </h6>
+                  <h6 className="nk-block-title title">Activity on your account</h6>
                   <NavLink to="/dashboard/profile-activity#" className="link link-danger">
                     Clear log
                   </NavLink>
@@ -73,17 +71,13 @@ export const ProfileActivity = () => {
                         </td>
                         <td className="tb-col-time">
                           <span className="sub-text">
-                            Nov 20, 2019{" "}
-                            <span className="d-none d-sm-inline-block">
-                              10:34 PM
-                            </span>
+                            Nov 20, 2019 <span className="d-none d-sm-inline-block">10:34 PM</span>
                           </span>
                         </td>
                         <td className="tb-col-action">
                           <NavLink
                             to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1"
-                          >
+                            className="link-cross me-sm-n1">
                             <em className="icon ni ni-cross" />
                           </NavLink>
                         </td>
@@ -95,17 +89,13 @@ export const ProfileActivity = () => {
                         </td>
                         <td className="tb-col-time">
                           <span className="sub-text">
-                            Nov 12, 2019{" "}
-                            <span className="d-none d-sm-inline-block">
-                              08:56 PM
-                            </span>
+                            Nov 12, 2019 <span className="d-none d-sm-inline-block">08:56 PM</span>
                           </span>
                         </td>
                         <td className="tb-col-action">
                           <NavLink
                             to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1"
-                          >
+                            className="link-cross me-sm-n1">
                             <em className="icon ni ni-cross" />
                           </NavLink>
                         </td>
@@ -117,17 +107,13 @@ export const ProfileActivity = () => {
                         </td>
                         <td className="tb-col-time">
                           <span className="sub-text">
-                            Nov 03, 2019{" "}
-                            <span className="d-none d-sm-inline-block">
-                              04:29 PM
-                            </span>
+                            Nov 03, 2019 <span className="d-none d-sm-inline-block">04:29 PM</span>
                           </span>
                         </td>
                         <td className="tb-col-action">
                           <NavLink
                             to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1"
-                          >
+                            className="link-cross me-sm-n1">
                             <em className="icon ni ni-cross" />
                           </NavLink>
                         </td>
@@ -139,17 +125,13 @@ export const ProfileActivity = () => {
                         </td>
                         <td className="tb-col-time">
                           <span className="sub-text">
-                            Oct 29, 2019{" "}
-                            <span className="d-none d-sm-inline-block">
-                              09:38 AM
-                            </span>
+                            Oct 29, 2019 <span className="d-none d-sm-inline-block">09:38 AM</span>
                           </span>
                         </td>
                         <td className="tb-col-action">
                           <NavLink
                             to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1"
-                          >
+                            className="link-cross me-sm-n1">
                             <em className="icon ni ni-cross" />
                           </NavLink>
                         </td>
@@ -161,17 +143,13 @@ export const ProfileActivity = () => {
                         </td>
                         <td className="tb-col-time">
                           <span className="sub-text">
-                            Oct 23, 2019{" "}
-                            <span className="d-none d-sm-inline-block">
-                              04:16 PM
-                            </span>
+                            Oct 23, 2019 <span className="d-none d-sm-inline-block">04:16 PM</span>
                           </span>
                         </td>
                         <td className="tb-col-action">
                           <NavLink
                             to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1"
-                          >
+                            className="link-cross me-sm-n1">
                             <em className="icon ni ni-cross" />
                           </NavLink>
                         </td>
@@ -183,17 +161,13 @@ export const ProfileActivity = () => {
                         </td>
                         <td className="tb-col-time">
                           <span className="sub-text">
-                            Oct 15, 2019{" "}
-                            <span className="d-none d-sm-inline-block">
-                              11:41 PM
-                            </span>
+                            Oct 15, 2019 <span className="d-none d-sm-inline-block">11:41 PM</span>
                           </span>
                         </td>
                         <td className="tb-col-action">
                           <NavLink
                             to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1"
-                          >
+                            className="link-cross me-sm-n1">
                             <em className="icon ni ni-cross" />
                           </NavLink>
                         </td>
@@ -205,17 +179,13 @@ export const ProfileActivity = () => {
                         </td>
                         <td className="tb-col-time">
                           <span className="sub-text">
-                            Oct 13, 2019{" "}
-                            <span className="d-none d-sm-inline-block">
-                              05:43 AM
-                            </span>
+                            Oct 13, 2019 <span className="d-none d-sm-inline-block">05:43 AM</span>
                           </span>
                         </td>
                         <td className="tb-col-action">
                           <NavLink
                             to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1"
-                          >
+                            className="link-cross me-sm-n1">
                             <em className="icon ni ni-cross" />
                           </NavLink>
                         </td>
@@ -227,17 +197,13 @@ export const ProfileActivity = () => {
                         </td>
                         <td className="tb-col-time">
                           <span className="sub-text">
-                            Oct 03, 2019{" "}
-                            <span className="d-none d-sm-inline-block">
-                              04:12 AM
-                            </span>
+                            Oct 03, 2019 <span className="d-none d-sm-inline-block">04:12 AM</span>
                           </span>
                         </td>
                         <td className="tb-col-action">
                           <NavLink
                             to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1"
-                          >
+                            className="link-cross me-sm-n1">
                             <em className="icon ni ni-cross" />
                           </NavLink>
                         </td>
@@ -250,7 +216,6 @@ export const ProfileActivity = () => {
           </div>
         </div>
       </div>
-   </>
-
-  )
-}
+    </>
+  );
+};

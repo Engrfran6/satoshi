@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import {NavLink} from 'react-router-dom';
 
 export const ProfileNotify = () => {
   return (
@@ -15,12 +15,10 @@ export const ProfileNotify = () => {
                       <span>My Profile</span>
                     </NavLink>
                   </div>
-                  <h2 className="nk-block-title fw-normal">
-                    Account Notification
-                  </h2>
+                  <h2 className="nk-block-title fw-normal">Account Notification</h2>
                   <div className="nk-block-des">
                     <p>
-                      You have full control to manage your own account setting.{" "}
+                      You have full control to manage your own account setting.{' '}
                       <span className="text-primary">
                         <em className="icon ni ni-info" />
                       </span>
@@ -63,10 +61,7 @@ export const ProfileNotify = () => {
                   <div className="nk-block-head-content">
                     <h6>Security Alerts</h6>
                     <div className="nk-block-des">
-                      <p>
-                        You will get only those email notification what you
-                        want.
-                      </p>
+                      <p>You will get only those email notification what you want.</p>
                     </div>
                   </div>
                 </div>
@@ -80,25 +75,15 @@ export const ProfileNotify = () => {
                           defaultChecked=""
                           id="unusual-activity"
                         />
-                        <label
-                          className="custom-control-label"
-                          htmlFor="unusual-activity"
-                        >
+                        <label className="custom-control-label" htmlFor="unusual-activity">
                           Email me whenever encounter unusual activity
                         </label>
                       </div>
                     </div>
                     <div className="g-item">
                       <div className="custom-control custom-switch">
-                        <input
-                          type="checkbox"
-                          className="custom-control-input"
-                          id="new-browser"
-                        />
-                        <label
-                          className="custom-control-label"
-                          htmlFor="new-browser"
-                        >
+                        <input type="checkbox" className="custom-control-input" id="new-browser" />
+                        <label className="custom-control-label" htmlFor="new-browser">
                           Email me if new browser is used to sign in
                         </label>
                       </div>
@@ -109,10 +94,7 @@ export const ProfileNotify = () => {
                   <div className="nk-block-head-content">
                     <h6 className="nk-block-title-sm">News</h6>
                     <div className="nk-block-des">
-                      <p>
-                        You will get only those email notification what you
-                        want.
-                      </p>
+                      <p>You will get only those email notification what you want.</p>
                     </div>
                   </div>
                 </div>
@@ -126,10 +108,7 @@ export const ProfileNotify = () => {
                           defaultChecked=""
                           id="latest-sale"
                         />
-                        <label
-                          className="custom-control-label"
-                          htmlFor="latest-sale"
-                        >
+                        <label className="custom-control-label" htmlFor="latest-sale">
                           Notify me by email about sales and latest news
                         </label>
                       </div>
@@ -141,10 +120,7 @@ export const ProfileNotify = () => {
                           className="custom-control-input"
                           id="feature-update"
                         />
-                        <label
-                          className="custom-control-label"
-                          htmlFor="feature-update"
-                        >
+                        <label className="custom-control-label" htmlFor="feature-update">
                           Email me about new features and updates
                         </label>
                       </div>
@@ -157,10 +133,7 @@ export const ProfileNotify = () => {
                           defaultChecked=""
                           id="account-tips"
                         />
-                        <label
-                          className="custom-control-label"
-                          htmlFor="account-tips"
-                        >
+                        <label className="custom-control-label" htmlFor="account-tips">
                           Email me about tips on using account
                         </label>
                       </div>
@@ -172,8 +145,7 @@ export const ProfileNotify = () => {
           </div>
         </div>
       </div>
-     <Footer/>
+      <Footer />
     </>
-
-  )
-}
+  );
+};

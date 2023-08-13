@@ -1,7 +1,6 @@
-import { NavLink } from "react-router-dom"
-import { Footer } from "../../components/Dashboard/Footer/DashboardFooter"
-import { Header } from "../../components/Dashboard/Header/DashboardHeader"
-
+import {NavLink} from 'react-router-dom';
+import {Footer} from '../../components/Dashboard/Footer/DashboardFooter';
+import {Header} from '../../components/Dashboard/Header/DashboardHeader';
 
 export const ProfileSetting = () => {
   return (
@@ -21,7 +20,7 @@ export const ProfileSetting = () => {
                   <h2 className="nk-block-title fw-normal">Account Setting</h2>
                   <div className="nk-block-des">
                     <p>
-                      You have full control to manage your own account setting.{" "}
+                      You have full control to manage your own account setting.{' '}
                       <span className="text-primary">
                         <em className="icon ni ni-info" />
                       </span>
@@ -56,9 +55,7 @@ export const ProfileSetting = () => {
                   <div className="nk-block-head-content">
                     <h5 className="nk-block-title">Security Settings</h5>
                     <div className="nk-block-des">
-                      <p>
-                        These settings are helps you keep your account secure.
-                      </p>
+                      <p>These settings are helps you keep your account secure.</p>
                     </div>
                   </div>
                 </div>
@@ -69,8 +66,7 @@ export const ProfileSetting = () => {
                         <div className="nk-block-text">
                           <h6>Save my Activity Logs</h6>
                           <p>
-                            You can save your all activity logs including
-                            unusual activity detected.
+                            You can save your all activity logs including unusual activity detected.
                           </p>
                         </div>
                         <div className="nk-block-actions">
@@ -83,10 +79,7 @@ export const ProfileSetting = () => {
                                   defaultChecked=""
                                   id="activity-log"
                                 />
-                                <label
-                                  className="custom-control-label"
-                                  htmlFor="activity-log"
-                                />
+                                <label className="custom-control-label" htmlFor="activity-log" />
                               </div>
                             </li>
                           </ul>
@@ -102,10 +95,7 @@ export const ProfileSetting = () => {
                         <div className="nk-block-actions flex-shrink-sm-0">
                           <ul className="align-center flex-wrap flex-sm-nowrap gx-3 gy-2">
                             <li className="order-md-last">
-                              <NavLink
-                                to="/dashboard/profile-setting#"
-                                className="btn btn-primary"
-                              >
+                              <NavLink to="/dashboard/profile-setting#" className="btn btn-primary">
                                 Change Password
                               </NavLink>
                             </li>
@@ -122,21 +112,16 @@ export const ProfileSetting = () => {
                       <div className="between-center flex-wrap flex-md-nowrap g-3">
                         <div className="nk-block-text">
                           <h6>
-                            2FA Authentication{" "}
-                            <span className="badge bg-success">Enabled</span>
+                            2FA Authentication <span className="badge bg-success">Enabled</span>
                           </h6>
                           <p>
-                            Secure your account with 2FA security. When it is
-                            activated you will need to enter not only your
-                            password, but also a special code using app. You can
-                            receive this code by in mobile app.{" "}
+                            Secure your account with 2FA security. When it is activated you will
+                            need to enter not only your password, but also a special code using app.
+                            You can receive this code by in mobile app.{' '}
                           </p>
                         </div>
                         <div className="nk-block-actions">
-                          <NavLink
-                            to="/dashboard/profile-setting#"
-                            className="btn btn-primary"
-                          >
+                          <NavLink to="/dashboard/profile-setting#" className="btn btn-primary">
                             Disable
                           </NavLink>
                         </div>
@@ -153,10 +138,7 @@ export const ProfileSetting = () => {
                       </NavLink>
                     </div>
                     <div className="nk-block-des">
-                      <p>
-                        This information about the last login activity on your
-                        account.
-                      </p>
+                      <p>This information about the last login activity on your account.</p>
                     </div>
                   </div>
                 </div>
@@ -198,17 +180,11 @@ export const ProfileSetting = () => {
                         </td>
                         <td className="tb-col-time">
                           <span className="sub-text">
-                            Nov 20, 2019{" "}
-                            <span className="d-none d-sm-inline-block">
-                              10:34 PM
-                            </span>
+                            Nov 20, 2019 <span className="d-none d-sm-inline-block">10:34 PM</span>
                           </span>
                         </td>
                         <td className="tb-col-action">
-                          <NavLink
-                            to="/dashboard/profile-setting#"
-                            className="link-cross me-sm-n1"
-                          >
+                          <NavLink to="/dashboard/profile-setting#" className="link-cross me-sm-n1">
                             <em className="icon ni ni-cross" />
                           </NavLink>
                         </td>
@@ -220,17 +196,11 @@ export const ProfileSetting = () => {
                         </td>
                         <td className="tb-col-time">
                           <span className="sub-text">
-                            Nov 12, 2019{" "}
-                            <span className="d-none d-sm-inline-block">
-                              08:56 PM
-                            </span>
+                            Nov 12, 2019 <span className="d-none d-sm-inline-block">08:56 PM</span>
                           </span>
                         </td>
                         <td className="tb-col-action">
-                          <NavLink
-                            to="/dashboard/profile-setting#"
-                            className="link-cross me-sm-n1"
-                          >
+                          <NavLink to="/dashboard/profile-setting#" className="link-cross me-sm-n1">
                             <em className="icon ni ni-cross" />
                           </NavLink>
                         </td>
@@ -244,6 +214,5 @@ export const ProfileSetting = () => {
         </div>
       </div>
     </>
-
-  )
-}
+  );
+};

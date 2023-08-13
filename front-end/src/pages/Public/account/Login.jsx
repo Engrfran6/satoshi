@@ -4,8 +4,7 @@ import logo from '../../../assets/sato-logo1.png';
 import {userRequest} from '../../../components/Commons/HandleRequest';
 
 export const Login = () => {
-  const [data, setData] = useState();
-  const [error, setError] = useState();
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -25,16 +24,16 @@ export const Login = () => {
     try {
       const response = await userRequest('/auth/login', formData);
 
-      if (response.isVerified == true) {
-        // setData(data); // Login successful
-        // localStorage.setItem('token', token);
-        navigate('/dash'); // <-- redirect
+      if (response.status === 200 && response.isVerified == true) {
+        navigate('/dashboard');
+      }
+      if (response.status === 200 && response.isVerified == false) {
+        navigate('/dashboard/welcome');
       } else {
-        navigate('/dash/welcome'); // <-- redirect
+        setMessage(response.error);
       }
     } catch (error) {
-      // Handle the error, show an error message, etc.
-      console.error(error);
+      console.error('Error', error);
     }
   };
 
@@ -77,7 +76,6 @@ export const Login = () => {
         </div>
       </header>
 
-      {/* <title>satoshitradepro | Login</title> */}
       <div
         style={{
           display: 'flex',
@@ -85,11 +83,12 @@ export const Login = () => {
           alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
+          height: '90vh',
         }}>
         <form
           onSubmit={handleSubmit}
           style={{
-            width: '35%',
+            width: '25%',
             padding: '12% 0 6% 0',
           }}>
           <span>
@@ -136,6 +135,8 @@ export const Login = () => {
             <div className="input-group-append"></div>
           </div>
           <span style={{color: 'crimson'}} />
+
+          <p style={{color: 'red'}}>{message}</p>
           <br />
 
           <button
@@ -145,15 +146,14 @@ export const Login = () => {
             Sign in
           </button>
           <br />
-          <br />
 
           <p className="mt-3">
-            <NavLink href="/account/register" className="text-white">
-              Register here!
-            </NavLink>
-            <br />
             <NavLink style={{color: 'purple'}} to={'/account/forgot-password'} className>
               Forgot password?
+            </NavLink>
+            <br />
+            <NavLink style={{background: 'smokewhite'}} to="/account/register">
+              Register here!
             </NavLink>
           </p>
         </form>

@@ -12,7 +12,7 @@ export const Navbar = () => {
   }
 
   return (
-    <header className="header-style2 menu_area-light">
+    <header style={{background: 'rgb(2,19,32)'}} className="header-style2 menu_area-light">
       <div className="navbar-default">
         <span className="w3-bar-item w3-right">
           <ul>
