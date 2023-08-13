@@ -1,10 +1,10 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
-import {userRequest} from '../../../components/Commons/HandleRequest';
+import {getUserData, userRequest} from '../../../components/Commons/HandleRequest';
 
 userRequest;
 export const Register = () => {
-  const beginer = {name: 'Beginer', value: 200, percent: 15};
+  const beginer = {name: 'Beginer', value: 200, daily: 15};
   const standard = {name: 'Standard', value: 1000, percent: 17};
   const proffesional = {name: 'Proffesional', value: 10000, percent: 20};
   const ultimate = {name: 'Ultimate', value: 40000, percent: 55};
@@ -24,7 +24,7 @@ export const Register = () => {
     address: '',
     portfolio: '',
   });
-
+  // welcome
   const handleInputChange = (e) => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
