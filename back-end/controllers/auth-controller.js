@@ -3,14 +3,14 @@ const bcrypt = require('bcryptjs')
 const { v4: uuidv4 } = require('uuid');
 
 const User = require('../models/Users/UserModel')
-const Account = require('../models/Accounts/AccountModel');
+const Package = require('../models/Packages/PackageModel');
 
 
 const createUserSchema = Joi.object().keys({
   fullName: Joi.string().required(),
   username: Joi.string().required(),
   phoneNumber: Joi.string().required(),
-  accountId: Joi.string().required(),
+  packageId: Joi.string().required(),
   country: Joi.string().required(),
   state: Joi.string().required(),
   email: Joi.string().required().email({ tlds: { allow: false } }),
@@ -30,9 +30,9 @@ exports.register = async (req, res) => {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    const account = await Account.findOne({ _id: doc.accountId })
-    if (!account) {
-      return res.status(400).json({ error: `no account found with id ${doc.accountId}` });
+    const package = await Package.findOne({ _id: doc.packageId })
+    if (!package) {
+      return res.status(400).json({ error: `no package found with id ${doc.packageId}` });
     }
     const generatedPassword = uuidv4()
     const salt = await bcrypt.genSalt(10);
@@ -42,7 +42,7 @@ exports.register = async (req, res) => {
       fullName: doc.fullName,
       username: doc.username,
       phoneNumber: doc.phoneNumber,
-      account: doc.accountId,
+      package: doc.packageId,
       referal: doc.phoneNumber,
       country: doc.country,
       state: doc.state,
