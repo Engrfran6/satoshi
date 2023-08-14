@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const User = require('../models/Users/UserModel');
 const Package = require('../models/Packages/PackageModel');
+const Activity = require('../models/Activities/ActivityModel');
 
 const createUserSchema = Joi.object().keys({
   fullName: Joi.string().required(),
@@ -12,6 +13,7 @@ const createUserSchema = Joi.object().keys({
   packageId: Joi.string().required(),
   country: Joi.string().required(),
   state: Joi.string().required(),
+  address: Joi.string().required(),
   email: Joi.string()
     .required()
     .email({tlds: {allow: false}}),
@@ -48,6 +50,7 @@ exports.register = async (req, res) => {
       referal: doc.phoneNumber,
       country: doc.country,
       state: doc.state,
+      address: doc.address,
       password: generatedPassword,
       referal: genrateReferal,
     };
@@ -77,7 +80,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({error: error.details[0].message});
     }
     const {email, password} = req.body;
-    const user = await User.findOne({email: email});
+    const user = await User.findOne({email: email}).populate('package');;
     if (!user) {
       res.status(401).json({error: 'invalid credentials'});
     }
@@ -86,10 +89,13 @@ exports.login = async (req, res) => {
       res.status(401).json({error: 'invalid credentials'});
     } else {
       const token = user.getSignedJwtToken();
+      const activity = new Activity({ title: 'logged in', user: user._id });
+      await activity.save();
       res.status(200).json({
         status: 'success',
         token,
         user,
+        investment: "" // find All investment which
       });
     }
   } catch (e) {}
@@ -105,7 +111,7 @@ exports.authorizeAccount = async (req, res) => {
 
 const generateRandomNumber = () => {
   const randomNumbers = [];
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 3; i++) {
     randomNumbers.push(Math.floor(Math.random() * 10));
   }
   return randomNumbers.join('');
