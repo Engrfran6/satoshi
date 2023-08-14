@@ -2,122 +2,19 @@
 
 {
   "data": [
-    
-    {    
-        "id": 1,
-        "user": { 
-          "name": "Francis Efe",
-          "email": "frank@gmail.com",
-          "isVerified": false
-        },
-
-        "portfolio": [
-          {"name":"Beginer", "percent":41, "value":"6352"}, 
-          {"name":"Standard", "percent":41, "value":"5002"},
-          {"name":"Premium", "percent":21, "value":"2002"},
-          {"name":"Proffesional", "percent":10, "value":"352"}
-        ],
-
-        "expired": [],
-
-        "balance":105,
-
-        "investmentDate": "10/23/2023",
-
-        "invested": [1000, 6587, 8787, 87,665, 434,343, 87],
-
-        "dailyProfits": [665, 434,343, 342,665, 434,343],
-
-        "dailyLosses": [343, 343, 3323, 332,665, 434,343], 
-
-        "rewards": 10,
-
-        "referrals":90
-    },
-
-
-
-
-
-
-
-
-
-
-
-    {   "id": 2,
-        "user": { 
-          "name": "Francis Efe",
-          "email": "frank@gmail.com",
-          "isVerified": false
-        },
-
-        "investmentDate": "10/23/2023",
-
-        "portfolio": [
-          {"name":"Beginer", "percent":41, "value":"6352"}, 
-          {"name":"Standard", "percent":41, "value":"5002"},
-          {"name":"Premium", "percent":21, "value":"2002"},
-          {"name":"Proffesional", "percent":10, "value":"352"}
-        ],
-
-        "balance":105,
-
-        "invested": [1000, 6587, 8787, 87,665, 434,343, 87],
-
-        "dailyProfits": [665, 434,343, 342,665, 434,343],
-
-
-        "loss": [343, 343, 3323, 332,665, 434,343]
-    },
-
         {
-         "id": 3,
-        "user": { 
-          "name": "Francis Efe",
-          "email": "frank@gmail.com",
-          "isVerified": true
+        "name": "Starter",
+        "amount": 2000,
+        "dailyRoi": 10,
+        "createdAt": "2023-08-13T22:37:17.837Z",
+        "updatedAt": "2023-08-13T22:37:17.838Z"
+        },
+        {
+          "name": "standard",
+          "amount": 2000,
+          "dailyRoi": 10,
+          "createdAt": "2023-08-13T22:37:36.316Z",
+          "updatedAt": "2023-08-13T22:37:36.316Z"
         }
-    }, 
-
-
-        {
-        "id": 4,
-
-        "user": {
-          "id": 4,
-          "name": "Francis Efe",
-          "email": "frank@gmail.com",
-          "isVerified": false
-        },
-
-        "balance":1200,
-
-        "packageDetails":[
-          {"package":"Starter", "value":200, "profitRate":5,"duration":30, "minDeposit":200, "maxDeposit":1000, "totalPercentageReturn":200 },
-          {"package":"Silver", "value":1000, "profitRate":7, "duration":60, "minDeposit":200, "maxDeposit":1000, "totalPercentageReturn":200 },
-          {"package":"Diamond", "value":10000, "profitRate":9,"duration":90, "minDeposit":200, "maxDeposit":1000, "totalPercentageReturn":200 },
-          {"package":"Gold", "value":40000, "profitRate":12, "duration":120, "minDeposit":200, "maxDeposit":1000, "totalPercentageReturn":200 },
-          {"package":"Platinium", "value":100000, "profitRate":15, "duration":150, "minDeposit":200, "maxDeposit":1000, "totalPercentageReturn":200 }
-        ],
-
-         "activeInvestments":[
-          {"package":"Gold", "value":1000, "profitRate":5, "dailyReturns":70, "lossRate":1.3, "dailyLoss":1.5, "amountInvested":1000, "duration":30, "investmentDate":"2023-10-2" },
-          {"package":"silver", "value":1000, "profitRate":5, "dailyReturns":20, "lossRate":1.3, "dailyLoss":1.5, "amountInvested": 3000, "duration":60, "investmentDate":"2023-10-2" },
-          {"package":"Diamond", "value":1000, "profitRate":5, "dailyReturns":60, "lossRate":1.3, "dailyLoss":1.5, "amountInvested":5000, "duration":90, "investmentDate":"2023-10-2" },
-          {"package":"starter", "value":1000, "profitRate":5, "dailyReturns":10, "lossRate":1.3, "dailyLoss":1.5, "amountInvested":10000, "duration":30, "investmentDate":"2023-10-2" }
-        ],
-
-        "expiredInvestments":[
-          {"package":"beginer", "value":1000, "profitRate":5, "dailyReturns":40, "lossRate":1.3, "dailyLoss":1.5, "amountInvested":5000, "duration":90, "investmentDate":"2023-10-2" },
-          {"package":"starter", "value":1000, "profitRate":5, "dailyReturns":20, "lossRate":1.3, "dailyLoss":1.5, "amountInvested":10000, "duration":30, "investmentDate":"2023-10-2" }
-        ],
-
-        "rewards": 102,
-
-        "referrals":9,
-
-        "referralId": "321342"
-    }
   ]
 }
