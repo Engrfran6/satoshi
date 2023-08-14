@@ -1,4 +1,3 @@
-import React from 'react';
 import {useEffect, useState} from 'react';
 import {AuthorizedApp} from './authorized-app';
 import {UnauthorizedApp} from './unauthorized-app';
@@ -9,7 +8,7 @@ const App = () => {
 
   useEffect(() => {
     userService.verifyToken().then((data) => {
-      if (data.success) {
+      if (data.status === 'success') {
         setAuthentictaed(true);
       } else {
         setAuthentictaed(false);

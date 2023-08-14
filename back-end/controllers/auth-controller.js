@@ -89,9 +89,18 @@ exports.login = async (req, res) => {
       res.status(200).json({
         status: 'success',
         token,
+        user,
       });
     }
   } catch (e) {}
+};
+
+exports.authorizeAccount = async (req, res) => {
+  if (!req.user.username) res.status(401).json({error: 'expired token'});
+  res.status(200).json({
+    status: 'success',
+    user: req.user,
+  });
 };
 
 const generateRandomNumber = () => {

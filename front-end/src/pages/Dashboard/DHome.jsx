@@ -1,10 +1,15 @@
+import { store } from '../../redux/store';
 import {NavLink} from 'react-router-dom';
-import {DataContext} from './Store/DataProvider';
 import {EmailIcon, EmailShareButton, WhatsappIcon, WhatsappShareButton} from 'react-share';
-import {useContext, useState} from 'react';
 // import { SMTPClient } from 'emailjs';
 
 export const DHome = () => {
+  let user = store?.getState()?.user?.user
+  if (user) {
+    user = user.user
+  }
+
+  console.log('User ==============>>>>>', user)
   const [recipientEmail, setRecipientEmail] = useState();
   const [show, setShow] = useState(false);
   const [showInner, setShowInner] = useState(false);

@@ -2,8 +2,11 @@ import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
 import logo from '../../../assets/sato-logo1.png';
 import {userRequest} from '../../../components/Commons/HandleRequest';
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../redux/user-slice";
 
 export const Login = () => {
+  const dispatch = useDispatch();
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
@@ -23,12 +26,10 @@ export const Login = () => {
     e.preventDefault();
     try {
       const response = await userRequest('/auth/login', formData);
-
-      if (response.status === 200 && response.isVerified == true) {
+      const { token, user } = response
+      if (response.status === 'success') {
+        dispatch(setUser({ token: token, user }));
         navigate('/dashboard');
-      }
-      if (response.status === 200 && response.isVerified == false) {
-        navigate('/dashboard/welcome');
       } else {
         setMessage(response.error);
       }

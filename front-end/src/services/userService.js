@@ -14,7 +14,7 @@ export const userService = {
   },
 
   verifyToken: async () => {
-    const url = `${apiBaseUrl}/account/authorized`;
+    const url = `${apiBaseUrl}/auth/authorize`;
     const method = 'GET';
     const response = await client(url, method);
     if (!response) throw new Error('Not Authorized');
@@ -25,7 +25,6 @@ export const userService = {
     const url = `${apiBaseUrl}/package`;
     const method = 'GET';
     const response = await client(url, method);
-    console.log('register======================================================', response);
     if (!response) throw new Error('Not Authorized');
     return response;
   },
