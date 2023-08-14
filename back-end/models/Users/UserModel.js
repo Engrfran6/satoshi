@@ -1,9 +1,7 @@
 const  { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
 const AutoGeneratePlugin = require('../schema_plugins')
-
 
 const userSchema = new Schema({
   email: {
@@ -35,6 +33,23 @@ const userSchema = new Schema({
   country: {
     type: String,
   },
+  status: {
+    type: String,
+    enum: ['verified', 'pending'],
+    default: 'pending',
+  },
+  balance: {
+    type: String,
+    default: 0.00,
+  },
+  profit: {
+    type: [String],
+    default: 0.00,
+  },
+  losss: {
+    type: [String],
+    default: [0.00],
+  },
   state: {
     type: String,
   },
@@ -56,6 +71,13 @@ const userSchema = new Schema({
   package: {
     type: Schema.Types.String,
     ref: 'Package'
+  },
+  profilePhoto: {
+    type: String,
+    optional: true,
+  },
+  kyc: {
+    type: [String],
   }
 },{versionKey: false});
 
@@ -66,8 +88,6 @@ userSchema.pre('save', async (next) => {
   }
 });
 
-
-// Add auto generate plugin for auto Id, createdAt and updatedAt
 userSchema.plugin(AutoGeneratePlugin);
 
 userSchema.methods.matchPassword = async function(enteredPassword) {

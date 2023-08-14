@@ -15,13 +15,16 @@ const depositSchema = new Schema({
   depAmount: {
     type: Number,
   },
+  photo: {
+    type: String,
+  },
   user: {
     type: Schema.Types.String,
     ref: 'User'
   },
 },{versionKey: false});
 
-investmentSchema.plugin(AutoGeneratePlugin);
+depositSchema.plugin(AutoGeneratePlugin);
 
 const Deposit = model('Deposit', depositSchema);
 module.exports = Deposit;
