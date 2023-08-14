@@ -1,30 +1,26 @@
 import {useEffect, useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
 import {getUserData, userRequest} from '../../../components/Commons/HandleRequest';
+import axios from 'axios';
+import {userService} from '../../../services/userService';
 
 userRequest;
 export const Register = () => {
-  const beginer = {name: 'Beginer', value: 200, daily: 15};
-  const standard = {name: 'Standard', value: 1000, percent: 17};
-  const proffesional = {name: 'Proffesional', value: 10000, percent: 20};
-  const ultimate = {name: 'Ultimate', value: 40000, percent: 55};
-  const premium = {name: 'Premium', value: 100000, percent: 10};
-
   const navigate = useNavigate();
   const [message, setMessage] = useState('Pending');
+  const [selectedItemId, setSelectedItemId] = useState();
   const [formData, setFormData] = useState({
-    fullname: '',
+    fullName: '',
     username: '',
     email: '',
     password: '',
-    phone: '',
-    referral: '',
+    phoneNumber: '',
     country: '',
     state: '',
-    address: '',
-    portfolio: '',
+    // address: '',
+    packageId: '',
   });
-  // welcome
+
   const handleInputChange = (e) => {
     setFormData({...formData, [e.target.name]: e.target.value});
   };
@@ -45,6 +41,21 @@ export const Register = () => {
     } catch (error) {
       console.error('Error', error);
       setMessage('failed');
+    }
+  };
+
+  const [packages, setPackages] = useState([]);
+
+  useEffect(() => {
+    getPackage();
+  }, []);
+
+  const getPackage = async () => {
+    try {
+      const response = await getUserData('/package');
+      setPackages(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
   };
 
@@ -140,8 +151,8 @@ export const Register = () => {
               type="text"
               style={{color: 'black'}}
               className="form-control"
-              name="fullname"
-              value={formData.fullname}
+              name="fullName"
+              value={formData.fullName}
               onChange={handleInputChange}
               placeholder="Enter full name"
               required
@@ -218,8 +229,8 @@ export const Register = () => {
               type="text"
               style={{color: 'black'}}
               className="form-control"
-              name="phone"
-              value={formData.phone}
+              name="phoneNumber"
+              value={formData.phoneNumber}
               onChange={handleInputChange}
               placeholder="Enter Phone number"
               required
@@ -227,18 +238,18 @@ export const Register = () => {
             <span style={{color: 'crimson'}} />
             <br />
 
-            <label style={{color: 'black'}} className="font-weight-bold">
-              Referral
-            </label>
-            <input
+            {/* <label style={{color: 'black'}} className="font-weight-bold">
+              Referral ID
+            </label> */}
+            {/* <input
               type="text"
               style={{color: 'black'}}
               className="form-control"
-              name="referral"
-              value={formData.referral}
+              name="referal"
+              value={formData.referal}
               onChange={handleInputChange}
               placeholder="Optional"
-            />
+            /> */}
             <span style={{color: 'crimson'}} />
             <br />
 
@@ -519,77 +530,35 @@ export const Register = () => {
             <span style={{color: 'crimson'}} />
             <br />
 
-            <label style={{color: 'black'}} className="font-weight-bold">
-              Address
-            </label>
-            <input
-              type="text"
-              style={{color: 'black'}}
-              className="form-control"
-              name="address"
-              value={formData.address}
-              onChange={handleInputChange}
-              placeholder="Address"
-              required
-            />
             <span style={{color: 'crimson'}} />
             <br />
 
             <label style={{color: 'black'}} className="font-weight-bold">
               Account Type
             </label>
-            {/* <select
-            style={{color: '#252d47'}}
-            className="form-control"
-            name="investment"
-            value={formData.investment}
-            onChange={handleInputChange}
-            required>
-            <option>Select investment type</option>
-            <option>CryptoCurrency & NFT Investment</option>
-          </select> */}
             <span style={{color: 'crimson'}} />
             <br />
 
             <label style={{color: 'black'}} className="font-weight-bold">
               Portfolio
             </label>
+
             <select
               style={{color: '#252d47'}}
               className="form-control"
-              name="portfolio"
-              value={formData.portfolio}
+              name="packageId"
+              value={formData.packageId}
               onChange={handleInputChange}
               required>
-              <option>Select invvestment package</option>
-              <option>
-                {beginer.name} - $ {beginer.value} {beginer.percent}% ROI
-              </option>
-              <option>
-                {standard.name} - $ {standard.value} {standard.percent}% ROI
-              </option>
-              <option>
-                {proffesional.name} - $ {proffesional.value} {proffesional.percent}% ROI
-              </option>
-              <option>
-                {ultimate.name} - $ {ultimate.value} {ultimate.percent}% ROI
-              </option>
-              <option>
-                {premium.name} - $ {premium.value} {premium.percent}% ROI
-              </option>
+              <option required>Select invvestment package</option>
+              {packages.map((item, index) => (
+                <option value={item._id} key={index}>
+                  {item.name} - $ {item.amount} -- {item.dailyRoi}% ROI
+                </option>
+              ))}
             </select>
             <span style={{color: 'crimson'}} />
             <br />
-
-            {/* <div className="checkbox">
-          <input type="checkbox" name="agree" className="form-check-input" defaultChecked required />
-          <i className="fa fa-pencil" />
-          <b style={{color: 'black' }}>You agree to our <a style={{color: 'green' }}>Terms and
-              Conditions</a></b>
-        </div> */}
-            {/* <div className="message" style={{color: message == 'success' ? 'green' : 'red'}}>
-            <p>{message}</p>
-          </div> */}
 
             <button
               className="btn btn-lg btn-primary btn-round"
@@ -601,10 +570,6 @@ export const Register = () => {
         )}
       </div>
 
-      {/* IE10 viewport hack for Surface/desktop Windows 8 bug */}
-      {/* <style
-    dangerouslySetInnerHTML={{__html: "\n      .mgm {\n        border-radius: 7px;\n        border: 4px solid #253978;\n        position: fixed;\n        z-index: 90;\n        bottom: 80px;\n        right: 20px;\n        bottom: 4px;\n        left: 30px;\n        background: #fff;\n        padding: 10px 27px;\n        box-shadow: 0px 5px 13px 0px rgba(0, 0, 0, .3);\n      }\n\n      .mgm a {\n        font-weight: 700;\n        display: block;\n        color: #253978;\n      }\n\n      .mgm a,\n      .mgm a:active {\n        transition: all .2s ease;\n        color: #253978;\n      }\n    "
-    }} /> */}
       <div className="mgm" style={{display: 'none'}}>
         <div className="txt" style={{color: 'black'}} />
       </div>

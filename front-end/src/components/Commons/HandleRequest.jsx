@@ -7,9 +7,9 @@ const api = axios.create({
   baseURL: API_URL,
 });
 
-export const userRequest = async (alias, userId) => {
+export const getUserData = async (alias, userId) => {
   try {
-    const response = await api.post(alias, userId);
+    const response = await api.get(alias, userId);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -17,9 +17,9 @@ export const userRequest = async (alias, userId) => {
   }
 };
 
-export const getUserData = async (alias, userId) => {
+export const userRequest = async (alias, userId) => {
   try {
-    const response = await api.get(alias, userId);
+    const response = await api.post(alias, userId);
     return response.data;
   } catch (error) {
     console.error(error);
