@@ -20,7 +20,7 @@ exports.protect = async (req, res, next) => {
     }
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
-      const user = await User.findOne({ email: decoded.email});
+      const user = await User.findOne({ email: decoded.email})
       if (!user) {
         next (new ApplicationError("Not authorized to access this route", 401))
       }

@@ -5,24 +5,48 @@ const createPackageSchema = Joi.object().keys({
   name: Joi.string().required(),
   amount: Joi.string().required(),
   dailyRoi: Joi.string().required(),
+  profitRate: Joi.string().required(),
+  lossRate: Joi.string().required(),
+  dailyLoss: Joi.string().required(),
+  minDeposit: Joi.string().required(),
+  maxDeposit: Joi.string().required(),
+  totalPercentageReturn: Joi.string().required(),
 });
 
 
 exports.createPackage = async (req, res) => {
   try {
     const doc = req.body;
-    const { name, dailyRoi, amount } = req.body;
+    let { 
+      name, dailyRoi, amount, profitRate, 
+      lossRate, dailyLoss, minDeposit, maxDeposit, 
+      totalPercentageReturn
+    } = req.body;
+
     const { error } = createPackageSchema.validate({...doc});
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    const roi = Number(dailyRoi);
-    const newAmount = Number(amount);
+    dailyRoi = Number(dailyRoi);
+    amount = Number(amount);
+    profitRate = Number(profitRate);
+    lossRate = Number(lossRate);
+    dailyLoss = Number(dailyLoss);
+    minDeposit = Number(minDeposit);
+    maxDeposit = Number(maxDeposit);
+    totalPercentageReturn = Number(totalPercentageReturn);
+  
     const package = new Package({
       name,
-      amount: newAmount,
-      dailyRoi: roi
+      amount,
+      dailyRoi,
+      profitRate,
+      lossRate, 
+      dailyLoss, 
+      minDeposit, 
+      maxDeposit, 
+      totalPercentageReturn
     });
 
     await package.save();

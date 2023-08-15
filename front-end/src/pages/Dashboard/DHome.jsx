@@ -9,8 +9,11 @@ export const DHome = () => {
   if (user) {
     user = user.user;
   }
-  console.log('user========================', user.country);
-  console.log('User ==============>>>>>', user);
+
+
+
+
+
 
   const [recipientEmail, setRecipientEmail] = useState();
   const [show, setShow] = useState(false);
