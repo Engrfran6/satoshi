@@ -5,6 +5,7 @@ const createPackageSchema = Joi.object().keys({
   name: Joi.string().required(),
   amount: Joi.string().required(),
   dailyRoi: Joi.string().required(),
+  duration: Joi.string().required(),
   profitRate: Joi.string().required(),
   lossRate: Joi.string().required(),
   dailyLoss: Joi.string().required(),
@@ -46,7 +47,8 @@ exports.createPackage = async (req, res) => {
       dailyLoss, 
       minDeposit, 
       maxDeposit, 
-      totalPercentageReturn
+      totalPercentageReturn,
+      duration: doc.duration,
     });
 
     await package.save();

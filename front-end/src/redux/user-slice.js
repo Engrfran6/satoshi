@@ -12,7 +12,10 @@ export const userSlice = createSlice({
     },
     setToken(state, action) {
       state.user.token = action.payload
-    }, 
+    },
+    setInvestments(state, action) {
+      state.user.investments = action.payload
+    },
     clearToken: (state) => {
       state = null;
       return state;
@@ -25,7 +28,7 @@ export const userSlice = createSlice({
 });
 
 
-export const { resetUser, clearToken, setUser, setToken } = userSlice.actions;
+export const { resetUser, clearToken, setUser, setToken, setInvestments } = userSlice.actions;
 export const selectUser = (state) => state.user;
 
 

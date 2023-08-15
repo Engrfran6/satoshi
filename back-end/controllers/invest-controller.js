@@ -23,6 +23,7 @@ exports.createInvestment = async (req, res) => {
     const params = {
       user: userId,
       invAmount: doc.invAmount,
+      package: packageId
     };
 
     const investment = new Investment(params);
