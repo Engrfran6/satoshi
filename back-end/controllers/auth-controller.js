@@ -90,16 +90,16 @@ exports.login = async (req, res) => {
       res.status(401).json({error: 'invalid credentials'});
     } else {
       const token = user.getSignedJwtToken();
-      const activity = new Activity({ title: 'logged in', user: user._id });
-      await activity.save();
-      const activities = await Activity.find({ user: user._id })
-      const investments = await Investment.find({ user: user._id })
+      // const activity = new Activity({ title: 'logged in', user: user._id });
+      // await activity.save();
+      // const activities = await Activity.find({ user: user._id })
+      const investments = await Investment.find({ user: user._id }).populate('package')
       res.status(200).json({
         status: 'success',
         token,
         user,
-        activities,
-        investments,
+        investments
+        // activities,
       });
     }
   } catch (e) {}

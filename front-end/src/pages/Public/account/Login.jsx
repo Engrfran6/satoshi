@@ -26,9 +26,9 @@ export const Login = () => {
     e.preventDefault();
     try {
       const response = await userRequest('/auth/login', formData);
-      const { token, user } = response
+      const { token, user, investments } = response
       if (response.status === 'success') {
-        dispatch(setUser({ token: token, user }));
+        dispatch(setUser({ token: token, user, investments }));
         navigate('/dashboard');
       } else {
         setMessage(response.error);

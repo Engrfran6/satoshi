@@ -34,6 +34,9 @@ const packageSchema = new Schema({
   investment: {
     type: [Schema.Types.String],
     ref: 'Investment'
+  },
+  duration: {
+    type: String
   }
 },{versionKey: false});
 
