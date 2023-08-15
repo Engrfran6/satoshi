@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/Users/UserModel');
 const Package = require('../models/Packages/PackageModel');
 const Activity = require('../models/Activities/ActivityModel');
+const Investment = require('../models/Investment/InvestmentModel');
 
 const createUserSchema = Joi.object().keys({
   fullName: Joi.string().required(),
@@ -92,12 +93,13 @@ exports.login = async (req, res) => {
       const activity = new Activity({ title: 'logged in', user: user._id });
       await activity.save();
       const activities = await Activity.find({ user: user._id })
+      const investments = await Investment.find({ user: user._id })
       res.status(200).json({
         status: 'success',
         token,
         user,
         activities,
-        investment: "" // find All investment which
+        investments,
       });
     }
   } catch (e) {}

@@ -1,13 +1,13 @@
 const Joi = require('@hapi/joi');
-const Deposit = require("../models/Deposits/DepositModel");
+const Investment = require("../models/Investment/InvestmentModel");
 const Activity = require('../models/Activities/ActivityModel');
 
 const createUserSchema = Joi.object().keys({
-  depAmount: Joi.string().required(),
-  photo: Joi.string(),
+  invAmount: Joi.string().required(),
+  packageId: Joi.string().required(),
 });
 
-exports.createDeposit = async (req, res) => {
+exports.createInvestment = async (req, res) => {
   try {
     const user = req.user
     const doc = req.body;
@@ -15,21 +15,24 @@ exports.createDeposit = async (req, res) => {
     if (error) {
       return res.status(400).json({error: error.details[0].message});
     }
+
+    if (Number(doc.invAmount) > Number(user.balance) ) {
+      return res.status(400).json({error: 'You cant invest more than your balance'});
+    }
     const userId = user._id
     const params = {
       user: userId,
-      depAmount: doc.depAmount,
-      photo: doc.photo
+      invAmount: doc.invAmount,
     };
 
-    const deposit = new Deposit(params);
-    await deposit.save();
-    const activity = new Activity({ title: 'created a deposit', user: user._id });
+    const investment = new Investment(params);
+    await investment.save();
+    const activity = new Activity({ title: 'started a new investment', user: user._id });
     await activity.save();
-    if (deposit) {
+    if (investment) {
       return res.status(201).json({
         status: 'success',
-        data: deposit,
+        data: investment,
       });
     }
   } catch (e) {
@@ -40,10 +43,10 @@ exports.createDeposit = async (req, res) => {
   }
 };
 
-exports.getDeposits = async (req, res) => {
+exports.getInvestments = async (req, res) => {
   try {
     const userId = req.user._id
-    const deposits = await Deposit.findOne({ user: userId });
+    const deposits = await Investments.find({ user: userId });
 
     return res.status(201).json({
       status: 'success',
