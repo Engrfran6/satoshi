@@ -70,16 +70,17 @@ export const ProfileConnected = () => {
                         </div>
                         <div className="media-content">
                           <p>
-                            You have successfully connected with your facebook account, you can
-                            easily log in using your account too.
+                            You can connect with your google account, you can easily log in using
+                            your account too.
+                            <em className="d-block text-soft">Not connected yet</em>
                           </p>
                         </div>
                       </div>
                       <div className="nk-block-actions flex-shrink-0">
                         <NavLink
                           to="/dashboard/profile-connected#"
-                          className="btn btn-lg btn-danger">
-                          Revoke Access
+                          className="btn btn-lg btn-dim btn-danger">
+                          Coming Soon!
                         </NavLink>
                       </div>
                     </div>
@@ -103,8 +104,8 @@ export const ProfileConnected = () => {
                       <div className="nk-block-actions flex-shrink-0">
                         <NavLink
                           to="/dashboard/profile-connected#"
-                          className="btn btn-lg btn-dim btn-primary">
-                          Connect
+                          className="btn btn-lg btn-dim btn-danger">
+                          Coming Soon!
                         </NavLink>
                       </div>
                     </div>
@@ -117,7 +118,8 @@ export const ProfileConnected = () => {
                       <NavLink
                         to="/dashboard/profile-connected#"
                         className="link link-primary ms-auto">
-                        Import from Google
+                        Import from Google{' '}
+                        <span className="btn btn-lg btn-dim btn-danger">Coming Soon!</span>
                       </NavLink>
                     </h6>
                     <div className="nk-block-des">

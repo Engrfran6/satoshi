@@ -1,6 +1,13 @@
 import {NavLink} from 'react-router-dom';
+import {store} from '../../redux/store';
+import CountryTimeZone from '../../components/Commons/GetTimeZone';
 
 export const Profile = () => {
+  let user = store?.getState()?.user?.user;
+  if (user) {
+    user = user.user;
+  }
+
   return (
     <>
       <div className="nk-content nk-content-lg nk-content-fluid">
@@ -50,7 +57,10 @@ export const Profile = () => {
                   <div className="nk-block-head-content">
                     <h5 className="nk-block-title">Personal Information</h5>
                     <div className="nk-block-des">
-                      <p>Basic info, like your name and address, that you use on Nio Platform.</p>
+                      <p>
+                        Basic info, like your name and address, that you use on the Satochi
+                        investment platform.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -62,7 +72,7 @@ export const Profile = () => {
                       data-bs-target="#profile-edit">
                       <div className="data-col">
                         <span className="data-label">Full Name</span>
-                        <span className="data-value">Abu Bin Ishtiyak</span>
+                        <span className="data-value">{user.fullName}</span>
                       </div>
                       <div className="data-col data-col-end">
                         <span className="data-more">
@@ -73,7 +83,7 @@ export const Profile = () => {
                     <div className="data-item">
                       <div className="data-col">
                         <span className="data-label">Email</span>
-                        <span className="data-value">info@softnio.com</span>
+                        <span className="data-value">{user.email}</span>
                       </div>
                       <div className="data-col data-col-end">
                         <span className="data-more disable">
@@ -87,7 +97,7 @@ export const Profile = () => {
                       data-bs-target="#profile-edit">
                       <div className="data-col">
                         <span className="data-label">Phone Number</span>
-                        <span className="data-value text-soft">Not add yet</span>
+                        <span className="data-value text-soft">{user.phoneNumber}</span>
                       </div>
                       <div className="data-col data-col-end">
                         <span className="data-more">
@@ -115,7 +125,7 @@ export const Profile = () => {
                       data-bs-target="#profile-edit"
                       data-tab-target="#address">
                       <div className="data-col">
-                        <span className="data-label">Address</span>
+                        <span className="data-label">Address {user.address}</span>
                         <span className="data-value">
                           2337 Kildeer Drive,
                           <br />
@@ -154,7 +164,7 @@ export const Profile = () => {
                     <div className="data-item">
                       <div className="data-col">
                         <span className="data-label">Date Format</span>
-                        <span className="data-value">M d, YYYY</span>
+                        <span className="data-value">{user.createdAt}</span>
                       </div>
                       <div className="data-col data-col-end">
                         <NavLink to="/dashboard/profile#" className="link link-primary">
@@ -165,7 +175,9 @@ export const Profile = () => {
                     <div className="data-item">
                       <div className="data-col">
                         <span className="data-label">Timezone</span>
-                        <span className="data-value">Bangladesh (GMT +6)</span>
+                        <span className="data-value">
+                          {user.country} <CountryTimeZone countryName={user.country} />
+                        </span>
                       </div>
                       <div className="data-col data-col-end">
                         <NavLink to="/dashboard/profile#" className="link link-primary">
