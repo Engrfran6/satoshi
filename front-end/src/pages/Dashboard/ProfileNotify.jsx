@@ -145,7 +145,6 @@ export const ProfileNotify = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

@@ -1,15 +1,20 @@
-import { store } from '../../redux/store';
+import {useState} from 'react';
+import {store} from '../../redux/store';
 import {NavLink} from 'react-router-dom';
 import {EmailIcon, EmailShareButton, WhatsappIcon, WhatsappShareButton} from 'react-share';
 // import { SMTPClient } from 'emailjs';
 
 export const DHome = () => {
-  let user = store?.getState()?.user?.user
+  let user = store?.getState()?.user?.user;
   if (user) {
-    user = user.user
+    user = user.user;
   }
 
-  console.log('User ==============>>>>>', user) 
+
+
+
+
+
   const [recipientEmail, setRecipientEmail] = useState();
   const [show, setShow] = useState(false);
   const [showInner, setShowInner] = useState(false);
@@ -45,7 +50,7 @@ export const DHome = () => {
   // };
 
   return (
-    <div>
+    <div style={{paddingTop: '4rem'}}>
       <div className="nk-content nk-content-lg nk-content-fluid">
         <div className="container-xl wide-lg">
           <div className="nk-content-inner">
@@ -58,7 +63,7 @@ export const DHome = () => {
                     </div>
                     <div className="align-center flex-wrap pb-2 gx-4 gy-3">
                       <div>
-                        {/* <h2 className="nk-block-title fw-normal">{customerName}</h2> */}
+                        <h2 className="nk-block-title fw-normal">{user.username}</h2>
                       </div>
                       <div>
                         <NavLink to="/dashboard/schemes" className="btn btn-white btn-light">
@@ -188,7 +193,7 @@ export const DHome = () => {
                           </div>
                           <div className="nk-iv-wg2-text">
                             <div className="nk-iv-wg2-amount">
-                              {/* $ {balance} */}
+                              $ {user.balance}
                               <span className="change up">
                                 <span className="sign" />
                                 3.4%

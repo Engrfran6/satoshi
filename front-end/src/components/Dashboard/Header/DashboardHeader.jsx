@@ -3,8 +3,6 @@ import {NavLink} from 'react-router-dom';
 // import { DataContext } from "../../../pages/Dashboard/Store/DataProvider";
 
 export const Header = ({customerEmail, customerName, customerStatus, logout}) => {
-  // const  {customerName, customerEmail, customerStatus, balance, totalInvested, totalBalance, totalProfits, totalLoss, this_month_profit,this_month_loss, lastInvest, numberOfInvest, activeInvest, loading , error, logout} = useContext(DataContext);
-
   const isVerified = customerStatus == true ? 'Verified' : 'Unverified';
 
   return (

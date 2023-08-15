@@ -1,41 +1,28 @@
 import {NavLink} from 'react-router-dom';
-import {Footer} from '../../components/Dashboard/Footer/DashboardFooter';
-import {Header} from '../../components/Dashboard/Header/DashboardHeader';
-import {DataContext} from './Store/DataProvider';
-import {useContext} from 'react';
+import {store} from '../../redux/store';
 
 export const Schemes = () => {
-  // get data from context provider
-  const {
-    customerName,
-    customerEmail,
-    customerStatus,
-    balance,
-    rewards,
-    referrals,
-    inviteLink,
-    totalInvested,
-    totalBalance,
-    totalProfits,
-    dailyReturns,
-    thisMonthProfit,
-    totalMonthlyProfits,
-    totalNumberOfInvestments,
-    myInvestments,
-    lastestInvestments,
-    numberOfActiveInvestments,
-    numberOfexpiredInvestments,
-    currentInventedFunds,
-    activeInvestments,
-    expiredInvestments,
-    percentIncrease,
-    percentDecrease,
-    referralsId,
-    calculateEndDate,
-    error,
-    loading,
-    logout,
-  } = useContext(DataContext);
+  let user = store?.getState()?.user?.user;
+  if (user) {
+    user = user.user;
+  }
+
+  const activeInvestments = [54, 65, 8, 87, 97];
+  const expiredInvestments = [54, 65, 8, 87, 97];
+
+  const calculateEndDate = (startDate, investmentPeriod) => {
+    if (startDate && investmentPeriod) {
+      const start = new Date(startDate);
+      const periodInDays = parseInt(investmentPeriod, 10);
+
+      // Calculate the end date by adding the investment period to the start date
+      const endDateInMilliseconds = start.getTime() + periodInDays * 24 * 60 * 60 * 1000;
+      const endDateObj = new Date(endDateInMilliseconds);
+      const endDate = endDateObj.toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
+
+      return endDate;
+    }
+  };
 
   return (
     <>
@@ -110,7 +97,7 @@ export const Schemes = () => {
                               <div className="nk-iv-wg3-sub">
                                 <div className="nk-iv-wg3-amount">
                                   <div className="number">
-                                    $ {totalBalance}
+                                    $ {user.totalBalance}
                                     <small className="currency currency-usd">USD</small>
                                   </div>
                                 </div>
@@ -124,7 +111,7 @@ export const Schemes = () => {
                                   <div className="number-sm">1,234.43</div>
                                 </div>
                                 <div className="nk-iv-wg3-subtitle">
-                                  Locked Balance $ {currentInventedFunds}
+                                  Locked Balance $ {user.currentInventedFunds}
                                   <em
                                     className="icon ni ni-info-fill"
                                     data-bs-toggle="tooltip"
@@ -151,7 +138,7 @@ export const Schemes = () => {
                               <div className="nk-iv-wg3-sub-group gx-4">
                                 <div className="nk-iv-wg3-sub">
                                   <div className="nk-iv-wg3-amount">
-                                    <div className="number">$ {totalMonthlyProfits}</div>
+                                    <div className="number">$ {user.totalMonthlyProfits}</div>
                                   </div>
                                   <div className="nk-iv-wg3-subtitle">Total Profit</div>
                                 </div>
@@ -160,7 +147,7 @@ export const Schemes = () => {
                                     <em className="icon ni ni-plus" />
                                   </span>
                                   <div className="nk-iv-wg3-amount">
-                                    <div className="number-sm">$ {dailyReturns}</div>
+                                    <div className="number-sm">$ {user.dailyReturns}</div>
                                   </div>
                                   <div className="nk-iv-wg3-subtitle">Today Profit</div>
                                 </div>
@@ -208,7 +195,7 @@ export const Schemes = () => {
                   <div className="nk-block-head-content">
                     <h5 className="nk-block-title">
                       Active Plan{' '}
-                      <span className="count text-base">({numberOfActiveInvestments})</span>
+                      <span className="count text-base">({user.numberOfActiveInvestments})</span>
                     </h5>
                   </div>
                 </div>
@@ -272,7 +259,7 @@ export const Schemes = () => {
                     <div className="nk-block-head-content">
                       <h5 className="nk-block-title">
                         Recently End{' '}
-                        <span className="count text-base">({numberOfexpiredInvestments})</span>
+                        <span className="count text-base">({user.numberOfexpiredInvestments})</span>
                       </h5>
                     </div>
                     <div className="nk-block-head-content">

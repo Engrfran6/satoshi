@@ -3,7 +3,6 @@ import {DataContext} from './Store/DataProvider';
 import {NavLink} from 'react-router-dom';
 
 export const InvestForm = () => {
-  const {data, loading, error, isVerified} = useContext(DataContext);
   return (
     <>
       <div className="nk-content nk-content-lg nk-content-fluid">

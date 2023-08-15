@@ -27,7 +27,7 @@ export const Invest = () => {
     }
   };
 
-  const packageDetails = [te, eute];
+  const packageDetails = [{te: 'yt', eute: '56'}];
 
   const selectedPackage = packageDetails[itemIndex];
 
