@@ -91,10 +91,12 @@ exports.login = async (req, res) => {
       const token = user.getSignedJwtToken();
       const activity = new Activity({ title: 'logged in', user: user._id });
       await activity.save();
+      const activities = await Activity.find({ user: user._id })
       res.status(200).json({
         status: 'success',
         token,
         user,
+        activities,
         investment: "" // find All investment which
       });
     }
