@@ -29,6 +29,14 @@ export const userService = {
     return response;
   },
 
+  createDeposit: async () => {
+    const url = `${apiBaseUrl}/deposit`;
+    const method = 'POST';
+    const response = await client(url, method, {});
+    if (!response) throw new Error('Not Authorized');
+    return response;
+  },
+
   fetchUserFromStore: () => {
     let user = store?.getState()?.user?.user;
     let token;

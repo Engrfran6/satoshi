@@ -8,10 +8,6 @@ const depositSchema = new Schema({
     enum: ['successful', 'pending', 'failed'],
     default: 'pending',
   },
-  package: {
-    type: Schema.Types.String,
-    ref: 'Package'
-  },
   depAmount: {
     type: Number,
   },
