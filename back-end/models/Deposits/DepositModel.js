@@ -1,24 +1,30 @@
-const  { Schema, model } = require('mongoose');
-const AutoGeneratePlugin = require('../schema_plugins')
+const {Schema, model} = require('mongoose');
+const AutoGeneratePlugin = require('../schema_plugins');
 
-
-const depositSchema = new Schema({
-  status: {
-    type: String,
-    enum: ['successful', 'pending', 'failed'],
-    default: 'pending',
+const depositSchema = new Schema(
+  {
+    status: {
+      type: String,
+      enum: ['successful', 'pending', 'failed'],
+      default: 'pending',
+    },
+    depAmount: {
+      type: Number,
+    },
+    photo: {
+      type: String,
+    },
+    account: {
+      type: Schema.Types.String,
+      ref: 'Account',
+    },
+    user: {
+      type: Schema.Types.String,
+      ref: 'User',
+    },
   },
-  depAmount: {
-    type: Number,
-  },
-  photo: {
-    type: String,
-  },
-  user: {
-    type: Schema.Types.String,
-    ref: 'User'
-  },
-},{versionKey: false});
+  {versionKey: false}
+);
 
 depositSchema.plugin(AutoGeneratePlugin);
 

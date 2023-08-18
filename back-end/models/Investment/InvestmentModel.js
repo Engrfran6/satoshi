@@ -1,25 +1,63 @@
-const  { Schema, model } = require('mongoose');
-const AutoGeneratePlugin = require('../schema_plugins')
+const {Schema, model} = require('mongoose');
+const AutoGeneratePlugin = require('../schema_plugins');
 
+const investmentSchema = new Schema(
+  {
+    status: {
+      type: String,
+      enum: ['active', 'expired'],
+      default: 'active',
+    },
+    user: {
+      type: Schema.Types.String,
+      ref: 'User',
+    },
+    package: {
+      type: Schema.Types.String,
+      ref: 'Package',
+      required: true,
+    },
+    invAmount: {
+      type: Number,
+      required: true,
+    },
+    dailyProfit: {
+      type: Number,
+      default: 0.0,
+    },
+    dailyLoss: {
+      type: Number,
+      default: 0.0,
+    },
+    netProfit: {
+      type: Number,
+      default: 0.0,
+    },
 
-const investmentSchema = new Schema({
-  status: {
-    type: String,
-    enum: ['active', 'expired'],
-    default: 'active',
+    totalReturn: {
+      type: Number,
+      default: 0.0,
+    },
+
+    monthlyProfit: {
+      type: Number,
+      default: 0.0,
+    },
+    monthlyLoss: {
+      type: Number,
+      default: 0.0,
+    },
+    referalBonus: {
+      type: Number,
+      default: 0.0,
+    },
+    rewards: {
+      type: Number,
+      default: 0.0,
+    },
   },
-  package: {
-    type: Schema.Types.String,
-    ref: 'Package'
-  },
-  invAmount: {
-    type: Number,
-  },
-  user: {
-    type: Schema.Types.String,
-    ref: 'User'
-  },
-},{versionKey: false});
+  {versionKey: false}
+);
 
 investmentSchema.plugin(AutoGeneratePlugin);
 

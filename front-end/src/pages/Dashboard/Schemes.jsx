@@ -1,28 +1,34 @@
 import {NavLink} from 'react-router-dom';
 import {store} from '../../redux/store';
+import {stringToNumber} from './Store/convertStringToNumber';
+import {sumArray} from './Store/sumIndexArray';
+import {removeCommasFromNumber} from './Store/removeCommas';
+import {calculateEndDate} from '../Dashboard/Store/investmentDates';
 
 export const Schemes = () => {
-  let user = store?.getState()?.user?.user;
-  if (user) {
-    user = user.user;
-  }
+  let user = store?.getState()?.user?.user?.user || [];
+  let investments = store?.getState()?.user?.user?.investments || [];
+  let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
 
-  const activeInvestments = [54, 65, 8, 87, 97];
-  const expiredInvestments = [54, 65, 8, 87, 97];
+  console.log('=================', investments);
 
-  const calculateEndDate = (startDate, investmentPeriod) => {
-    if (startDate && investmentPeriod) {
-      const start = new Date(startDate);
-      const periodInDays = parseInt(investmentPeriod, 10);
+  const username = user?.username;
+  const balance = stringToNumber(user?.balance);
+  const totalInvested = sumArray(investments, 'invAmount');
+  const totalProfits = sumArray(investments, 'dailyProfit');
+  const balanceInAccount = removeCommasFromNumber(balance, totalInvested, totalProfits);
 
-      // Calculate the end date by adding the investment period to the start date
-      const endDateInMilliseconds = start.getTime() + periodInDays * 24 * 60 * 60 * 1000;
-      const endDateObj = new Date(endDateInMilliseconds);
-      const endDate = endDateObj.toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
+  const totalAvailableBalanceAndInv = removeCommasFromNumber(balance, totalInvested);
+  const monthlyProfit = investments ? investments.monthlyProfit : 0;
+  const referalBonus = user.totalReferalBonus;
+  const rewards = user.totalRewards;
+  const Total = user?.totalMonthlyProfit + referalBonus + rewards;
 
-      return endDate;
-    }
-  };
+  const totalActiveInv = investments.length ? investments.length : 0;
+  const totalExpiredInv = expiredInvestments.length ? expiredInvestments.length : 0;
+  const totalInv = totalActiveInv + totalExpiredInv;
+  const inviteLink = `https://www.satochitradepro.com/${user?.referal}`;
+  calculateEndDate(investments.createdAt, '30');
 
   return (
     <>
@@ -46,13 +52,13 @@ export const Schemes = () => {
                       <ul className="nk-block-tools gx-3">
                         <li>
                           <NavLink to="/dashboard/withdraw" className="btn btn-primary">
-                            <span>Withdraw</span>{' '}
+                            <span>Withdraw</span>
                             <em className="icon ni ni-arrow-long-right d-none d-sm-inline-block" />
                           </NavLink>
                         </li>
                         <li>
                           <NavLink to="/dashboard/invest" className="btn btn-white btn-light">
-                            <span>Invest More</span>{' '}
+                            <span>Invest More</span>
                             <em className="icon ni ni-arrow-long-right d-none d-sm-inline-block" />
                           </NavLink>
                         </li>
@@ -97,7 +103,7 @@ export const Schemes = () => {
                               <div className="nk-iv-wg3-sub">
                                 <div className="nk-iv-wg3-amount">
                                   <div className="number">
-                                    $ {user.totalBalance}
+                                    $ {balanceInAccount}
                                     <small className="currency currency-usd">USD</small>
                                   </div>
                                 </div>
@@ -111,7 +117,7 @@ export const Schemes = () => {
                                   <div className="number-sm">1,234.43</div>
                                 </div>
                                 <div className="nk-iv-wg3-subtitle">
-                                  Locked Balance $ {user.currentInventedFunds}
+                                  Locked Balance $ {totalInvested}
                                   <em
                                     className="icon ni ni-info-fill"
                                     data-bs-toggle="tooltip"
@@ -138,7 +144,7 @@ export const Schemes = () => {
                               <div className="nk-iv-wg3-sub-group gx-4">
                                 <div className="nk-iv-wg3-sub">
                                   <div className="nk-iv-wg3-amount">
-                                    <div className="number">$ {user.totalMonthlyProfits}</div>
+                                    <div className="number">$ {totalProfits}</div>
                                   </div>
                                   <div className="nk-iv-wg3-subtitle">Total Profit</div>
                                 </div>
@@ -147,7 +153,7 @@ export const Schemes = () => {
                                     <em className="icon ni ni-plus" />
                                   </span>
                                   <div className="nk-iv-wg3-amount">
-                                    <div className="number-sm">$ {user.dailyReturns}</div>
+                                    <div className="number-sm">$ {totalProfits}</div>
                                   </div>
                                   <div className="nk-iv-wg3-subtitle">Today Profit</div>
                                 </div>
@@ -176,7 +182,7 @@ export const Schemes = () => {
                         </li>
                         <li>
                           <NavLink to="/dashboard/schemes#">
-                            <em className="icon ni ni-report-profit" />{' '}
+                            <em className="icon ni ni-report-profit" />
                             <span>Monthly Statement</span>
                           </NavLink>
                         </li>
@@ -194,48 +200,50 @@ export const Schemes = () => {
                 <div className="nk-block-head-sm">
                   <div className="nk-block-head-content">
                     <h5 className="nk-block-title">
-                      Active Plan{' '}
-                      <span className="count text-base">({user.numberOfActiveInvestments})</span>
+                      Active Plan <span className="count text-base">({totalActiveInv})</span>
                     </h5>
                   </div>
                 </div>
 
                 <div className="nk-iv-scheme-list">
-                  {activeInvestments.map((item, index) => (
+                  {investments.map((item, index) => (
                     <div key={index} className="nk-iv-scheme-item">
                       <div className="nk-iv-scheme-icon is-running">
                         <em className="icon ni ni-update" />
                       </div>
                       <div className="nk-iv-scheme-info">
                         <div className="nk-iv-scheme-name">
-                          {item.package} - Daily {item.profitRate}% for {item.duration} Days
+                          {item.package.name} - Daily {item.package.profitRate}% for{' '}
+                          {item.package.duration} Days
                         </div>
                         <div className="nk-iv-scheme-desc">
-                          Invested Amount - <span className="amount">$ {item.amountInvested}</span>
+                          Invested Amount - <span className="amount">$ {item.invAmount}</span>
                         </div>
                       </div>
                       <div className="nk-iv-scheme-term">
                         <div className="nk-iv-scheme-start nk-iv-scheme-order">
                           <span className="nk-iv-scheme-label text-soft">Start Date</span>
-                          <span className="nk-iv-scheme-value date">{item.investmentDate}</span>
+                          <span className="nk-iv-scheme-value date">{item.createdAt}</span>
                         </div>
                         <div className="nk-iv-scheme-end nk-iv-scheme-order">
                           <span className="nk-iv-scheme-label text-soft">End Date</span>
                           <span className="nk-iv-scheme-value date">
-                            {calculateEndDate(item.investmentDate, item.duration)}
+                            {calculateEndDate(item.createdAt, item.package.duration)}
                           </span>
                         </div>
                       </div>
                       <div className="nk-iv-scheme-amount">
                         <div className="nk-iv-scheme-amount-a nk-iv-scheme-order">
                           <span className="nk-iv-scheme-label text-soft">Total Return</span>
-                          <span className="nk-iv-scheme-value amount">{item.dailyReturns}</span>
+                          <span className="nk-iv-scheme-value amount">{item.dailyProfit}</span>
                         </div>
                         <div className="nk-iv-scheme-amount-b nk-iv-scheme-order">
                           <span className="nk-iv-scheme-label text-soft">Net Profit Earn</span>
                           <span className="nk-iv-scheme-value amount">
-                            $ {item.dailyReturns - 10}{' '}
-                            <span className="amount-ex">~ $ {item.dailyReturns - 6}</span>
+                            $ {item.netProfit}{' '}
+                            <span className="amount-ex">
+                              ~ $ {item.dailyProfit - item.dailyLoss}
+                            </span>
                           </span>
                         </div>
                       </div>
@@ -258,8 +266,7 @@ export const Schemes = () => {
                   <div className="nk-block-between">
                     <div className="nk-block-head-content">
                       <h5 className="nk-block-title">
-                        Recently End{' '}
-                        <span className="count text-base">({user.numberOfexpiredInvestments})</span>
+                        Recently End <span className="count text-base">({totalExpiredInv})</span>
                       </h5>
                     </div>
                     <div className="nk-block-head-content">
@@ -277,34 +284,35 @@ export const Schemes = () => {
                       </div>
                       <div className="nk-iv-scheme-info">
                         <div className="nk-iv-scheme-name">
-                          {item.package} - Daily {item.profitRate}% for {item.duration} Days
+                          {item.package.name} - Daily {item.package.profitRate}% for{' '}
+                          {item.package.duration} Days
                         </div>
                         <div className="nk-iv-scheme-desc">
-                          Invested Amount - <span className="amount">$ {item.amountInvested}</span>
+                          Invested Amount - <span className="amount">$ {item.invAmount}</span>
                         </div>
                       </div>
                       <div className="nk-iv-scheme-term">
                         <div className="nk-iv-scheme-start nk-iv-scheme-order">
                           <span className="nk-iv-scheme-label text-soft">Start Date</span>
-                          <span className="nk-iv-scheme-value date">{item.investmentDate}</span>
+                          <span className="nk-iv-scheme-value date">{item.package.createdAt}</span>
                         </div>
                         <div className="nk-iv-scheme-end nk-iv-scheme-order">
                           <span className="nk-iv-scheme-label text-soft">End Date</span>
                           <span className="nk-iv-scheme-value date">
-                            {calculateEndDate(item.investmentDate, item.duration)}
+                            {/* {calculateEndDate(item.investmentDate, item.duration)} */}
                           </span>
                         </div>
                       </div>
                       <div className="nk-iv-scheme-amount">
                         <div className="nk-iv-scheme-amount-a nk-iv-scheme-order">
                           <span className="nk-iv-scheme-label text-soft">Total Return</span>
-                          <span className="nk-iv-scheme-value amount">$ {item.dailyReturns}</span>
+                          <span className="nk-iv-scheme-value amount">$ {item.dailyProfit}</span>
                         </div>
                         <div className="nk-iv-scheme-amount-b nk-iv-scheme-order">
                           <span className="nk-iv-scheme-label text-soft">Net Profit Earn</span>
                           <span className="nk-iv-scheme-value amount">
-                            $ {item.dailyReturns - 10}{' '}
-                            <span className="amount-ex">~ $ {item.dailyReturns - 6}</span>
+                            $ {item.netProfit}
+                            <span className="amount-ex">~ $ {item.netProfit - 6}</span>
                           </span>
                         </div>
                       </div>

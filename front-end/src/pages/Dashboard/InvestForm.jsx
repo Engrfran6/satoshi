@@ -1,10 +1,72 @@
-import {useContext} from 'react';
-import {DataContext} from './Store/DataProvider';
-import {NavLink} from 'react-router-dom';
+import {useState} from 'react';
+import {NavLink, useNavigate} from 'react-router-dom';
+import {store} from '../../redux/store';
+import {calculateEndDate} from './Store/investmentDates';
+import {setSelectedPaymentOption} from '../../redux/user-slice';
+import {useDispatch} from 'react-redux';
 
 export const InvestForm = () => {
+  let user = store?.getState()?.user?.user?.user || [];
+  let myPackage = store?.getState()?.user?.user?.selectedPackage || [];
+  const dispatch = useDispatch();
+
+  const [amount1, setAmount1] = useState(0);
+  const [amount2, setAmount2] = useState(100);
+  const navigate = useNavigate();
+  const value = [100, 250, 500, 1000, 1500, 2000, 3000];
+  const paymentOptions = [
+    {name: 'STP wallet', walletBalance: user?.balance, btcEquivalent: 0.033},
+    {name: 'BTC wallet', walletBalance: 500, btcEquivalent: 0.033},
+    {name: 'USDT wallet', walletBalance: 1200, btcEquivalent: 0.033},
+    {name: 'Bank deposit'},
+    {name: 'Wire transfer'},
+  ];
+
+  const selectAmount = (item) => {
+    setAmount1(item);
+  };
+  const amount = parseFloat(amount1) || parseFloat(amount2) || [];
+
+  const startDate = new Date(myPackage.createdAt).toLocaleDateString(); //format "MM/DD/YYYY"
+  const investmentStartDate = startDate.replace(/\//g, '-');
+  const investmentEndDate = calculateEndDate(startDate, myPackage.duration);
+
+  const [isChecked, setIsChecked] = useState(false);
+  const [alert, setAlert] = useState('');
+  const handleCheckboxChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+
+  const handleNextClick = () => {
+    if (isChecked && user?.balance > amount) {
+      dispatch(setSelectedPaymentOption(amount));
+      navigate('/dashboard/successful');
+    } else if (isChecked && user?.balance < amount) {
+      navigate('/dashboard/deposit');
+    } else {
+      setAlert('Please agree to the terms and conditions before proceeding.');
+    }
+  };
+
+  const [selectedCurrency, setSelectedCurrency] = useState('USD'); // Set an initial default currency
+  const handleCurrencySelect = (currency) => {
+    setSelectedCurrency(currency);
+  };
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedPaymentOption, setSelectedPaymentOption] = useState(null);
+
+  const handleDropdownToggle = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handlePaymentOptionSelect = (option) => {
+    setSelectedPaymentOption(option);
+    setIsDropdownOpen(false); // Close the dropdown after selecting an option
+  };
+
   return (
-    <>
+    <div>
       <div className="nk-content nk-content-lg nk-content-fluid">
         <div className="container-xl wide-lg">
           <div className="nk-content-inner">
@@ -27,12 +89,6 @@ export const InvestForm = () => {
                   <div className="row g-gs">
                     <div className="col-lg-7">
                       <div className="invest-field form-group">
-                        <input
-                          type="hidden"
-                          defaultValue="silver"
-                          name="iv-plan"
-                          id="invest-choose-plan"
-                        />
                         <div className="dropdown invest-cc-dropdown">
                           <NavLink
                             to="/dashboard/invest-form#"
@@ -43,191 +99,93 @@ export const InvestForm = () => {
                                 <em className="icon ni ni-offer-fill" />
                               </div>
                               <div className="coin-info">
-                                <span className="coin-name">Silver Plan</span>
+                                <span className="coin-name">{myPackage.name}</span>
                                 <span className="coin-text">
-                                  Invest for 21 days and get daily profit 4.76%
+                                  Invest for {myPackage.duration} days and get daily profit{' '}
+                                  {myPackage.dailyRoi}%
                                 </span>
                               </div>
                             </div>
                           </NavLink>
-                          <div className="dropdown-menu dropdown-menu-auto dropdown-menu-mxh">
-                            <ul className="invest-cc-list">
-                              <li className="invest-cc-item selected">
-                                <NavLink
-                                  to="/dashboard/invest-form#"
-                                  className="invest-cc-opt"
-                                  data-plan="silver">
-                                  <div className="coin-item">
-                                    <div className="coin-icon">
-                                      <em className="icon ni ni-offer-fill" />
-                                    </div>
-                                    <div className="coin-info">
-                                      <span className="coin-name">Silver Plan</span>
-                                      <span className="coin-text">
-                                        Invest for 21 days and get daily profit 4.76%
-                                      </span>
-                                    </div>
-                                  </div>
-                                </NavLink>
-                              </li>
-                              <li className="invest-cc-item selected">
-                                <NavLink
-                                  to="/dashboard/invest-form#"
-                                  className="invest-cc-opt"
-                                  data-plan="starter">
-                                  <div className="coin-item">
-                                    <div className="coin-icon">
-                                      <em className="icon ni ni-offer-fill" />
-                                    </div>
-                                    <div className="coin-info">
-                                      <span className="coin-name">Starter Plan</span>
-                                      <span className="coin-text">
-                                        Invest for 30 days and get daily profit 1.67%
-                                      </span>
-                                    </div>
-                                  </div>
-                                </NavLink>
-                              </li>
-                              <li className="invest-cc-item">
-                                <NavLink
-                                  to="/dashboard/invest-form#"
-                                  className="invest-cc-opt"
-                                  data-plan="dimond">
-                                  <div className="coin-item">
-                                    <div className="coin-icon">
-                                      <em className="icon ni ni-offer-fill" />
-                                    </div>
-                                    <div className="coin-info">
-                                      <span className="coin-name">Dimond Plan</span>
-                                      <span className="coin-text">
-                                        Invest for 14 days and get daily profit 14.29%
-                                      </span>
-                                    </div>
-                                  </div>
-                                </NavLink>
-                              </li>
-                            </ul>
-                          </div>
                         </div>
                       </div>
                       <div className="invest-field form-group">
                         <div className="form-label-group">
                           <label className="form-label">Choose Quick Amount to Invest</label>
                         </div>
+
                         <div className="invest-amount-group g-2">
-                          <div className="invest-amount-item">
-                            <input
-                              type="radio"
-                              className="invest-amount-control"
-                              name="iv-amount"
-                              id="iv-amount-1"
-                            />
-                            <label className="invest-amount-label" htmlFor="iv-amount-1">
-                              $ 100
-                            </label>
-                          </div>
-                          <div className="invest-amount-item">
-                            <input
-                              type="radio"
-                              className="invest-amount-control"
-                              name="iv-amount"
-                              id="iv-amount-2"
-                            />
-                            <label className="invest-amount-label" htmlFor="iv-amount-2">
-                              $ 250
-                            </label>
-                          </div>
-                          <div className="invest-amount-item">
-                            <input
-                              type="radio"
-                              className="invest-amount-control"
-                              name="iv-amount"
-                              id="iv-amount-3"
-                            />
-                            <label className="invest-amount-label" htmlFor="iv-amount-3">
-                              $ 500
-                            </label>
-                          </div>
-                          <div className="invest-amount-item">
-                            <input
-                              type="radio"
-                              className="invest-amount-control"
-                              name="iv-amount"
-                              id="iv-amount-4"
-                            />
-                            <label className="invest-amount-label" htmlFor="iv-amount-4">
-                              $ 1,000
-                            </label>
-                          </div>
-                          <div className="invest-amount-item">
-                            <input
-                              type="radio"
-                              className="invest-amount-control"
-                              name="iv-amount"
-                              id="iv-amount-5"
-                            />
-                            <label className="invest-amount-label" htmlFor="iv-amount-5">
-                              $ 1,500
-                            </label>
-                          </div>
-                          <div className="invest-amount-item">
-                            <input
-                              type="radio"
-                              className="invest-amount-control"
-                              name="iv-amount"
-                              id="iv-amount-6"
-                            />
-                            <label className="invest-amount-label" htmlFor="iv-amount-6">
-                              $ 2,000
-                            </label>
-                          </div>
+                          {value.map((item, index) => (
+                            <div key={index} className="invest-amount-item">
+                              <label
+                                style={{paddingTop: '1.6rem'}}
+                                key={index}
+                                onClick={() => selectAmount(item)}>
+                                <span
+                                  className="invest-amount-label"
+                                  style={{
+                                    backgroundColor:
+                                      amount1 === item ? 'rgb(38,155,71)' : 'rgb(244,246,250)',
+                                    color: amount1 === item ? 'white' : '',
+                                  }}>
+                                  $ {item}
+                                </span>
+                              </label>
+                            </div>
+                          ))}
                         </div>
                       </div>
                       <div className="invest-field form-group">
                         <div className="form-label-group">
                           <label className="form-label">Or Enter Your Amount</label>
-                          <div className="dropdown">
-                            <NavLink
-                              to="/dashboard/invest-form#"
-                              className="link py-1"
-                              data-bs-toggle="dropdown">
+                          <div className="dropdownee">
+                            <NavLink className="link py-1" data-bs-toggle="dropdown">
                               Change Currency
                             </NavLink>
                             <div className="dropdown-menu dropdown-menu-xxs dropdown-menu-end">
                               <ul className="link-list-plain sm text-center">
                                 <li>
-                                  <NavLink to="/dashboard/invest-form#">USD</NavLink>
+                                  <NavLink onClick={() => handleCurrencySelect('USD')}>USD</NavLink>
                                 </li>
                                 <li>
-                                  <NavLink to="/dashboard/invest-form#">EUR</NavLink>
+                                  <NavLink onClick={() => handleCurrencySelect('EUR')}>EUR</NavLink>
                                 </li>
                                 <li>
-                                  <NavLink to="/dashboard/invest-form#">CAD</NavLink>
+                                  <NavLink onClick={() => handleCurrencySelect('CAD')}>CAD</NavLink>
                                 </li>
                                 <li>
-                                  <NavLink to="/dashboard/invest-form#">BTC</NavLink>
+                                  <NavLink onClick={() => handleCurrencySelect('BTC')}>BTC</NavLink>
                                 </li>
                                 <li>
-                                  <NavLink to="/dashboard/invest-form#">ETH</NavLink>
+                                  <NavLink onClick={() => handleCurrencySelect('ETH')}>ETH</NavLink>
                                 </li>
                               </ul>
                             </div>
                           </div>
                         </div>
                         <div className="form-control-group">
-                          <div className="form-info">USD</div>
+                          <div className="form-info">{selectedCurrency}</div>
                           <input
-                            type="text"
+                            type="number"
                             className="form-control form-control-amount form-control-lg"
-                            id="custom-amount"
-                            defaultValue={100.0}
+                            name="amount2"
+                            value={amount2}
+                            onChange={(e) => setAmount2(e.target.value)}
                           />
                           <div className="form-range-slider" id="amount-step" />
                         </div>
-                        <div className="form-note pt-2">
-                          Note: Minimum invest 100 USD and upto 2,000 USD
+                        <h5 className="form-note pt-2" style={{color: 'green'}}>
+                          Available balance: $
+                          <p style={{textDecoration: 'underline', display: 'inline-block'}}>
+                            {user?.balance.toLocaleString()}
+                          </p>
+                        </h5>
+                        <div className="form-note pt-2" style={{color: 'green'}}>
+                          Note: Minimum invest {myPackage.minDeposit} USD and upto{' '}
+                          {myPackage.maxDeposit} USD
                         </div>
                       </div>
+
                       <div className="invest-field form-group">
                         <div className="form-label-group">
                           <label className="form-label">Choose Payment Method</label>
@@ -238,86 +196,76 @@ export const InvestForm = () => {
                           name="iv-wallet"
                           id="invest-choose-wallet"
                         />
-                        <div className="dropdown invest-cc-dropdown">
+                        <div
+                          className={`dropdown invest-cc-dropdown ${isDropdownOpen ? 'show' : ''}`}>
                           <NavLink
-                            to="/dashboard/invest-form#"
+                            to="#"
                             className="invest-cc-chosen dropdown-indicator"
-                            data-bs-toggle="dropdown">
-                            <div className="coin-item">
-                              <div className="coin-icon">
-                                <em className="icon ni ni-wallet-alt" />
+                            onClick={handleDropdownToggle}>
+                            {/* Display the selected payment option */}
+                            {selectedPaymentOption ? (
+                              <div className="coin-item">
+                                <div className="coin-icon">
+                                  <em className="icon ni ni-wallet-alt" />
+                                </div>
+                                <div className="coin-info">
+                                  <span className="coin-name">{selectedPaymentOption.name}</span>
+                                  <span className="coin-text">
+                                    Current balance: $ {selectedPaymentOption.walletBalance} ~
+                                    {selectedPaymentOption.btcEquivalent} BTC
+                                  </span>
+                                </div>
                               </div>
-                              <div className="coin-info">
-                                <span className="coin-name">NioWallet</span>
-                                <span className="coin-text">
-                                  Current balance: 2.014095 BTC ( $18,934.84 )
-                                </span>
+                            ) : (
+                              <div className="coin-item">
+                                <div className="coin-icon">
+                                  <em className="icon ni ni-wallet-alt" />
+                                </div>
+                                <div className="coin-info">Select payment option</div>
                               </div>
-                            </div>
+                            )}
                           </NavLink>
-                          <div className="dropdown-menu dropdown-menu-auto dropdown-menu-mxh">
+                          <div
+                            className={`dropdown-menu dropdown-menu-auto dropdown-menu-mxh ${
+                              isDropdownOpen ? 'show' : ''
+                            }`}>
                             <ul className="invest-cc-list">
-                              <li className="invest-cc-item selected">
-                                <NavLink
-                                  to="/dashboard/invest-form#"
-                                  className="invest-cc-opt"
-                                  data-plan="silver">
-                                  <div className="coin-item">
-                                    <div className="coin-icon">
-                                      <em className="icon ni ni-wallet-alt" />
+                              {paymentOptions.map((item, index) => (
+                                <li key={index} className="invest-cc-item">
+                                  <NavLink
+                                    className="invest-cc-opt"
+                                    onClick={() => handlePaymentOptionSelect(item)}>
+                                    <div className="coin-item">
+                                      <div className="coin-icon">
+                                        <em className="icon ni ni-wallet-alt" />
+                                      </div>
+                                      <div className="coin-info">
+                                        <span className="coin-name">{item.name}</span>
+                                        <span className="coin-text">
+                                          Current balance: $ {item.walletBalance} ~
+                                          {item.btcEquivalent} BTC
+                                        </span>
+                                      </div>
                                     </div>
-                                    <div className="coin-info">
-                                      <span className="coin-name">NioWallet</span>
-                                      <span className="coin-text">
-                                        Current balance: 2.014095 BTC ( $18,934.84 )
-                                      </span>
-                                    </div>
-                                  </div>
-                                </NavLink>
-                              </li>
-                              <li className="invest-cc-item selected">
-                                <NavLink
-                                  to="/dashboard/invest-form#"
-                                  className="invest-cc-opt"
-                                  data-plan="starter">
-                                  <div className="coin-item">
-                                    <div className="coin-icon">
-                                      <em className="icon ni ni-sign-btc" />
-                                    </div>
-                                    <div className="coin-info">
-                                      <span className="coin-name">BTC Wallet</span>
-                                      <span className="coin-text">
-                                        Current balance: 2.014095 BTC
-                                      </span>
-                                    </div>
-                                  </div>
-                                </NavLink>
-                              </li>
-                              <li className="invest-cc-item">
-                                <NavLink
-                                  to="/dashboard/invest-form#"
-                                  className="invest-cc-opt"
-                                  data-plan="dimond">
-                                  <div className="coin-item">
-                                    <div className="coin-icon">
-                                      <em className="icon ni ni-sign-usd" />
-                                    </div>
-                                    <div className="coin-info">
-                                      <span className="coin-name">USD Wallet</span>
-                                      <span className="coin-text">Current balance: $18,934.84</span>
-                                    </div>
-                                  </div>
-                                </NavLink>
-                              </li>
+                                  </NavLink>
+                                </li>
+                              ))}
                             </ul>
                           </div>
                         </div>
                       </div>
+
                       <div className="invest-field form-group">
                         <div className="custom-control custom-control-xs custom-checkbox">
-                          <input type="checkbox" className="custom-control-input" id="checkbox" />
+                          <input
+                            type="checkbox"
+                            className="custom-control-input"
+                            id="checkbox"
+                            checked={isChecked}
+                            onChange={handleCheckboxChange}
+                          />
                           <label className="custom-control-label" htmlFor="checkbox">
-                            I agree the{' '}
+                            I agree to the {}
                             <NavLink to="/dashboard/invest-form#">
                               terms and &amp; conditions.
                             </NavLink>
@@ -333,35 +281,42 @@ export const InvestForm = () => {
                             <ul className="nk-iv-wg4-overview g-2">
                               <li>
                                 <div className="sub-text">Name of scheme</div>
-                                <div className="lead-text">Silver Plan</div>
+                                <div className="lead-text">{myPackage.name}</div>
                               </li>
                               <li>
                                 <div className="sub-text">Term of the scheme</div>
-                                <div className="lead-text">21 days</div>
+                                <div className="lead-text">{myPackage.duration} days</div>
                               </li>
                               <li>
                                 <div className="sub-text">Daily profit</div>
-                                <div className="lead-text">$ 11.99</div>
+                                <div className="lead-text">$ {myPackage.dailyRoi}</div>
                               </li>
                               <li>
                                 <div className="sub-text">Daily profit %</div>
-                                <div className="lead-text">4.76 %</div>
+                                <div className="lead-text">{myPackage.profitRate} %</div>
                               </li>
                               <li>
                                 <div className="sub-text">Total net profit</div>
-                                <div className="lead-text">$ 249.99</div>
+                                <div className="lead-text">
+                                  $ {Number(myPackage.dailyRoi) * Number(myPackage.duration)}
+                                </div>
                               </li>
                               <li>
                                 <div className="sub-text">Total Return</div>
-                                <div className="lead-text">$ 499.99</div>
+                                <div className="lead-text">
+                                  ${' '}
+                                  {Number(myPackage.dailyRoi) *
+                                    Number(myPackage.duration) *
+                                    Number(1.8384)}
+                                </div>
                               </li>
                               <li>
                                 <div className="sub-text">Term start at</div>
-                                <div className="lead-text">Today (12-04-2019)</div>
+                                <div className="lead-text">Today ({investmentStartDate})</div>
                               </li>
                               <li>
                                 <div className="sub-text">Term end at</div>
-                                <div className="lead-text">12 - 25 - 2019</div>
+                                <div className="lead-text">Ends ({investmentEndDate})</div>
                               </li>
                             </ul>
                           </div>
@@ -369,7 +324,15 @@ export const InvestForm = () => {
                             <ul className="nk-iv-wg4-list">
                               <li>
                                 <div className="sub-text">Payment Method</div>
-                                <div className="lead-text">NioWallet</div>
+                                <div className="lead-text">
+                                  {selectedPaymentOption?.name}
+                                  <div>
+                                    Available: ~
+                                    <p style={{color: 'green', display: 'inline-flex'}}>
+                                      $ {selectedPaymentOption?.walletBalance}
+                                    </p>
+                                  </div>
+                                </div>
                               </li>
                             </ul>
                           </div>
@@ -377,13 +340,13 @@ export const InvestForm = () => {
                             <ul className="nk-iv-wg4-list">
                               <li>
                                 <div className="sub-text">Amount to invest</div>
-                                <div className="lead-text">$ 250.00</div>
+                                <div className="lead-text">$ {amount}</div>
                               </li>
                               <li>
                                 <div className="sub-text">
                                   Conversion Fee <span>(0.5%)</span>
                                 </div>
-                                <div className="lead-text">$ 1.25</div>
+                                <div className="lead-text">$ {amount * 0.005}</div>
                               </li>
                             </ul>
                           </div>
@@ -391,17 +354,20 @@ export const InvestForm = () => {
                             <ul className="nk-iv-wg4-list">
                               <li>
                                 <div className="lead-text">Total Charge</div>
-                                <div className="caption-text text-primary">$ 251.25</div>
+                                <div className="caption-text text-primary">
+                                  ${' '}
+                                  {((1 + 0.0005) * amount).toLocaleString(undefined, {
+                                    maximumFractionDigits: 2,
+                                  })}
+                                </div>
                               </li>
                             </ul>
                           </div>
+                          <small style={{color: 'red', textAlign: 'center'}}>{alert}</small>
                           <div className="nk-iv-wg4-sub text-center bg-lighter">
-                            <NavLink
-                              className="btn btn-lg btn-primary ttu"
-                              data-bs-toggle="modal"
-                              to="/dashboard/invest-form#invest-plan">
+                            <button onClick={handleNextClick} className="btn btn-lg btn-primary">
                               Confirm &amp; proceed
-                            </NavLink>
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -413,6 +379,6 @@ export const InvestForm = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

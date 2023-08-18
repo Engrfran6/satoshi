@@ -1,35 +1,42 @@
-import {NavLink} from 'react-router-dom';
-import {DataContext} from './Store/DataProvider';
-import {useState, useContext} from 'react';
+import {getUserData} from '../../components/Commons/HandleRequest';
+import {useState, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
+import {setSelectedPackage} from '../../redux/user-slice';
+import {NavLink, useNavigate} from 'react-router-dom';
 
 export const Invest = () => {
+  const dispatch = useDispatch();
   const [clickedItem, setClickedItem] = useState(null);
-  const [itemIndex, setItemIndex] = useState(null);
+  const [alert, setAlert] = useState('');
+  const navigate = useNavigate();
+  const [packages, setPackages] = useState([]);
 
-  const handleClick = (item) => {
-    setClickedItem(item);
+  useEffect(() => {
+    getPackage();
+  }, []);
 
-    if (item == 'Starter') {
-      setItemIndex(0);
-    }
-    if (item == 'Silver') {
-      setItemIndex(1);
-    }
-
-    if (item == 'Diamond') {
-      setItemIndex(2);
-    }
-    if (item == 'Gold') {
-      setItemIndex(3);
-    }
-    if (item == 'Platinium') {
-      setItemIndex(4);
+  const getPackage = async () => {
+    try {
+      const response = await getUserData('/package');
+      setPackages(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
   };
 
-  const packageDetails = [{te: 'yt', eute: '56'}];
+  const handleClick = (item) => {
+    setClickedItem(item);
+  };
 
-  const selectedPackage = packageDetails[itemIndex];
+  const setItem = () => {
+    if (item) {
+      dispatch(setSelectedPackage(clickedItem));
+      navigate('/dashboard/invest-form');
+    } else {
+      setAlert('You must select an investment plan to continue!');
+      navigate('/dashboard/invest#');
+    }
+  };
 
   return (
     <>
@@ -83,98 +90,97 @@ export const Invest = () => {
                   </div>
 
                   <div>
-                    <ul style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr'}}>
-                      {packageDetails.map((item, index) => (
-                        <li key={index} className="plan-item" style={{width: '100%'}}>
-                          <input className="plan-control" />
-                          <div
-                            className="plan-item-card"
-                            style={{
-                              border:
-                                clickedItem === item.package ? '1.7px solid rgb(101,117,255)' : '',
-                            }}>
-                            <div className="plan-item-head">
-                              <div className="plan-item-heading">
-                                <h4 className="plan-item-title card-title title">{item.package}</h4>
-                                <p className="sub-text">
-                                  Enjoy entry level of invest &amp; earn money.
-                                </p>
-                              </div>
-                              <div className="plan-item-summary card-text">
-                                <div className="row">
-                                  <div className="col-6">
-                                    <span className="lead-text">1.67%</span>
-                                    <span className="sub-text">Daily Interest</span>
+                    <ul style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr'}}>
+                      {packages &&
+                        packages.map((item, index) => (
+                          <li key={index} className="plan-item" style={{width: '100%'}}>
+                            <input className="plan-control" />
+                            <div
+                              className="plan-item-card"
+                              style={{
+                                border: clickedItem === item ? '1.7px solid rgb(38,155,71)' : '',
+                              }}>
+                              <div className="plan-item-head">
+                                <div className="plan-item-heading">
+                                  <h4 className="plan-item-title card-title title">{item.name}</h4>
+                                  <p className="sub-text">
+                                    Enjoy entry level of invest &amp; earn money.
+                                  </p>
+                                </div>
+                                <div className="plan-item-summary card-text">
+                                  <div className="row">
+                                    <div className="col-6">
+                                      <span className="lead-text">{item.profitRate}%</span>
+                                      <span className="sub-text">Daily Interest</span>
+                                    </div>
+                                    <div className="col-6">
+                                      <span className="lead-text">{item.duration}</span>
+                                      <span className="sub-text">Term Days</span>
+                                    </div>
                                   </div>
-                                  <div className="col-6">
-                                    <span className="lead-text">{item.duration}</span>
-                                    <span className="sub-text">Term Days</span>
+                                </div>
+                              </div>
+                              <div className="plan-item-body">
+                                <div className="plan-item-desc card-text">
+                                  <ul className="plan-item-desc-list">
+                                    <li>
+                                      <span className="desc-label">Min Deposit</span>-{' '}
+                                      <span className="desc-data">${item.minDeposit}</span>
+                                    </li>
+                                    <li>
+                                      <span className="desc-label">Max Deposit</span>-{' '}
+                                      <span className="desc-data">$ {item.maxDeposit}</span>
+                                    </li>
+                                    <li>
+                                      <span className="desc-label">Deposit Return</span>-{' '}
+                                      <span className="desc-data">Yes</span>
+                                    </li>
+                                    <li>
+                                      <span className="desc-label">Total Return</span>-{' '}
+                                      <span className="desc-data">
+                                        {item.totalPercentageReturn}%
+                                      </span>
+                                    </li>
+                                  </ul>
+                                  <div className="plan-item-action">
+                                    <label
+                                      className="plan-label"
+                                      onClick={() => handleClick(item)}
+                                      style={{
+                                        backgroundColor:
+                                          clickedItem === item
+                                            ? 'rgb(38,155,71)'
+                                            : 'rgb(244,246,250)',
+                                        color: clickedItem === item ? 'white' : '',
+                                      }}>
+                                      <span
+                                        style={{
+                                          display: clickedItem === item ? 'none' : 'block',
+                                        }}>
+                                        Choose this plan
+                                      </span>
+                                      <span
+                                        style={{
+                                          display: clickedItem === item ? 'block' : 'none',
+                                        }}>
+                                        Plan Selected
+                                      </span>
+                                    </label>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                            <div className="plan-item-body">
-                              <div className="plan-item-desc card-text">
-                                <ul className="plan-item-desc-list">
-                                  <li>
-                                    <span className="desc-label">Min Deposit</span>-{' '}
-                                    <span className="desc-data">${item.minDeposit}</span>
-                                  </li>
-                                  <li>
-                                    <span className="desc-label">Max Deposit</span>-{' '}
-                                    <span className="desc-data">$ {item.maxDeposit}</span>
-                                  </li>
-                                  <li>
-                                    <span className="desc-label">Deposit Return</span>-{' '}
-                                    <span className="desc-data">Yes</span>
-                                  </li>
-                                  <li>
-                                    <span className="desc-label">Total Return</span>-{' '}
-                                    <span className="desc-data">{item.totalPercentageReturn}%</span>
-                                  </li>
-                                </ul>
-                                <div className="plan-item-action">
-                                  <label
-                                    className="plan-label"
-                                    onClick={() => handleClick(item.package)}
-                                    style={{
-                                      backgroundColor:
-                                        clickedItem === item.package
-                                          ? 'rgb(101,117,255)'
-                                          : 'rgb(244,246,250)',
-                                      color: clickedItem === item.package ? 'white' : '',
-                                    }}>
-                                    <span
-                                      style={{
-                                        display: clickedItem === item.package ? 'none' : 'block',
-                                      }}>
-                                      Choose this plan
-                                    </span>
-                                    <span
-                                      style={{
-                                        display: clickedItem === item.package ? 'block' : 'none',
-                                      }}>
-                                      Plan Selected
-                                    </span>
-
-                                    {/* <span onClick={()=> item.package == 'Starter'? active : item.package == 'Silver'? setSelected('PLAN SELECTED'): item.package == 'Diamond'? setSelected('PLAN SELECTED'):item.package == 'Gold'? setSelected('PLAN SELECTED'):item.package == 'Platinium'? setSelected('PLAN SELECTED') : "" } >{selected}</span> */}
-                                  </label>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </li>
-                      ))}
+                          </li>
+                        ))}
                     </ul>
                   </div>
 
                   <div className="plan-iv-actions text-center">
-                    <NavLink to="/dashboard/invest-form">
-                      <button className="btn btn-primary btn-lg">
-                        <span>Continue to Invest</span>
-                        <em className="icon ni ni-arrow-right" />
-                      </button>
-                    </NavLink>
+                    <small>{alert}</small>
+                    <button onClick={setItem} className="btn btn-primary btn-lg">
+                      <span>Continue to Invest</span>
+                      <em className="icon ni ni-arrow-right" />
+                    </button>
                   </div>
                 </form>
               </div>

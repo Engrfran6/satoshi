@@ -13,6 +13,10 @@ import {SchemeDetails} from './pages/Dashboard/SchemeDetails';
 import {Schemes} from './pages/Dashboard/Schemes';
 import {Profile} from './pages/Dashboard/Profile';
 import {Welcome} from './pages/Dashboard/Welcome';
+import {Deposit} from './pages/Dashboard/transactions/Deposit';
+import {Withdrawal} from './pages/Dashboard/transactions/Withdrawal';
+import {Investment} from './pages/Dashboard/transactions/Investing';
+import {SuccessMessage} from './pages/Dashboard/transactions/SuccessMessage';
 
 export const AuthorizedApp = () => {
   const routes = useRoutes([
@@ -29,6 +33,10 @@ export const AuthorizedApp = () => {
     {path: '/dashboard/profile', element: <Profile />},
     {path: '/dashboard/schemes', element: <Schemes />},
     {path: '/dashboard/scheme-details', element: <SchemeDetails />},
+    {path: '/dashboard/deposit', element: <Deposit />},
+    {path: '/dashboard/withdraw', element: <Withdrawal />},
+    {path: '/dashboard/investing', element: <Investment />},
+    {path: '/dashboard/successful', element: <SuccessMessage />},
   ]);
 
   return (
