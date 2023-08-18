@@ -1,56 +1,46 @@
-
-import { useState } from 'react';
-import { store } from '../../redux/store';
+import {useEffect, useState} from 'react';
 import {NavLink} from 'react-router-dom';
 import {EmailIcon, EmailShareButton, WhatsappIcon, WhatsappShareButton} from 'react-share';
-// import { SMTPClient } from 'emailjs';
+import {store} from '../../redux/store';
+import {sumArray} from '../Dashboard/Store/sumIndexArray';
+import {stringToNumber} from './Store/convertStringToNumber';
+import {removeCommasFromNumber} from './Store/removeCommas';
 
 export const DHome = () => {
-  let user = store?.getState()?.user?.user?.user || []
-  let investments = store?.getState()?.user?.user?.investments || []
-
   const [recipientEmail, setRecipientEmail] = useState();
   const [show, setShow] = useState(false);
   const [showInner, setShowInner] = useState(false);
+  let user = store?.getState()?.user?.user?.user || [];
+  let investments = store?.getState()?.user?.user?.investments || [];
+  let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
 
-  const prepareUser = () => {
-    if (user.length) {
-      user.map((x) => {
-        x.name
-      })
-    }
-    return ''
-  }
+  const handleShow = () => {
+    setShow(!show);
+  };
+  const handleShowInner = () => {
+    setShowInner(!showInner);
+  };
 
-  // const client = new SMTPClient({
-  // 	user: 'user',
-  // 	password: 'thispass',
-  // 	host: 'smtp.support@satochi.com',
-  // 	ssl: true,
-  // });
+  console.log('Checking===============', user.balance + 200333);
+  console.log('INVESTMENT===============', investments);
+  console.log('USER===============', user);
 
-  // // send the message and get a callback with an error or details of the message that was sent
-  // const sendInvite =()=>{
-  //   client.send(
-  // 	{
-  // 		text: `This is a great investment platform i like to share with you, try it out..... i have earned ${totalProfits} in 2mounths ${<br/>} ${<br/>} Click Here to Join ${inviteLink}`,
-  // 		from: customerEmail,
-  // 		to: recipientEmail,
-  // 		cc: '',
-  // 		subject: 'Check out this Investment platform',
-  // 	},
-  // 	(err, message) => {
-  // 		console.log(err || message);
-  // 	}
-  // );
-  // }
+  const username = user?.username;
+  const balance = stringToNumber(user?.balance);
+  const totalInvested = sumArray(investments, 'invAmount');
+  const totalProfits = sumArray(investments, 'dailyProfit');
+  const balanceInAccount = removeCommasFromNumber(balance, totalInvested, totalProfits);
 
-  // const handleShow = () => {
-  //   setShow(!show);
-  // };
-  // const handleShowInner = () => {
-  //   setShowInner(!showInner);
-  // };
+  const totalAvailableBalanceAndInv = removeCommasFromNumber(balance, totalInvested);
+  const monthlyProfit = investments ? investments.monthlyProfit : 0;
+  const referalBonus = user.totalReferalBonus;
+  const rewards = user.totalRewards;
+  const Total = user?.totalMonthlyProfit + referalBonus + rewards;
+
+  const totalActiveInv = investments.length ? investments.length : 0;
+  const totalExpiredInv = expiredInvestments.length ? expiredInvestments.length : 0;
+  const totalInv = totalActiveInv + totalExpiredInv;
+  const inviteLink = `https://www.satochitradepro.com/${user?.referal}`;
 
   return (
     <div style={{paddingTop: '4rem'}}>
@@ -66,7 +56,7 @@ export const DHome = () => {
                     </div>
                     <div className="align-center flex-wrap pb-2 gx-4 gy-3">
                       <div>
-                        <h2 className="nk-block-title fw-normal">{user.username}</h2>
+                        <h2 className="nk-block-title fw-normal">{username}</h2>
                       </div>
                       <div>
                         <NavLink to="/dashboard/schemes" className="btn btn-white btn-light">
@@ -79,86 +69,6 @@ export const DHome = () => {
                       <p>At a glance summary of your investment account. Have fun!</p>
                     </div>
                   </div>
-
-                  {/* <div className="nk-block-head-content d-none d-md-block">
-                    <div className="nk-slider nk-slider-s1">
-                      <div
-                        className="slider-init"
-                        data-slick='{"dots": true, "arrows": false, "fade": true}'
-                      >
-                        <div className="slider-item">
-                          <div className="nk-iv-wg1">
-                            <div className="nk-iv-wg1-sub sub-text">
-                              My Active Plans
-                            </div>
-                            <h6 className="nk-iv-wg1-info title">
-                              Silver - 4.76% for 21 Days
-                            </h6>
-                            <NavLink
-                              to ="/dashboard#"
-                              className="nk-iv-wg1-link link link-light"
-                            >
-                              <em className="icon ni ni-trend-up" />{" "}
-                              <span>Check Details</span>
-                            </NavLink>
-                            <div className="nk-iv-wg1-progress">
-                              <div
-                                className="progress-bar bg-primary"
-                                data-progress={80}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="slider-item">
-                          <div className="nk-iv-wg1">
-                            <div className="nk-iv-wg1-sub sub-text">
-                              My Active Plans
-                            </div>
-                            <h6 className="nk-iv-wg1-info title">
-                              Silver - 4.76% for 21 Days
-                            </h6>
-                            <NavLink
-                              to ="/dashboard#"
-                              className="nk-iv-wg1-link link link-light"
-                            >
-                              <em className="icon ni ni-trend-up" />{" "}
-                              <span>Check Details</span>
-                            </NavLink>
-                            <div className="nk-iv-wg1-progress">
-                              <div
-                                className="progress-bar bg-primary"
-                                data-progress={30}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="slider-item">
-                          <div className="nk-iv-wg1">
-                            <div className="nk-iv-wg1-sub sub-text">
-                              My Active Plans
-                            </div>
-                            <h6 className="nk-iv-wg1-info title">
-                              Silver - 4.76% for 21 Days
-                            </h6>
-                            <NavLink
-                              to ="/dashboard#"
-                              className="nk-iv-wg1-link link link-light"
-                            >
-                              <em className="icon ni ni-trend-up" />{" "}
-                              <span>Check Details</span>
-                            </NavLink>
-                            <div className="nk-iv-wg1-progress">
-                              <div
-                                className="progress-bar bg-primary"
-                                data-progress={50}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="slider-dots" />
-                    </div>
-                  </div> */}
                 </div>
               </div>
               <div className="nk-block">
@@ -190,13 +100,13 @@ export const DHome = () => {
                         <div className="nk-iv-wg2">
                           <div className="nk-iv-wg2-title">
                             <h6 className="title">
-                              Available Balance
+                              STP Wallet Balance
                               <em className="icon ni ni-info" />
                             </h6>
                           </div>
                           <div className="nk-iv-wg2-text">
                             <div className="nk-iv-wg2-amount">
-                              $ {user.balance}
+                              $ {balance}
                               <span className="change up">
                                 <span className="sign" />
                                 3.4%
@@ -219,7 +129,7 @@ export const DHome = () => {
                           </div>
                           <div className="nk-iv-wg2-text">
                             <div className="nk-iv-wg2-amount">
-                              {/* $ {totalInvested} */}
+                              $ {totalInvested}
                               <span className="change up">
                                 <span className="sign" />
                                 2.8%
@@ -242,7 +152,7 @@ export const DHome = () => {
                           </div>
                           <div className="nk-iv-wg2-text">
                             <div className="nk-iv-wg2-amount">
-                              {/* $ {totalProfits} */}
+                              $ {totalProfits}
                               <span className="change down">
                                 <span className="sign" />
                                 1.4%
@@ -266,19 +176,19 @@ export const DHome = () => {
                             <h6 className="title">Balance in Account</h6>
                           </div>
                           <div className="nk-iv-wg2-text">
-                            {/* <div className="nk-iv-wg2-amount ui-v2">$ {totalBalance}</div> */}
+                            <div className="nk-iv-wg2-amount ui-v2">$ {balanceInAccount}</div>
                             <ul className="nk-iv-wg2-list">
                               <li>
                                 <span className="item-label">Available Funds</span>
-                                {/* <span className="item-value">$ {balance}</span> */}
+                                <span className="item-value">$ {balance}</span>
                               </li>
                               <li>
                                 <span className="item-label">Invested Funds</span>
-                                {/* <span className="item-value">$ {currentInventedFunds} </span> */}
+                                <span className="item-value">$ {totalInvested} </span>
                               </li>
                               <li className="total">
                                 <span className="item-label">Total</span>
-                                {/* <span className="item-value"> $ {totalBalance}</span> */}
+                                <span className="item-value"> $ {totalAvailableBalanceAndInv}</span>
                               </li>
                             </ul>
                           </div>
@@ -307,7 +217,7 @@ export const DHome = () => {
                           </div>
                           <div className="nk-iv-wg2-text">
                             <div className="nk-iv-wg2-amount ui-v2">
-                              {/* $ {totalMonthlyProfits} */}
+                              $ {monthlyProfit}
                               <span className="change up">
                                 <span className="sign" />
                                 4.5%
@@ -316,19 +226,19 @@ export const DHome = () => {
                             <ul className="nk-iv-wg2-list">
                               <li>
                                 <span className="item-label">Profits</span>
-                                {/* <span className="item-value">{thisMonthProfit}</span> */}
+                                <span className="item-value">{monthlyProfit}</span>
                               </li>
                               <li>
                                 <span className="item-label">Referrals</span>
-                                {/* <span className="item-value">{referrals}</span> */}
+                                <span className="item-value">{referalBonus}</span>
                               </li>
                               <li>
                                 <span className="item-label">Rewards</span>
-                                {/* <span className="item-value">{rewards}</span> */}
+                                <span className="item-value">{rewards}</span>
                               </li>
                               <li className="total">
                                 <span className="item-label">Total Profit</span>
-                                {/* <span className="item-value">{totalMonthlyProfits}</span> */}
+                                <span className="item-value">{Total}</span>
                               </li>
                             </ul>
                           </div>
@@ -358,24 +268,24 @@ export const DHome = () => {
                           </div>
 
                           <div className="nk-iv-wg2-text">
-                            {/* <div className="nk-iv-wg2-amount ui-v2">
-                              {totalNumberOfInvestments}
-                              <span className="sub">{numberOfActiveInvestments}</span> Active
-                              <span className="sub">{numberOfexpiredInvestments}</span> Expired
-                            </div> */}
+                            <div className="nk-iv-wg2-amount ui-v2">
+                              {totalInv}
+                              <span className="sub">{totalActiveInv}</span> Active
+                              <span className="sub">{totalExpiredInv}</span> Expired
+                            </div>
 
                             <ul className="nk-iv-wg2-list">
-                              {/* {
-                                myInvestments.map((item, index)=>(
-                                  <li key={index}>
-                                    <span className="item-label">
-                                      <a href="/dashboard/schemes">{item.package}</a>
-                                      <small>- {item.profitRate}% for {item.duration} Days</small>
-                                    </span>
-                                     <span className="item-value">{item.amountInvested}</span>
-                                  </li>
-                                ))
-                              } */}
+                              {investments.slice(-4).map((item, index) => (
+                                <li key={index}>
+                                  <span className="item-label">
+                                    <a href="/dashboard/schemes">{item.package.name}</a>
+                                    <small>
+                                      - {item.package.profitRate}% for {item.package.duration} Days
+                                    </small>
+                                  </span>
+                                  <span className="item-value">{item.invAmount}</span>
+                                </li>
+                              ))}
                             </ul>
                           </div>
 
@@ -411,7 +321,7 @@ export const DHome = () => {
                         </div>
                         <div className="nk-refwg-action">
                           <NavLink
-                            // onClick={handleShow}
+                            onClick={handleShow}
                             to="/dashboard#"
                             className="btn btn-primary">
                             Invite
@@ -442,9 +352,9 @@ export const DHome = () => {
                             </WhatsappShareButton>
 
                             <p
-                              // onClick={handleShowInner}
+                              onClick={handleShowInner}
                               style={{
-                                backgroundColor: 'rgb(43,55,130)',
+                                backgroundColor: 'rgb(38,175,71)',
                                 color: 'white',
                                 cursor: 'pointer',
                                 fontWeight: 'bolder',
@@ -485,7 +395,7 @@ export const DHome = () => {
                                   style={{
                                     border: 'none',
                                     padding: '.3rem .4rem',
-                                    backgroundColor: 'rgb(43,55,130)',
+                                    backgroundColor: 'rgb(38,175,71)',
                                     color: 'white',
                                     fontWeight: 'bolder',
                                     borderRadius: '.4rem',
@@ -514,7 +424,7 @@ export const DHome = () => {
                             type="text"
                             className="form-control copy-text"
                             id="refUrl"
-                            // defaultValue={inviteLink}
+                            defaultValue={inviteLink}
                           />
                         </div>
                       </div>
@@ -534,33 +444,14 @@ export const DHome = () => {
                         </div>
                         <div className="nk-refwg-info g-3">
                           <div className="nk-refwg-sub">
-                            <div className="title">0</div>
+                            <div className="title">{referalBonus?.length - 1}</div>
                             <div className="sub-text">Total Joined</div>
                           </div>
                           <div className="nk-refwg-sub">
-                            {/* <div className="title">{referrals}</div> */}
-                            <div className="sub-text">Referral Earn</div>
-                          </div>
-                        </div>
-                        <div className="nk-refwg-more dropdown mt-n1 me-n1">
-                          <NavLink
-                            to="/dashboard#"
-                            className="btn btn-icon btn-trigger"
-                            data-bs-toggle="dropdown">
-                            <em className="icon ni ni-more-h" />
-                          </NavLink>
-                          <div className="dropdown-menu dropdown-menu-xs dropdown-menu-end">
-                            <ul className="link-list-plain sm">
-                              <li>
-                                <NavLink to="/dashboard#">7 days</NavLink>
-                              </li>
-                              <li>
-                                <NavLink to="/dashboard#">15 Days</NavLink>
-                              </li>
-                              <li>
-                                <NavLink to="/dashboard#">30 Days</NavLink>
-                              </li>
-                            </ul>
+                            <div className="sub-text">
+                              Referral Earn
+                              <small>{referalBonus}</small>
+                            </div>
                           </div>
                         </div>
                       </div>

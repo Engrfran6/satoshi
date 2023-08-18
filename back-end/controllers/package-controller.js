@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi');
-const Package = require('../models/Packages/PackageModel')
+const Package = require('../models/Packages/PackageModel');
 
 const createPackageSchema = Joi.object().keys({
   name: Joi.string().required(),
@@ -14,19 +14,24 @@ const createPackageSchema = Joi.object().keys({
   totalPercentageReturn: Joi.string().required(),
 });
 
-
 exports.createPackage = async (req, res) => {
   try {
     const doc = req.body;
-    let { 
-      name, dailyRoi, amount, profitRate, 
-      lossRate, dailyLoss, minDeposit, maxDeposit, 
-      totalPercentageReturn
+    let {
+      name,
+      dailyRoi,
+      amount,
+      profitRate,
+      lossRate,
+      dailyLoss,
+      minDeposit,
+      maxDeposit,
+      totalPercentageReturn,
     } = req.body;
 
-    const { error } = createPackageSchema.validate({...doc});
+    const {error} = createPackageSchema.validate({...doc});
     if (error) {
-      return res.status(400).json({ error: error.details[0].message });
+      return res.status(400).json({error: error.details[0].message});
     }
 
     dailyRoi = Number(dailyRoi);
@@ -37,16 +42,16 @@ exports.createPackage = async (req, res) => {
     minDeposit = Number(minDeposit);
     maxDeposit = Number(maxDeposit);
     totalPercentageReturn = Number(totalPercentageReturn);
-  
+
     const package = new Package({
       name,
       amount,
       dailyRoi,
       profitRate,
-      lossRate, 
-      dailyLoss, 
-      minDeposit, 
-      maxDeposit, 
+      lossRate,
+      dailyLoss,
+      minDeposit,
+      maxDeposit,
       totalPercentageReturn,
       duration: doc.duration,
     });
@@ -55,28 +60,28 @@ exports.createPackage = async (req, res) => {
     if (package) {
       return res.status(201).json({
         status: 'success',
-        data: package
+        data: package,
       });
     }
   } catch (e) {
     res.status(500).json({
-      status: "failed",
-      message: e.message
+      status: 'failed',
+      message: e.message,
     });
   }
 };
 
 exports.getPackages = async (req, res) => {
   try {
-    const package = await Package.find({})
+    const package = await Package.find({});
     return res.status(200).json({
       status: 'success',
-      data: package
+      data: package,
     });
   } catch (e) {
     res.status(500).json({
-      status: "failed",
-      message: e.message
+      status: 'failed',
+      message: e.message,
     });
   }
 };

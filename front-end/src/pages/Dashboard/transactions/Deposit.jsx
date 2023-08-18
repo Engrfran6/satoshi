@@ -1,56 +1,52 @@
-import {useNavigate} from 'react-router-dom';
-import {updateUserData} from '../../../components/Commons/HandleRequest';
-import {useContext, useState} from 'react';
-import {DataContext} from '../Store/DataProvider';
+import {NavLink, useNavigate} from 'react-router-dom';
+import {useState} from 'react';
 import {Footer} from '../../../components/Dashboard/Footer/DashboardFooter';
 import {Header} from '../../../components/Dashboard/Header/DashboardHeader';
-
-// import useFetch from "./DataProvider";
+import {store} from '../../../redux/store';
+import {stringToNumber} from '../../Dashboard/Store/convertStringToNumber';
+import {removeCommasFromNumber} from '../../Dashboard/Store/removeCommas';
+import {EmailIcon, WhatsappIcon, WhatsappShareButton} from 'react-share';
+import {useDispatch} from 'react-redux';
+import {setSelectedPaymentOption} from '../../../redux/user-slice';
 
 export const Deposit = () => {
-  const dis = [
-    customerName,
-    customerStatus,
-    balance,
-    totalInvested,
-    totalProfits,
-    inviteLink,
-    referrals,
-    error,
-    loading,
-    logout,
-  ];
-
-  // deposit
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
-  const [deposit, setDeposit] = useState('');
+  const [deposit, setDeposit] = useState(0);
+  const [recipientEmail, setRecipientEmail] = useState();
+  const [show, setShow] = useState(false);
+  const [showInner, setShowInner] = useState(false);
 
-  const newBalance = balance + parseFloat(deposit);
+  let user = store?.getState()?.user?.user?.user || [];
+
+  const username = user?.username;
+  const balance = stringToNumber(user?.balance);
+  const totalInvested = stringToNumber(user?.totalInvested);
+  const totalProfits = stringToNumber(user?.totalProfit);
+  const balanceInAccount = removeCommasFromNumber(balance, totalInvested, totalProfits);
+  const referalBonus = user.totalReferalBonus;
+  const rewards = user.totalRewards;
+  const inviteLink = `https://www.satochitradepro.com/${user?.referal}`;
+
+  const newBalance = Number(user?.balance) + parseInt(deposit);
 
   const handleInputChange = (e) => {
     setDeposit(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleShow = () => {
+    setShow(!show);
+  };
+  const handleShowInner = () => {
+    setShowInner(!showInner);
+  };
 
-    if (!deposit) {
-      setMessage('Please enter an amount.');
-      return;
-    }
-
-    try {
-      const response = await updateUserData('/data', {balance: newBalance});
-
-      if (response.Ok) {
-        setMessage(`Your deposit of $ -${deposit} is been proccessed, please hold!`);
-      }
-      navigate('/dashboard#'); // <-- redirect
-    } catch (error) {
-      // Handle the error, show an error message, etc.
-      console.error(error);
-    }
+  const dispatch = useDispatch();
+  const processDeposit = () => {
+    if (deposit > 0) {
+      dispatch(setSelectedPaymentOption(deposit));
+      navigate('/dashboard/investing');
+    } else console.log('Enter deposit amount');
   };
 
   return (
@@ -71,7 +67,7 @@ export const Deposit = () => {
                         </div>
                         <div className="align-center flex-wrap pb-2 gx-4 gy-3">
                           <div>
-                            <h2 className="nk-block-title fw-normal">{customerName}</h2>
+                            <h2 className="nk-block-title fw-normal">{username}</h2>
                           </div>
                           <div>
                             <NavLink to="/dashboard/schemes" className="btn btn-white btn-light">
@@ -87,7 +83,7 @@ export const Deposit = () => {
 
                       <div
                         style={{
-                          display: customerStatus == true ? 'none' : 'block',
+                          display: user?.status == 'pending' ? 'block' : 'none',
                           color: 'red',
                           fontSize: '1rem',
                         }}>
@@ -176,8 +172,8 @@ export const Deposit = () => {
                         <div className="nk-news-list">
                           {/* <NavLink className="nk-news-item" to ="/dashboard#"> */}
 
-                          <form onSubmit={handleSubmit} style={{width: '30%', margin: '0 auto'}}>
-                            <label>Withdrawal:</label>
+                          <form style={{width: '30%', margin: '0 auto'}}>
+                            <label>Deposit:</label>
                             <div
                               style={{
                                 display: 'flex',
@@ -190,26 +186,27 @@ export const Deposit = () => {
                                   fontSize: '1.2rem',
                                   border: 'none',
                                   borderBottom: '2px solid grey',
+                                  width: '100%',
                                 }}
                                 type="number"
-                                value={withdrawal}
+                                value={deposit}
                                 onChange={handleInputChange}
-                                placeholder="Enter the withdrawal amount"
+                                placeholder="Enter the deposit amount"
                               />
                             </div>
-                          </form>
-
-                          <form onSubmit={handleSubmit}>
-                            <p>{balance}</p>
-                            <label>Deposit:</label>
-                            <input
-                              type="number"
-                              value={deposit}
-                              onChange={handleInputChange}
-                              placeholder="Enter deposit amount"
-                            />
-
-                            <button>Deposit Funds</button>
+                            <p>{message}</p>
+                            <button
+                              onClick={processDeposit}
+                              style={{
+                                padding: '.5rem 1.5rem',
+                                borderRadius: '.5rem',
+                                border: 'none',
+                                marginTop: '1rem',
+                                background: 'rgb(43,55,130)',
+                                color: 'white',
+                              }}>
+                              Process Deposit
+                            </button>
                           </form>
 
                           {/* </NavLink> */}
@@ -355,11 +352,11 @@ export const Deposit = () => {
                             </div>
                             <div className="nk-refwg-info g-3">
                               <div className="nk-refwg-sub">
-                                <div className="title">0</div>
+                                <div className="title">{referalBonus?.length - 1}</div>
                                 <div className="sub-text">Total Joined</div>
                               </div>
                               <div className="nk-refwg-sub">
-                                <div className="title">{referrals}</div>
+                                <div className="title">{referalBonus}</div>
                                 <div className="sub-text">Referral Earn</div>
                               </div>
                             </div>

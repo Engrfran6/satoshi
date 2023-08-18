@@ -11,10 +11,6 @@ const createUserSchema = Joi.object().keys({
   password: Joi.string().required(),
   username: Joi.string().required(),
   phoneNumber: Joi.string().required(),
-  packageId: Joi.string().required(),
-  country: Joi.string().required(),
-  state: Joi.string().required(),
-  address: Joi.string().required(),
   email: Joi.string()
     .required()
     .email({tlds: {allow: false}}),
@@ -33,10 +29,10 @@ exports.register = async (req, res) => {
       return res.status(400).json({error: error.details[0].message});
     }
 
-    const package = await Package.findOne({_id: doc.packageId});
-    if (!package) {
-      return res.status(400).json({error: `no package found with id ${doc.packageId}`});
-    }
+    // const package = await Package.findOne({_id: doc.packageId});
+    // if (!package) {
+    //   return res.status(400).json({error: `no package found with id ${doc.packageId}`});
+    // }
 
     const salt = await bcrypt.genSalt(10);
     const generatedPassword = await bcrypt.hash(doc.password, salt);
@@ -47,13 +43,8 @@ exports.register = async (req, res) => {
       fullName: doc.fullName,
       username: doc.username,
       phoneNumber: doc.phoneNumber,
-      package: doc.packageId,
-      referal: doc.phoneNumber,
-      country: doc.country,
-      state: doc.state,
-      address: doc.address,
       password: generatedPassword,
-      referal: genrateReferal,
+      referalId: genrateReferal,
     };
 
     const user = new User(params);
@@ -81,7 +72,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({error: error.details[0].message});
     }
     const {email, password} = req.body;
-    const user = await User.findOne({email: email}).populate('package');;
+    const user = await User.findOne({email: email});
     if (!user) {
       res.status(401).json({error: 'invalid credentials'});
     }
@@ -93,12 +84,12 @@ exports.login = async (req, res) => {
       // const activity = new Activity({ title: 'logged in', user: user._id });
       // await activity.save();
       // const activities = await Activity.find({ user: user._id })
-      const investments = await Investment.find({ user: user._id }).populate('package')
+      const investments = await Investment.find({user: user._id}).populate('package');
       res.status(200).json({
         status: 'success',
         token,
         user,
-        investments
+        investments,
         // activities,
       });
     }

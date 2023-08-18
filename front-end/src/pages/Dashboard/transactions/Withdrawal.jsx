@@ -3,31 +3,32 @@ import {updateUserData} from '../../../components/Commons/HandleRequest';
 import {NavLink, useNavigate} from 'react-router-dom';
 import {Footer} from '../../../components/Dashboard/Footer/DashboardFooter';
 import {Header} from '../../../components/Dashboard/Header/DashboardHeader';
-import {DataContext} from '../../../pages/Dashboard/Store/DataProvider';
 import {EmailIcon, WhatsappIcon, WhatsappShareButton} from 'react-share';
+import {store} from '../../../redux/store';
+import {sumArray} from '../../Dashboard/Store/sumIndexArray';
+import {stringToNumber} from '../../Dashboard/Store/convertStringToNumber';
+import {removeCommasFromNumber} from '../../Dashboard/Store/removeCommas';
 
 export const Withdrawal = () => {
-  const dis = [
-    customerName,
-    customerStatus,
-    balance,
-    totalInvested,
-    totalProfits,
-    inviteLink,
-    referrals,
-    error,
-    loading,
-    logout,
-  ];
-
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
-  const [withdrawal, setWithdrawal] = useState('');
+  const [withdrawal, setWithdrawal] = useState();
   const [recipientEmail, setRecipientEmail] = useState();
   const [show, setShow] = useState(false);
   const [showInner, setShowInner] = useState(false);
+  let user = store?.getState()?.user?.user?.user || [];
+  let investments = store?.getState()?.user?.user?.investments || [];
+  let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
 
-  const newBalance = balance - parseInt(parseFloat(withdrawal));
+  const username = user?.username;
+  const balance = stringToNumber(user?.balance);
+  const totalInvested = stringToNumber(user?.totalInvested);
+  const totalProfits = stringToNumber(user?.totalProfit);
+  const referalBonus = user.totalReferalBonus;
+  const rewards = user.totalRewards;
+  const inviteLink = `https://www.satochitradepro.com/${user?.referal}`;
+
+  const newBalance = Number(user?.balance) - parseInt(withdrawal);
 
   const handleInputChange = (e) => {
     setWithdrawal(e.target.value);
@@ -37,6 +38,10 @@ export const Withdrawal = () => {
     e.preventDefault();
     try {
       const response = await updateUserData('/auth/deposit', {balance: newBalance});
+
+      if (balance <= withdrawal) {
+        setMessage('withdrawal amount must be less than available balance');
+      } else setMessage('');
 
       if (response.Ok) {
         setMessage(
@@ -74,7 +79,7 @@ export const Withdrawal = () => {
                         </div>
                         <div className="align-center flex-wrap pb-2 gx-4 gy-3">
                           <div>
-                            <h2 className="nk-block-title fw-normal">{customerName}</h2>
+                            <h2 className="nk-block-title fw-normal">{username}</h2>
                           </div>
                           <div>
                             <NavLink to="/dashboard/schemes" className="btn btn-white btn-light">
@@ -90,7 +95,7 @@ export const Withdrawal = () => {
 
                       <div
                         style={{
-                          display: customerStatus == true ? 'none' : 'block',
+                          display: user?.status == 'pending' ? 'block' : 'none',
                           color: 'red',
                           fontSize: '1rem',
                         }}>
@@ -193,13 +198,27 @@ export const Withdrawal = () => {
                                   fontSize: '1.2rem',
                                   border: 'none',
                                   borderBottom: '2px solid grey',
+                                  width: '100%',
+                                  height: '5vh',
                                 }}
-                                type="number"
+                                type="text"
                                 value={withdrawal}
                                 onChange={handleInputChange}
                                 placeholder="Enter the withdrawal amount"
                               />
                             </div>
+                            <p>{message}</p>
+                            <button
+                              style={{
+                                padding: '.5rem 1.5rem',
+                                borderRadius: '.5rem',
+                                border: 'none',
+                                marginTop: '1rem',
+                                background: 'rgb(43,55,130)',
+                                color: 'white',
+                              }}>
+                              Process Withdrawal
+                            </button>
                           </form>
 
                           {/* </NavLink> */}
@@ -345,11 +364,11 @@ export const Withdrawal = () => {
                             </div>
                             <div className="nk-refwg-info g-3">
                               <div className="nk-refwg-sub">
-                                <div className="title">0</div>
+                                <div className="title">{referalBonus?.length - 1}</div>
                                 <div className="sub-text">Total Joined</div>
                               </div>
                               <div className="nk-refwg-sub">
-                                <div className="title">{referrals}</div>
+                                <div className="title">{referalBonus}</div>
                                 <div className="sub-text">Referral Earn</div>
                               </div>
                             </div>
