@@ -3,23 +3,17 @@ const AutoGeneratePlugin = require('../schema_plugins');
 
 const accountSchema = new Schema(
   {
-    user: {
-      type: Schema.Types.String,
-      ref: 'User',
-    },
     StpWallet: {
-      type: String,
+      address: {type: String},
+      balance: {type: Number, default: 0},
     },
     BTCWallet: {
-      type: String,
+      address: {type: String},
+      balance: {type: Number, default: 0},
     },
     USDTWallet: {
-      type: String,
-      ref: 'Account',
-    },
-    BankTransfer: {
-      type: String,
-      ref: 'Account',
+      address: {type: String},
+      balance: {type: Number, default: 0},
     },
   },
   {versionKey: false}
@@ -27,5 +21,5 @@ const accountSchema = new Schema(
 
 accountSchema.plugin(AutoGeneratePlugin);
 
-const Account = model('Deposit', accountSchema);
+const Account = model('Account', accountSchema);
 module.exports = Account;

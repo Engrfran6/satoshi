@@ -31,6 +31,11 @@ export const userSlice = createSlice({
     resetUser(state) {
       state.user = undefined;
       localStorage.setItem('persist:root', '');
+      state.user.token = null;
+      state.user.investments = [];
+      state.user.selectedPackage = null;
+      state.user.selectedPaymentOption = null;
+      state.user.selectedDepositAmount = null;
     },
   },
 });
@@ -44,6 +49,7 @@ export const {
   setSelectedPackage,
   setSelectedPaymentOption,
 } = userSlice.actions;
+
 export const selectUser = (state) => state.user;
 
 export default userSlice.reducer;

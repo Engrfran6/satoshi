@@ -1,8 +1,34 @@
 import {NavLink} from 'react-router-dom';
+import {store} from '../../redux/store';
 import {Footer} from '../../components/Dashboard/Footer/DashboardFooter';
 import {Header} from '../../components/Dashboard/Header/DashboardHeader';
+import {updateUserData} from '../../components/Commons/HandleRequest';
+import {useState} from 'react';
 
 export const ProfileSetting = () => {
+  let user = store?.getState()?.user?.user.user;
+
+  const [currentPassword, setCurrentPassword] = useState(user.password);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleChangePassword = (event) => {
+    event.preventDefault();
+    if (currentPassword === user.password) {
+      if (newPassword === confirmNewPassword) {
+        const updatePassword = updateUserData('/update/password', {password: newPassword});
+        if (updatePassword.status == 200) {
+          setMessage('Password updated successfully.');
+        }
+      } else {
+        setMessage('New passwords do not match.');
+      }
+    } else {
+      setMessage('Current password is incorrect.');
+    }
+  };
+
   return (
     <>
       <div className="nk-content nk-content-lg nk-content-fluid">
@@ -92,20 +118,48 @@ export const ProfileSetting = () => {
                           <h6>Change Password</h6>
                           <p>Set a unique password to protect your account.</p>
                         </div>
-                        <div className="nk-block-actions flex-shrink-sm-0">
+                        <form className="nk-block-actions flex-shrink-sm-0">
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              gap: '1rem',
+                              marginBottom: '2rem',
+                            }}>
+                            <div>
+                              <label htmlFor="newPassword">New Password</label>
+                              <input
+                                type="password"
+                                id="newPassword"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                              />
+                            </div>
+                            <div>
+                              <label htmlFor="confirmNewPassword">Confirm Password</label>
+                              <input
+                                type="password"
+                                id="confirmNewPassword"
+                                value={confirmNewPassword}
+                                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                              />
+                            </div>
+                          </div>
                           <ul className="align-center flex-wrap flex-sm-nowrap gx-3 gy-2">
                             <li className="order-md-last">
-                              <NavLink to="/dashboard/profile-setting#" className="btn btn-primary">
+                              <button onClick={handleChangePassword} className="btn btn-primary">
                                 Change Password
-                              </NavLink>
+                              </button>
                             </li>
                             <li>
                               <em className="text-soft text-date fs-12px">
-                                Last changed: <span>Oct 2, 2019</span>
+                                Last changed: <span>{user.password.updatedAt}</span>
                               </em>
                             </li>
+                            <li>{message}</li>
                           </ul>
-                        </div>
+                        </form>
                       </div>
                     </div>
                     <div className="card-inner">
@@ -117,7 +171,7 @@ export const ProfileSetting = () => {
                           <p>
                             Secure your account with 2FA security. When it is activated you will
                             need to enter not only your password, but also a special code using app.
-                            You can receive this code by in mobile app.{' '}
+                            You can receive this code by in mobile app.
                           </p>
                         </div>
                         <div className="nk-block-actions">

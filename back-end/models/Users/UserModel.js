@@ -52,6 +52,7 @@ const userSchema = new Schema(
     kyc: {
       type: [String],
     },
+    // balance: {type: Schema.Types.ObjectId, ref: 'Account'},
     balance: {
       type: Number,
       default: 0.0,
