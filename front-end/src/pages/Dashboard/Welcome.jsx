@@ -1,6 +1,8 @@
 import {NavLink} from 'react-router-dom';
+import {store} from '../../redux/store';
 
 export const Welcome = () => {
+  let user = store?.getState()?.user?.user.user;
   return (
     <>
       <div className="nk-content nk-content-lg nk-content-fluid">
@@ -9,7 +11,7 @@ export const Welcome = () => {
             <div className="nk-content-body">
               <div className="nk-block-head nk-block-head-lg wide-xs mx-auto">
                 <div className="nk-block-head-content text-center">
-                  <h2 className="nk-block-title fw-normal">Nice, Abu Bin Ishtiyak!</h2>
+                  <h2 className="nk-block-title fw-normal">Nice, {user.fullName}!</h2>
                   <div className="nk-block-des">
                     <p>
                       Welcome to our <strong>DashLite Crypto Dashboard</strong>. You are few steps
@@ -199,7 +201,9 @@ export const Welcome = () => {
                               </li>
                               <li>Receive and send payment with NioWallet</li>
                             </ul>
-                            <NavLink to="/support" className="btn btn-lg btn-primary">
+                            <NavLink
+                              to="/dashboard/kyc-application"
+                              className="btn btn-lg btn-primary">
                               Get Started
                             </NavLink>
                           </div>

@@ -21,14 +21,18 @@ const investmentSchema = new Schema(
       type: Number,
       required: true,
     },
-    dailyProfit: {
-      type: Number,
-      default: 0.0,
-    },
-    dailyLoss: {
-      type: Number,
-      default: 0.0,
-    },
+    dailyProfit: [
+      {
+        type: Number,
+        default: 0.0,
+      },
+    ],
+    dailyLoss: [
+      {
+        type: Number,
+        default: 0.0,
+      },
+    ],
     netProfit: {
       type: Number,
       default: 0.0,
@@ -47,10 +51,12 @@ const investmentSchema = new Schema(
       type: Number,
       default: 0.0,
     },
-    referalBonus: {
-      type: Number,
-      default: 0.0,
-    },
+    referalBonus: [
+      {
+        type: Number,
+        default: 0.0,
+      },
+    ],
     rewards: {
       type: Number,
       default: 0.0,

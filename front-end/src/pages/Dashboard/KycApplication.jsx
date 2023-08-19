@@ -42,7 +42,7 @@ export const KycApplication = () => {
                   </div>
                   <div className="text-center pt-4">
                     <p>
-                      If you have any question, please contact our support team
+                      If you have any question, please contact our support team___{''}
                       <NavLink to="mailto:info@satochitradepro.com">
                         info@satochitradepro.com
                       </NavLink>

@@ -1,5 +1,5 @@
 const stringToNumber = (value) => {
-  let number = parseInt(parseFloat(value)).toLocaleString(undefined, {maximumFractionDigits: 2});
+  let number = parseInt(parseFloat(value));
   return number;
 };
 

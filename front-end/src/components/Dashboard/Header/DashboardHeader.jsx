@@ -1,9 +1,20 @@
-import {useContext, useState} from 'react';
 import {NavLink} from 'react-router-dom';
-// import { DataContext } from "../../../pages/Dashboard/Store/DataProvider";
+import {store} from '../../../redux/store';
+import {useDispatch} from 'react-redux';
+import {resetUser} from '../../../redux/user-slice';
 
-export const Header = ({customerEmail, customerName, customerStatus, logout}) => {
-  const isVerified = customerStatus == true ? 'Verified' : 'Unverified';
+export const Header = () => {
+  const dispatch = useDispatch();
+  let user = store?.getState()?.user?.user.user;
+
+  const initials = user?.fullName
+    .split(' ')
+    .map((name) => name.charAt(0).toUpperCase())
+    .join('');
+
+  const handleLogout = () => {
+    dispatch(resetUser());
+  };
 
   return (
     <div className="nk-header nk-header-fluid nk-header-fixed is-theme  nk-header-fixed">
@@ -76,10 +87,7 @@ export const Header = ({customerEmail, customerName, customerStatus, logout}) =>
           <div className="nk-header-tools">
             <ul className="nk-quick-nav">
               <li className="dropdown notification-dropdown">
-                <NavLink
-                  to="/dashboard/invest#"
-                  className="dropdown-toggle nk-quick-nav-icon"
-                  data-bs-toggle="dropdown">
+                <NavLink className="dropdown-toggle nk-quick-nav-icon" data-bs-toggle="dropdown">
                   <div className="icon-status icon-status-info">
                     <em className="icon ni ni-bell" />
                   </div>
@@ -87,7 +95,7 @@ export const Header = ({customerEmail, customerName, customerStatus, logout}) =>
                 <div className="dropdown-menu dropdown-menu-xl dropdown-menu-end dropdown-menu-s1">
                   <div className="dropdown-head">
                     <span className="sub-title nk-dropdown-title">Notifications</span>
-                    <NavLink to="/dashboard//invest#">Mark All as Read</NavLink>
+                    <NavLink>Mark All as Read</NavLink>
                   </div>
                   <div className="dropdown-body">
                     <div className="nk-notification">
@@ -160,11 +168,11 @@ export const Header = ({customerEmail, customerName, customerStatus, logout}) =>
                     </div>
                   </div>
                   <div className="dropdown-foot center">
-                    <NavLink to="/dashboard/invest#">View All</NavLink>
+                    <NavLink>View All</NavLink>
                   </div>
                 </div>
               </li>
-              <li className="dropdown language-dropdown d-none d-sm-flex me-n1">
+              {/* <li className="dropdown language-dropdown d-none d-sm-flex me-n1">
                 <NavLink
                   to="/dashboard/invest#"
                   className="dropdown-toggle nk-quick-nav-icon"
@@ -201,17 +209,14 @@ export const Header = ({customerEmail, customerName, customerStatus, logout}) =>
                     </li>
                   </ul>
                 </div>
-              </li>
+              </li> */}
               <li className="hide-mb-sm">
-                <NavLink to="/dashboard/invest#" className="nk-quick-nav-icon">
+                <a onClick={handleLogout} className="nk-quick-nav-icon">
                   <em className="icon ni ni-signout" />
-                </NavLink>
+                </a>
               </li>
               <li className="dropdown user-dropdown order-sm-first">
-                <NavLink
-                  to="/dashboard/invest#"
-                  className="dropdown-toggle"
-                  data-bs-toggle="dropdown">
+                <NavLink className="dropdown-toggle" data-bs-toggle="dropdown">
                   <div className="user-toggle">
                     <div className="user-avatar sm">
                       <em className="icon ni ni-user-alt" />
@@ -219,10 +224,10 @@ export const Header = ({customerEmail, customerName, customerStatus, logout}) =>
                     <div className="user-info d-none d-xl-block">
                       <div
                         className="user-status user-status-unverified"
-                        style={{color: customerStatus == true ? 'green' : 'red'}}>
-                        {isVerified}
+                        style={{color: user?.status == 'verified' ? 'rgb(95, 215, 183)' : 'red'}}>
+                        {user?.status == 'verified' ? 'Verified' : 'Unverified'}
                       </div>
-                      <div className="user-name dropdown-indicator">{customerName}</div>
+                      <div className="user-name dropdown-indicator">{user?.fullName}</div>
                     </div>
                   </div>
                 </NavLink>
@@ -230,11 +235,11 @@ export const Header = ({customerEmail, customerName, customerStatus, logout}) =>
                   <div className="dropdown-inner user-card-wrap bg-lighter d-none d-md-block">
                     <div className="user-card">
                       <div className="user-avatar">
-                        <span>AB</span>
+                        <span>{initials}</span>
                       </div>
                       <div className="user-info">
-                        <span className="lead-text">{customerName}</span>
-                        <span className="sub-text">{customerEmail}</span>
+                        <span className="lead-text">{user?.fullName}</span>
+                        <span className="sub-text">{user?.email}</span>
                       </div>
                       <div className="user-action">
                         <NavLink className="btn btn-icon me-n2" to="/dashboard/profile-setting">
@@ -247,15 +252,15 @@ export const Header = ({customerEmail, customerName, customerStatus, logout}) =>
                   <div className="dropdown-inner user-account-info" style={{display: 'block'}}>
                     <h6 className="overline-title-alt">Account Balance</h6>
                     <div className="user-balance">
-                      1,494.23 <small className="currency currency-usd">USD</small>
+                      {user?.balance} <small className="currency currency-usd">USD</small>
                     </div>
                     <div className="user-balance-sub">
                       Locked{' '}
                       <span>
-                        15,495.39 <span className="currency currency-usd">USD</span>
+                        {user?.lockedBalance} <span className="currency currency-usd">USD</span>
                       </span>
                     </div>
-                    <NavLink to="/dashboard/invest#" className="link">
+                    <NavLink to="/dashboard/withdraw" className="link">
                       <span>Withdraw Balance</span> <em className="icon ni ni-wallet-out" />
                     </NavLink>
                   </div>
@@ -284,10 +289,10 @@ export const Header = ({customerEmail, customerName, customerStatus, logout}) =>
                   <div className="dropdown-inner">
                     <ul className="link-list">
                       <li>
-                        <a onClick={logout}>
+                        <button onClick={handleLogout}>
                           <em className="icon ni ni-signout" />
                           <span>Sign out</span>
-                        </a>
+                        </button>
                       </li>
                     </ul>
                   </div>

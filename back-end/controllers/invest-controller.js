@@ -55,11 +55,11 @@ exports.createInvestment = async (req, res) => {
 exports.getInvestments = async (req, res) => {
   try {
     const userId = req.user._id;
-    const deposits = await Investment.find({user: userId});
+    const investment = await Investment.find({user: userId});
 
     return res.status(201).json({
       status: 'success',
-      data: deposits,
+      data: investment,
     });
   } catch (e) {
     res.status(500).json({

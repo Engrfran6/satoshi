@@ -5,6 +5,7 @@ import {store} from '../../redux/store';
 import {sumArray} from '../Dashboard/Store/sumIndexArray';
 import {stringToNumber} from './Store/convertStringToNumber';
 import {removeCommasFromNumber} from './Store/removeCommas';
+import {sumOfArray} from './calcAccountValues/Summation';
 
 export const DHome = () => {
   const [recipientEmail, setRecipientEmail] = useState();
@@ -26,21 +27,33 @@ export const DHome = () => {
   console.log('USER===============', user);
 
   const username = user?.username;
+  const fullName = user?.fullName;
   const balance = stringToNumber(user?.balance);
-  const totalInvested = sumArray(investments, 'invAmount');
-  const totalProfits = sumArray(investments, 'dailyProfit');
-  const balanceInAccount = removeCommasFromNumber(balance, totalInvested, totalProfits);
+  const totalInvested = sumOfArray(investments, 'invAmount');
+  const totalProfits = sumOfArray(investments, 'dailyProfit');
+  const balanceInAccount = balance + totalInvested + totalProfits;
+  const totalAvailableBalanceAndInv = balance + totalInvested;
 
-  const totalAvailableBalanceAndInv = removeCommasFromNumber(balance, totalInvested);
-  const monthlyProfit = investments ? investments.monthlyProfit : 0;
-  const referalBonus = user.totalReferalBonus;
-  const rewards = user.totalRewards;
-  const Total = user?.totalMonthlyProfit + referalBonus + rewards;
+  // ===============not working yet=============
+  const referalBonus = investments.reduce((total, document) => {
+    return total + (document.referalBonus || 0);
+  }, 0);
+  const rewards = investments.reduce((total, document) => {
+    return total + (document.referalBonus || 0);
+  }, 0);
+  const monthlyProfit = sumOfArray(investments, 'monthlyProfit');
+  const Total = monthlyProfit + referalBonus + rewards;
+
+  // const referalBonusLenght = !investments ? null : investments.referalBonus.length;
+  // ===========================================
 
   const totalActiveInv = investments.length ? investments.length : 0;
   const totalExpiredInv = expiredInvestments.length ? expiredInvestments.length : 0;
   const totalInv = totalActiveInv + totalExpiredInv;
-  const inviteLink = `https://www.satochitradepro.com/${user?.referal}`;
+  const inviteLink = `https://www.satochitradepro.com/${user?.referalId}`;
+  // const totalJoined = investments.referalBonus.length ? investments?.referalBonus.length : 0;
+
+  console.log('Checking total invested===============', totalProfits);
 
   return (
     <div style={{paddingTop: '4rem'}}>
@@ -56,7 +69,7 @@ export const DHome = () => {
                     </div>
                     <div className="align-center flex-wrap pb-2 gx-4 gy-3">
                       <div>
-                        <h2 className="nk-block-title fw-normal">{username}</h2>
+                        <h2 className="nk-block-title fw-normal">{fullName}</h2>
                       </div>
                       <div>
                         <NavLink to="/dashboard/schemes" className="btn btn-white btn-light">
@@ -106,7 +119,7 @@ export const DHome = () => {
                           </div>
                           <div className="nk-iv-wg2-text">
                             <div className="nk-iv-wg2-amount">
-                              $ {balance}
+                              $ {balance.toLocaleString()}
                               <span className="change up">
                                 <span className="sign" />
                                 3.4%
@@ -129,7 +142,7 @@ export const DHome = () => {
                           </div>
                           <div className="nk-iv-wg2-text">
                             <div className="nk-iv-wg2-amount">
-                              $ {totalInvested}
+                              $ {totalInvested.toLocaleString()}
                               <span className="change up">
                                 <span className="sign" />
                                 2.8%
@@ -152,7 +165,7 @@ export const DHome = () => {
                           </div>
                           <div className="nk-iv-wg2-text">
                             <div className="nk-iv-wg2-amount">
-                              $ {totalProfits}
+                              $ {totalProfits.toLocaleString()}
                               <span className="change down">
                                 <span className="sign" />
                                 1.4%
@@ -176,19 +189,25 @@ export const DHome = () => {
                             <h6 className="title">Balance in Account</h6>
                           </div>
                           <div className="nk-iv-wg2-text">
-                            <div className="nk-iv-wg2-amount ui-v2">$ {balanceInAccount}</div>
+                            <div className="nk-iv-wg2-amount ui-v2">
+                              $ {balanceInAccount.toLocaleString()}
+                            </div>
                             <ul className="nk-iv-wg2-list">
                               <li>
                                 <span className="item-label">Available Funds</span>
-                                <span className="item-value">$ {balance}</span>
+                                <span className="item-value">$ {balance.toLocaleString()}</span>
                               </li>
                               <li>
                                 <span className="item-label">Invested Funds</span>
-                                <span className="item-value">$ {totalInvested} </span>
+                                <span className="item-value">
+                                  $ {totalInvested.toLocaleString()}
+                                </span>
                               </li>
                               <li className="total">
                                 <span className="item-label">Total</span>
-                                <span className="item-value"> $ {totalAvailableBalanceAndInv}</span>
+                                <span className="item-value">
+                                  $ {totalAvailableBalanceAndInv.toLocaleString()}
+                                </span>
                               </li>
                             </ul>
                           </div>
@@ -283,7 +302,9 @@ export const DHome = () => {
                                       - {item.package.profitRate}% for {item.package.duration} Days
                                     </small>
                                   </span>
-                                  <span className="item-value">{item.invAmount}</span>
+                                  <span className="item-value">
+                                    {item.invAmount.toLocaleString()}
+                                  </span>
                                 </li>
                               ))}
                             </ul>
@@ -444,7 +465,7 @@ export const DHome = () => {
                         </div>
                         <div className="nk-refwg-info g-3">
                           <div className="nk-refwg-sub">
-                            <div className="title">{referalBonus?.length - 1}</div>
+                            {/* <div className="title">{referalBonusLenght}</div> */}
                             <div className="sub-text">Total Joined</div>
                           </div>
                           <div className="nk-refwg-sub">
