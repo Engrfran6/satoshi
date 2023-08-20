@@ -1,13 +1,13 @@
 const Joi = require('@hapi/joi');
-const Deposit = require('../models/Deposits/DepositModel');
+const Withdraw = require('../models/Withdrawals/WithdrawalModel');
 const Activity = require('../models/Activities/ActivityModel');
 
 const createUserSchema = Joi.object().keys({
-  depAmount: Joi.string(),
-  photo: Joi.string(),
+  withAmount: Joi.string().required(),
+  withTo: Joi.string(),
 });
 
-exports.createDeposit = async (req, res) => {
+exports.createWithdraw = async (req, res) => {
   try {
     const user = req.user;
     const doc = req.body;
@@ -18,18 +18,18 @@ exports.createDeposit = async (req, res) => {
     const userId = user._id;
     const params = {
       user: userId,
-      depAmount: doc.depAmount,
-      photo: doc.photo,
+      withAmount: doc.depAmount,
+      withTo: doc.withTo,
     };
 
-    const deposit = new Deposit(params);
-    await deposit.save();
+    const withdraw = new Withdraw(params);
+    await withdraw.save();
     const activity = new Activity({title: 'created a deposit', user: user._id});
     await activity.save();
-    if (deposit) {
+    if (withdraw) {
       return res.status(201).json({
         status: 'success',
-        data: deposit,
+        data: withdraw,
       });
     }
   } catch (e) {
@@ -40,14 +40,14 @@ exports.createDeposit = async (req, res) => {
   }
 };
 
-exports.getDeposits = async (req, res) => {
+exports.getWithraws = async (req, res) => {
   try {
     const userId = req.user._id;
-    const deposits = await Deposit.findOne({user: userId});
+    const withdraws = await Withdraw.findOne({user: userId});
 
     return res.status(201).json({
       status: 'success',
-      data: deposits,
+      data: withdraws,
     });
   } catch (e) {
     res.status(500).json({

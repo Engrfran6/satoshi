@@ -8,14 +8,17 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
 
+const path = require('path');
 const app = express();
+
+app.use(express.static(path.join(__dirname + '/public')));
 
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
-let envVariable = process.env.DOMAIN_URL || '';
+let envVariable = process.env.DOMAIN_URL || 3000;
 let domainUrl = envVariable.split('//');
 const options = {
   openapi: '3.0.0',

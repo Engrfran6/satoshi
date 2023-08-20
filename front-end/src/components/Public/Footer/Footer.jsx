@@ -15,7 +15,8 @@ export const Footer = () => {
       <div className="container">
         <div className="row">
           <div className="col-lg-4 col-md-6 sm-margin-30px-bottom">
-            <img alt="footer-logo" src="img/logos/logo-footer-dark.png" />
+            {/* <img alt="footer-logo" src="img/logos/logo-footer-dark.png" /> */}
+            <h2>Satochi Trade Pro</h2>
             <p className="margin-20px-top text-default-color">
               We are a digital assets trading and managment company, providing blockchain-backed
               investment products to investors, who wish to create financial stabilty and security
@@ -104,10 +105,10 @@ export const Footer = () => {
         <div className="container">
           <div className="row">
             <div className="col-md-6 text-left xs-text-center xs-margin-5px-bottom">
-              <p>© Copyright Bitcoin satoshitradepro . All Rights Reserved.</p>
+              <p>© Copyright Bitcoin satoshi Trade Pro . All Rights Reserved.</p>
             </div>
             <div className="col-md-6 text-right xs-text-center">
-              Design and Developed by: satoshitradepro
+              Design and Developed by: BitGo Inc.
             </div>
           </div>
         </div>
