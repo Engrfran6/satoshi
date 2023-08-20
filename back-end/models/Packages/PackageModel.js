@@ -22,6 +22,9 @@ const packageSchema = new Schema(
     dailyLoss: {
       type: Number,
     },
+    referalBonus: {
+      type: Number,
+    },
     minDeposit: {
       type: Number,
     },

@@ -25,6 +25,9 @@ export const userSlice = createSlice({
     setSelectedPaymentOption(state, action) {
       state.user.selectedPaymentOption = action.payload;
     },
+    setInvestAmount(state, action) {
+      state.user.investAmount = action.payload;
+    },
     setSelectedDepositAmount(state, action) {
       state.user.selectedDepositAmount = action.payload;
     },
@@ -48,6 +51,7 @@ export const {
   setInvestments,
   setSelectedPackage,
   setSelectedPaymentOption,
+  setInvestAmount,
 } = userSlice.actions;
 
 export const selectUser = (state) => state.user;

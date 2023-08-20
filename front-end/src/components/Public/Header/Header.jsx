@@ -121,8 +121,8 @@ export const Header = () => {
           <MdOutlineArrowBackIosNew />
         </div>
         <div className="center">
-          <h1>{images[currImg].imgTitle}</h1>
-          <h2>{images[currImg].imgText}</h2>
+          {/* <h1>{images[currImg].imgTitle}</h1> */}
+          {/* <h2>{images[currImg].imgText}</h2> */}
         </div>
         <div className="right" onClick={imgSlideFuncRight}>
           <MdArrowForwardIos />

@@ -2,8 +2,9 @@ import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
 import {store} from '../../redux/store';
 import {calculateEndDate} from './Store/investmentDates';
-import {setSelectedPaymentOption} from '../../redux/user-slice';
+import {setInvestAmount} from '../../redux/user-slice';
 import {useDispatch} from 'react-redux';
+import {userRequest} from '../../components/Commons/HandleRequest';
 
 export const InvestForm = () => {
   let user = store?.getState()?.user?.user?.user || [];
@@ -15,11 +16,9 @@ export const InvestForm = () => {
   const navigate = useNavigate();
   const value = [100, 250, 500, 1000, 1500, 2000, 3000];
   const paymentOptions = [
-    {name: 'STP wallet', walletBalance: user?.balance, btcEquivalent: 0.033},
-    {name: 'BTC wallet', walletBalance: 500, btcEquivalent: 0.033},
-    {name: 'USDT wallet', walletBalance: 1200, btcEquivalent: 0.033},
-    {name: 'Bank deposit'},
-    {name: 'Wire transfer'},
+    {name: 'STP wallet', walletBalance: user?.balance},
+    {name: 'BTC wallet', walletBalance: 'not available'},
+    {name: 'USDT wallet', walletBalance: 'not available'},
   ];
 
   const selectAmount = (item) => {
@@ -33,16 +32,30 @@ export const InvestForm = () => {
 
   const [isChecked, setIsChecked] = useState(false);
   const [alert, setAlert] = useState('');
+  const [show, setShow] = useState('');
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
   };
 
-  const handleNextClick = () => {
+  const handleNextClick = async (e) => {
+    e.preventDefault();
+
     if (isChecked && user?.balance > amount) {
-      dispatch(setSelectedPaymentOption(amount));
-      navigate('/dashboard/successful');
+      const response = userRequest('/investment/create', {
+        investAmount: amount,
+        packageId: myPackage._id,
+      });
+      if (response.status == 200) {
+        dispatch(setInvestAmount(amount));
+        setTimeout(() => {
+          navigate('/dashboard/successful');
+        }, 3000);
+      }
     } else if (isChecked && user?.balance < amount) {
-      navigate('/dashboard/deposit');
+      setAlert(
+        'OOPS!! Account balance is too low, please click the button below to deposit funds into your account'
+      );
+      setShow('failed');
     } else {
       setAlert('Please agree to the terms and conditions before proceeding.');
     }
@@ -203,6 +216,7 @@ export const InvestForm = () => {
                             className="invest-cc-chosen dropdown-indicator"
                             onClick={handleDropdownToggle}>
                             {/* Display the selected payment option */}
+
                             {selectedPaymentOption ? (
                               <div className="coin-item">
                                 <div className="coin-icon">
@@ -364,8 +378,17 @@ export const InvestForm = () => {
                             </ul>
                           </div>
                           <small style={{color: 'red', textAlign: 'center'}}>{alert}</small>
+                          <NavLink
+                            to="/dashboard/deposit"
+                            className="btn btn-primary"
+                            style={{display: show == 'failed' ? 'block' : 'none'}}>
+                            Deposit Funds
+                          </NavLink>
                           <div className="nk-iv-wg4-sub text-center bg-lighter">
-                            <button onClick={handleNextClick} className="btn btn-lg btn-primary">
+                            <button
+                              style={{display: show == 'failed' ? 'none' : 'block'}}
+                              onClick={handleNextClick}
+                              className="btn btn-lg btn-primary">
                               Confirm &amp; proceed
                             </button>
                           </div>

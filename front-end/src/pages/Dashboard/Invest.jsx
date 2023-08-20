@@ -29,12 +29,11 @@ export const Invest = () => {
   };
 
   const setItem = () => {
-    if (item) {
+    if (clickedItem) {
       dispatch(setSelectedPackage(clickedItem));
       navigate('/dashboard/invest-form');
     } else {
       setAlert('You must select an investment plan to continue!');
-      navigate('/dashboard/invest#');
     }
   };
 
@@ -177,7 +176,9 @@ export const Invest = () => {
 
                   <div className="plan-iv-actions text-center">
                     <small>{alert}</small>
-                    <button onClick={setItem} className="btn btn-primary btn-lg">
+                    <button
+                      onClick={clickedItem ? setItem : null}
+                      className="btn btn-primary btn-lg">
                       <span>Continue to Invest</span>
                       <em className="icon ni ni-arrow-right" />
                     </button>

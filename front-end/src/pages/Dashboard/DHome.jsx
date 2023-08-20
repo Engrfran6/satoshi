@@ -22,11 +22,6 @@ export const DHome = () => {
     setShowInner(!showInner);
   };
 
-  console.log('Checking===============', user.balance + 200333);
-  console.log('INVESTMENT===============', investments);
-  console.log('USER===============', user);
-
-  const username = user?.username;
   const fullName = user?.fullName;
   const balance = stringToNumber(user?.balance);
   const totalInvested = sumOfArray(investments, 'invAmount');
@@ -44,16 +39,13 @@ export const DHome = () => {
   const monthlyProfit = sumOfArray(investments, 'monthlyProfit');
   const Total = monthlyProfit + referalBonus + rewards;
 
-  // const referalBonusLenght = !investments ? null : investments.referalBonus.length;
+  const totalJoined = investments?.referalBonus?.length || 0;
   // ===========================================
 
   const totalActiveInv = investments.length ? investments.length : 0;
   const totalExpiredInv = expiredInvestments.length ? expiredInvestments.length : 0;
   const totalInv = totalActiveInv + totalExpiredInv;
   const inviteLink = `https://www.satochitradepro.com/${user?.referalId}`;
-  // const totalJoined = investments.referalBonus.length ? investments?.referalBonus.length : 0;
-
-  console.log('Checking total invested===============', totalProfits);
 
   return (
     <div style={{paddingTop: '4rem'}}>
@@ -465,14 +457,12 @@ export const DHome = () => {
                         </div>
                         <div className="nk-refwg-info g-3">
                           <div className="nk-refwg-sub">
-                            {/* <div className="title">{referalBonusLenght}</div> */}
+                            <div className="title">{totalJoined}</div>
                             <div className="sub-text">Total Joined</div>
                           </div>
                           <div className="nk-refwg-sub">
-                            <div className="sub-text">
-                              Referral Earn
-                              <small>{referalBonus}</small>
-                            </div>
+                            <div className="title">{referalBonus}</div>
+                            <div className="sub-text">Referral Earn</div>
                           </div>
                         </div>
                       </div>

@@ -4,10 +4,10 @@ import {Footer} from '../../../components/Dashboard/Footer/DashboardFooter';
 import {Header} from '../../../components/Dashboard/Header/DashboardHeader';
 import {store} from '../../../redux/store';
 import {stringToNumber} from '../../Dashboard/Store/convertStringToNumber';
-import {removeCommasFromNumber} from '../../Dashboard/Store/removeCommas';
 import {EmailIcon, WhatsappIcon, WhatsappShareButton} from 'react-share';
 import {useDispatch} from 'react-redux';
 import {setSelectedPaymentOption} from '../../../redux/user-slice';
+import {sumOfArray} from '../calcAccountValues/Summation';
 
 export const Deposit = () => {
   const navigate = useNavigate();
@@ -18,20 +18,22 @@ export const Deposit = () => {
   const [showInner, setShowInner] = useState(false);
 
   let user = store?.getState()?.user?.user?.user || [];
-
-  const username = user?.username;
+  let investments = store?.getState()?.user?.user?.investments || [];
+  const fullName = user?.fullName.split(' ')[0];
   const balance = stringToNumber(user?.balance);
-  const totalInvested = stringToNumber(user?.totalInvested);
-  const totalProfits = stringToNumber(user?.totalProfit);
-  const balanceInAccount = removeCommasFromNumber(balance, totalInvested, totalProfits);
-  const referalBonus = user.totalReferalBonus;
-  const rewards = user.totalRewards;
-  const inviteLink = `https://www.satochitradepro.com/${user?.referal}`;
-
-  const newBalance = Number(user?.balance) + parseInt(deposit);
+  const totalInvested = sumOfArray(investments, 'invAmount');
+  const totalProfits = sumOfArray(investments, 'dailyProfit');
+  const referalBonus = investments.reduce((total, document) => {
+    return total + (document.referalBonus || 0);
+  }, 0);
+  const totalJoined = investments?.referalBonus?.length || 0;
+  const inviteLink = `https://www.satochitradepro.com/${user?.referalId}`;
 
   const handleInputChange = (e) => {
     setDeposit(e.target.value);
+    if (deposit > 0) {
+      setMessage('');
+    }
   };
 
   const handleShow = () => {
@@ -42,11 +44,14 @@ export const Deposit = () => {
   };
 
   const dispatch = useDispatch();
-  const processDeposit = () => {
+  const processDeposit = (e) => {
+    e.preventDefault();
     if (deposit > 0) {
       dispatch(setSelectedPaymentOption(deposit));
       navigate('/dashboard/investing');
-    } else console.log('Enter deposit amount');
+    } else {
+      setMessage('Enter deposit amount');
+    }
   };
 
   return (
@@ -67,7 +72,7 @@ export const Deposit = () => {
                         </div>
                         <div className="align-center flex-wrap pb-2 gx-4 gy-3">
                           <div>
-                            <h2 className="nk-block-title fw-normal">{username}</h2>
+                            <h2 className="nk-block-title fw-normal">{fullName}</h2>
                           </div>
                           <div>
                             <NavLink to="/dashboard/schemes" className="btn btn-white btn-light">
@@ -194,7 +199,7 @@ export const Deposit = () => {
                                 placeholder="Enter the deposit amount"
                               />
                             </div>
-                            <p>{message}</p>
+                            <p style={{color: deposit < 0 ? '' : 'red'}}>{message}</p>
                             <button
                               onClick={processDeposit}
                               style={{
@@ -352,7 +357,7 @@ export const Deposit = () => {
                             </div>
                             <div className="nk-refwg-info g-3">
                               <div className="nk-refwg-sub">
-                                <div className="title">{referalBonus?.length - 1}</div>
+                                <div className="title">{totalJoined}</div>
                                 <div className="sub-text">Total Joined</div>
                               </div>
                               <div className="nk-refwg-sub">

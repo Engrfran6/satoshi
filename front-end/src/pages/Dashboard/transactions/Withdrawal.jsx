@@ -1,13 +1,13 @@
-import {useContext, useState} from 'react';
-import {updateUserData} from '../../../components/Commons/HandleRequest';
+import {useState} from 'react';
+import {userRequest} from '../../../components/Commons/HandleRequest';
 import {NavLink, useNavigate} from 'react-router-dom';
 import {Footer} from '../../../components/Dashboard/Footer/DashboardFooter';
 import {Header} from '../../../components/Dashboard/Header/DashboardHeader';
 import {EmailIcon, WhatsappIcon, WhatsappShareButton} from 'react-share';
 import {store} from '../../../redux/store';
-import {sumArray} from '../../Dashboard/Store/sumIndexArray';
 import {stringToNumber} from '../../Dashboard/Store/convertStringToNumber';
-import {removeCommasFromNumber} from '../../Dashboard/Store/removeCommas';
+import {sumOfArray} from '../calcAccountValues/Summation';
+import {useDispatch, useSelector} from 'react-redux';
 
 export const Withdrawal = () => {
   const navigate = useNavigate();
@@ -18,39 +18,56 @@ export const Withdrawal = () => {
   const [showInner, setShowInner] = useState(false);
   let user = store?.getState()?.user?.user?.user || [];
   let investments = store?.getState()?.user?.user?.investments || [];
-  let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.user.user.token);
 
-  const username = user?.username;
+  const fullName = user?.fullName.split(' ')[0];
   const balance = stringToNumber(user?.balance);
-  const totalInvested = stringToNumber(user?.totalInvested);
-  const totalProfits = stringToNumber(user?.totalProfit);
-  const referalBonus = user.totalReferalBonus;
-  const rewards = user.totalRewards;
-  const inviteLink = `https://www.satochitradepro.com/${user?.referal}`;
-
-  const newBalance = Number(user?.balance) - parseInt(withdrawal);
+  const totalInvested = sumOfArray(investments, 'invAmount');
+  const totalProfits = sumOfArray(investments, 'dailyProfit');
+  const referalBonus = investments.reduce((total, document) => {
+    return total + (document.referalBonus || 0);
+  }, 0);
+  const totalJoined = investments?.referalBonus?.length || 0;
+  const inviteLink = `https://www.satochitradepro.com/${user?.referalId}`;
 
   const handleInputChange = (e) => {
     setWithdrawal(e.target.value);
+    if (withdrawal < user?.balance) {
+      setMessage('');
+    }
   };
+
+  const [details, setDetails] = useState('process payment to this informations');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await updateUserData('/auth/deposit', {balance: newBalance});
-
-      if (balance <= withdrawal) {
+      if (user?.balance < parseFloat(withdrawal)) {
         setMessage('withdrawal amount must be less than available balance');
       } else setMessage('');
 
-      if (response.Ok) {
+      const response = await userRequest(
+        '/withdraw/create',
+        {
+          withAmount: withdrawal,
+          withTo: details,
+        },
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status == 'success') {
         setMessage(
-          `Your withdrawal of $ -${withdrawal} is been proccessed to your USDT/BTC wallet address, please hold!`
+          `Your withdrawal of $ -${withdrawal} was successful, Please hold while we proccess your withdrawal request!`
         );
       }
-      navigate('/dashboard#'); // <-- redirect
+      navigate('/dashboard'); // <-- redirect
     } catch (error) {
-      //show an error message, etc.
       console.error(error);
     }
   };
@@ -79,7 +96,7 @@ export const Withdrawal = () => {
                         </div>
                         <div className="align-center flex-wrap pb-2 gx-4 gy-3">
                           <div>
-                            <h2 className="nk-block-title fw-normal">{username}</h2>
+                            <h2 className="nk-block-title fw-normal">{fullName}</h2>
                           </div>
                           <div>
                             <NavLink to="/dashboard/schemes" className="btn btn-white btn-light">
@@ -207,7 +224,9 @@ export const Withdrawal = () => {
                                 placeholder="Enter the withdrawal amount"
                               />
                             </div>
-                            <p>{message}</p>
+                            <p style={{color: user?.balance < parseFloat(withdrawal) ? 'red' : ''}}>
+                              {message}
+                            </p>
                             <button
                               style={{
                                 padding: '.5rem 1.5rem',
@@ -364,7 +383,7 @@ export const Withdrawal = () => {
                             </div>
                             <div className="nk-refwg-info g-3">
                               <div className="nk-refwg-sub">
-                                <div className="title">{referalBonus?.length - 1}</div>
+                                <div className="title">{totalJoined}</div>
                                 <div className="sub-text">Total Joined</div>
                               </div>
                               <div className="nk-refwg-sub">
