@@ -29,7 +29,7 @@ export const Invest = () => {
   };
 
   const setItem = () => {
-    if ((clickedItem = !null)) {
+    if (clickedItem) {
       dispatch(setSelectedPackage(clickedItem));
       navigate('/dashboard/invest-form');
     } else {
