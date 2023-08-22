@@ -8,12 +8,7 @@ export const Contact = () => {
         <div className="row">
           <div className="col-lg-6 col-md-12 sm-margin-30px-bottom">
             {/* start form here */}
-            <form
-              className="quform"
-              action="https://satoshitradepro.com/quform/getin-touch-one.php"
-              method="post"
-              encType="multipart/form-data"
-              onclick="">
+            <form className="quform">
               <div className="quform-elements">
                 <div className="row">
                   {/* Begin Text input element */}

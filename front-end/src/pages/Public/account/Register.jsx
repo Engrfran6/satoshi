@@ -2,7 +2,6 @@ import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
 import {userRequest} from '../../../components/Commons/HandleRequest';
 
-
 export const Register = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState('Pending');

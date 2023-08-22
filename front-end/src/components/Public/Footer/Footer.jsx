@@ -69,16 +69,20 @@ export const Footer = () => {
           <div className="col-lg-3 col-md-6 offset-lg-1">
             <h3 className="footer-title-style6">Get in Touch</h3>
             <ul className="footer-list-style3">
-              {/*  <li>
-                        <span class="d-inline-block vertical-align-top font-size18"><i class="fas fa-map-marker-alt"></i></span>
-                        <span class="d-inline-block width-85 vertical-align-top padding-10px-left">27-29, MIAMI, FLORIDA </span>
-                    </li> */}
+              <li>
+                <span class="d-inline-block vertical-align-top font-size18">
+                  <i class="fas fa-map-marker-alt"></i>
+                </span>
+                <span class="d-inline-block width-85 vertical-align-top padding-10px-left">
+                  27-29, LONDON, UK
+                </span>
+              </li>
               <li>
                 <span className="d-inline-block vertical-align-top font-size18">
                   <i className="fas fa-mobile-alt" />
                 </span>
                 <span className="d-inline-block width-85 vertical-align-top padding-10px-left">
-                  +100000
+                  +44 7443693461
                 </span>
               </li>
               <li>
