@@ -54,6 +54,12 @@ export const Deposit = () => {
     }
   };
 
+  const isLarge = window.innerWidth > 700; // Adjust the breakpoint as needed
+  const depStyle = {
+    // width: isLarge ? '40%' : '',
+    // margin: isLarge ? '0 auto' : '',
+  };
+
   return (
     <div className="nk-body npc-invest bg-lighter ">
       <div className="nk-app-root">
@@ -92,7 +98,7 @@ export const Deposit = () => {
                           color: 'red',
                           fontSize: '1rem',
                         }}>
-                        Please veriy your account before carrying out a withdrawal
+                        Please complete your kyc verification!
                       </div>
                     </div>
                   </div>
@@ -177,7 +183,7 @@ export const Deposit = () => {
                         <div className="nk-news-list">
                           {/* <NavLink className="nk-news-item" to ="/dashboard#"> */}
 
-                          <form style={{width: '30%', margin: '0 auto'}}>
+                          <form style={depStyle}>
                             <label>Deposit:</label>
                             <div
                               style={{

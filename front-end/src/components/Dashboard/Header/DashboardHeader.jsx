@@ -1,11 +1,10 @@
 import {NavLink} from 'react-router-dom';
 import {store} from '../../../redux/store';
 import {useDispatch} from 'react-redux';
-import {resetUser} from '../../../redux/user-slice';
 
 export const Header = () => {
   const dispatch = useDispatch();
-  let user = store?.getState()?.user?.user.user;
+  let user = store?.getState()?.user?.user?.user || [];
 
   const initials = user?.fullName
     .split(' ')
@@ -13,7 +12,7 @@ export const Header = () => {
     .join('');
 
   const handleLogout = () => {
-    dispatch(resetUser());
+    dispatch();
   };
 
   return (

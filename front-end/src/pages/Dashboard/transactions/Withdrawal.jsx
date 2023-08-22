@@ -43,7 +43,7 @@ export const Withdrawal = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (user?.balance < parseFloat(withdrawal)) {
+      if (user?.balance < withdrawal) {
         setMessage('withdrawal amount must be less than available balance');
       } else setMessage('');
 
@@ -53,12 +53,7 @@ export const Withdrawal = () => {
           withAmount: withdrawal,
           withTo: details,
         },
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        token
       );
 
       if (response.status == 'success') {
@@ -116,7 +111,7 @@ export const Withdrawal = () => {
                           color: 'red',
                           fontSize: '1rem',
                         }}>
-                        Please veriy your account before carrying out a withdrawal
+                        You need to complete your kyc verification! to unable withdrawal
                       </div>
                     </div>
                   </div>

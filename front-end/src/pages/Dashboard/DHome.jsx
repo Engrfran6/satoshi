@@ -1,16 +1,15 @@
 import {useEffect, useState} from 'react';
-import {NavLink} from 'react-router-dom';
-import {EmailIcon, EmailShareButton, WhatsappIcon, WhatsappShareButton} from 'react-share';
+import {NavLink, useNavigate} from 'react-router-dom';
+import {EmailIcon, WhatsappIcon, WhatsappShareButton} from 'react-share';
 import {store} from '../../redux/store';
-import {sumArray} from '../Dashboard/Store/sumIndexArray';
 import {stringToNumber} from './Store/convertStringToNumber';
-import {removeCommasFromNumber} from './Store/removeCommas';
 import {sumOfArray} from './calcAccountValues/Summation';
 
 export const DHome = () => {
   const [recipientEmail, setRecipientEmail] = useState();
   const [show, setShow] = useState(false);
   const [showInner, setShowInner] = useState(false);
+  const navigate = useNavigate();
   let user = store?.getState()?.user?.user?.user || [];
   let investments = store?.getState()?.user?.user?.investments || [];
   let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];

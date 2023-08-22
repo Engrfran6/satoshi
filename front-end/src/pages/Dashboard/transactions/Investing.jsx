@@ -5,7 +5,6 @@ import {store} from '../../../redux/store';
 import {useDispatch, useSelector} from 'react-redux';
 
 export const Investment = () => {
-  const dispatch = useDispatch();
   const token = useSelector((state) => state.user.user.token);
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
@@ -16,14 +15,13 @@ export const Investment = () => {
   const deposit = myDeposit.toLocaleString();
   const thisDeposit = tDeposit.toLocaleString();
 
-  console.log('token', token);
   const [selectedImage, setSelectedImage] = useState(null);
 
   const handleImageChange = (event) => {
     const image = event.target.files[0];
     setSelectedImage(URL.createObjectURL(image));
   };
-
+  console.log('token==========', token);
   const handleUpload = async (e) => {
     e.preventDefault();
     if (selectedImage) {
@@ -32,12 +30,7 @@ export const Investment = () => {
       formData.append('depAmount', thisDeposit);
 
       try {
-        const response = await userRequest('/deposit/create', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await userRequest('/deposit/create', formData, token);
         if (response.status == 200) {
           setMessage('success');
           navigate('/dashboard/schemes');

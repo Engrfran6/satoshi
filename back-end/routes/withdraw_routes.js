@@ -4,7 +4,7 @@ const {createWithdraw, getWithraws} = require('../controllers/withdrawal-control
 
 const withdrawRouter = Router();
 
-withdrawRouter.get('/', getWithraws);
-withdrawRouter.post('/create', createWithdraw);
+withdrawRouter.get('/', protect, getWithraws);
+withdrawRouter.post('/create', protect, createWithdraw);
 
 module.exports = withdrawRouter;

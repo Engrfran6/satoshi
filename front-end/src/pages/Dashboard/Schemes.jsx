@@ -9,6 +9,23 @@ export const Schemes = () => {
   let investments = store?.getState()?.user?.user?.investments || [];
   let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
 
+  // const token = useSelector((state) => state.user.user.token);
+  // const [investments, setInvestments] = useState(null);
+
+  // useEffect(() => {
+  //   getInvest();
+  // }, []);
+
+  // const getInvest = async () => {
+  //   try {
+  //     const response = getUserData('/investment', token);
+  //     console.log('invest', response.data);
+  //     setInvestments(response.data);
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //   }
+  // };
+
   const balance = stringToNumber(user?.balance);
   const totalInvested = sumOfArray(investments, 'invAmount');
   const totalProfits = sumOfArray(investments, 'dailyProfit');

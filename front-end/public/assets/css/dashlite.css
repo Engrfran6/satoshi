@@ -150,7 +150,7 @@
   --bs-link-color: rgb(30,224,172);
   --bs-link-color-rgb: 121, 139, 255;
   --bs-link-decoration: none;
-  --bs-link-hover-color: #465fff;
+  /* --bs-link-hover-color: #465fff; */
   --bs-link-hover-color-rgb: 70, 95, 255;
   --bs-link-hover-decoration: none;
   --bs-code-color: #ff63a5;
@@ -172,7 +172,7 @@
   --bs-box-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.075);
   --bs-focus-ring-width: 0.25rem;
   --bs-focus-ring-opacity: 0.25;
-  --bs-focus-ring-color: rgba(85, 155, 251, 0.25);
+  /* --bs-focus-ring-color: rgba(85, 155, 251, 0.25); */
   --bs-form-valid-color: #1ee0ac;
   --bs-form-valid-border-color: #1ee0ac;
   --bs-form-invalid-color: #e85347;
