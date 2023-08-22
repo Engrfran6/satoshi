@@ -70,9 +70,6 @@ export const Navbar = () => {
                           fontSize: '1rem',
                           color: 'white',
                           fontWeight: 'bolder',
-                          fontFamily: 'Crimson Text',
-                          fontFamily: 'Noto Serif',
-                          fontFamily: 'Poppins',
                           fontFamily: 'Ysabeau Infant',
                         }}>
                         SATOCHI TRADE PRO
