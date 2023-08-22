@@ -1,9 +1,7 @@
 import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
 import {userRequest} from '../../../components/Commons/HandleRequest';
-import PhoneInput from 'react-phone-number-input';
-import 'react-phone-number-input/style.css';
-import {getCountryCallingCode} from 'libphonenumber-js/mobile';
+
 
 export const Register = () => {
   const navigate = useNavigate();
