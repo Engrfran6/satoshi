@@ -3,7 +3,6 @@ import {useLocation} from 'react-router-dom';
 export const Footer = () => {
   const location = useLocation();
   const hiddenRoutes = ['/account/register', '/account/login', '/account/forgot-password'];
-
   const shouldHideFooter = hiddenRoutes.includes(location.pathname);
 
   if (shouldHideFooter) {
