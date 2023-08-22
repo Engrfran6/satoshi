@@ -82,7 +82,6 @@ export const Register = () => {
     return phoneNumberPattern.test(phoneNumber);
   };
 
-  // const countryCallingCode = getCountryCallingCode('US'); // Default to US
   const handlePhoneNumberChange = (e) => {
     const newPhoneNumber = e.target.value;
     const isValidPhoneNumber = validatePhoneNumber(newPhoneNumber);
