@@ -95,6 +95,8 @@ export const Register = () => {
     setFormData({...formData, phoneNumber: newPhoneNumber});
   };
 
+  // console.log(phoneNumber);
+
   // const handleLogin = async () => {
   //   try {
   //     const response = await userRequest('/auth/login', {
