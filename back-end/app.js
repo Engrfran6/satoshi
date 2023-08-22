@@ -18,7 +18,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
-let envVariable = process.env.DOMAIN_URL || 3000;
+let envVariable = process.env.DOMAIN_URL || 3030;
 let domainUrl = envVariable.split('//');
 const options = {
   openapi: '3.0.0',
