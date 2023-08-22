@@ -82,7 +82,6 @@ export const Register = () => {
     return phoneNumberPattern.test(phoneNumber);
   };
 
-  // const countryCallingCode = getCountryCallingCode('US'); // Default to US
   const handlePhoneNumberChange = (e) => {
     const newPhoneNumber = e.target.value;
     const isValidPhoneNumber = validatePhoneNumber(newPhoneNumber);
@@ -95,6 +94,8 @@ export const Register = () => {
 
     setFormData({...formData, phoneNumber: newPhoneNumber});
   };
+
+  // console.log(phoneNumber);
 
   // const handleLogin = async () => {
   //   try {
