@@ -22,7 +22,6 @@ export const SuccessMessage = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          alignItems: 'center',
           gap: '1rem',
         }}>
         <h5 style={{color: 'green'}}>Congratutions!!!</h5> <h5>{user?.username}</h5>
