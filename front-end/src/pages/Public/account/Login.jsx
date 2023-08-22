@@ -2,12 +2,15 @@ import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
 import logo from '../../../assets/sato-logo1.png';
 import {userRequest} from '../../../components/Commons/HandleRequest';
-import { useDispatch } from "react-redux";
-import { setUser } from "../../../redux/user-slice";
+import {useDispatch} from 'react-redux';
+import {setUser} from '../../../redux/user-slice';
 
 export const Login = () => {
   const dispatch = useDispatch();
   const [message, setMessage] = useState('');
+  const [emailValidationMessage, setEmailValidationMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -22,58 +25,68 @@ export const Login = () => {
     });
   };
 
+  const validateEmail = (email) => {
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(email);
+  };
+
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
+    const isValidEmail = validateEmail(newEmail);
+
+    if (!isValidEmail) {
+      setEmailValidationMessage('Invalid email format');
+    } else {
+      setEmailValidationMessage('');
+    }
+
+    setFormData({...formData, email: newEmail});
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await userRequest('/auth/login', formData);
-      const { token, user, investments } = response
+
+      const {token, user, investments} = response;
+
       if (response.status === 'success') {
-        dispatch(setUser({ token: token, user, investments }));
+        dispatch(setUser({token: token, user, investments}));
         navigate('/dashboard');
-      } else {
-        setMessage(response.error);
       }
     } catch (error) {
-      console.error('Error', error);
+      setMessage('Invalid Email or Password');
     }
+  };
+  const isMobile = window.innerWidth <= 900; // Adjust the breakpoint as needed
+  const containerStyle = {
+    width: isMobile ? '85%' : '45%',
   };
 
   return (
-    <>
+    <div style={{width: '100%'}}>
       <header
         style={{
           position: 'fixed',
           display: 'flex',
           justifyContent: 'space-between',
+          alignItems: 'center',
           padding: '1rem',
+          width: '100%',
         }}>
-        <div style={{width: '100rem', height: '4rem', paddingLeft: '30px'}}>
+        <div>
           <NavLink to="/#">
             <p>SATOCHI TRADE PRO</p>
           </NavLink>
         </div>
 
         <div className="pull-right">
-          <ul>
-            <li
-              style={{
-                margin: '12px 40px 0 0',
-                display: 'flex',
-                justifyContent: 'center',
-                gap: '1rem',
-                width: 'max-content',
-              }}>
-              {' '}
-              <p style={{color: 'purple'}}>Don't have an account?</p>{' '}
-              <NavLink
-                to="/account/register"
-                style={{background: 'rgb(38,155,72)', color: 'white'}}
-                className="btn btn-primary">
-                {' '}
-                Register
-              </NavLink>
-            </li>
-          </ul>
+          <NavLink
+            to="/account/register"
+            style={{background: 'rgb(38,155,72)', color: 'white'}}
+            className="btn btn-primary">
+            Register
+          </NavLink>
         </div>
       </header>
 
@@ -84,22 +97,12 @@ export const Login = () => {
           alignItems: 'center',
           justifyContent: 'center',
           width: '100%',
-          height: '90vh',
+          height: '85vh',
         }}>
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            width: '25%',
-            padding: '12% 0 6% 0',
-          }}>
-          <span>
-            <h3 style={{color: 'crimson', textAlign: 'center'}} />
-          </span>
-          <span>
-            <h3 style={{color: 'green', textAlign: 'center'}} />
-          </span>
-
-          <h2 className="tex-black mb-4 font-weight-bold">Sign in</h2>
+        <form onSubmit={handleSubmit} style={containerStyle}>
+          <h2 className=" mb-4 font-weight-bold" style={{color: 'green'}}>
+            Sign in
+          </h2>
 
           <label style={{color: 'black'}} className="font-weight-bold">
             Email
@@ -109,14 +112,13 @@ export const Login = () => {
             type="email"
             name="email"
             value={formData.email}
-            onChange={handleInputChange}
+            onChange={handleEmailChange}
             className="form-control font-weight-bold"
             id="email"
             placeholder="name@example.com"
             required
           />
-          <span style={{color: 'crimson'}} />
-          <br />
+          <p style={{color: 'red'}}>{emailValidationMessage}</p>
 
           <label style={{color: 'black'}} className="font-weight-bold">
             Password
@@ -124,7 +126,7 @@ export const Login = () => {
           <div className="input-group">
             <input
               style={{color: 'black'}}
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder="Enter Password"
               name="password"
               value={formData.password}
@@ -133,34 +135,49 @@ export const Login = () => {
               id="pwd"
               required
             />
-            <div className="input-group-append"></div>
+
+            <div className="input-group-append">
+              <span
+                className="input-group-text"
+                onClick={() => setShowPassword(!showPassword)} // Toggle password visibility on click
+                style={{cursor: 'pointer'}}>
+                {showPassword ? 'Hide' : 'Show'}
+              </span>
+            </div>
           </div>
-          <span style={{color: 'crimson'}} />
 
           <p style={{color: 'red'}}>{message}</p>
-          <br />
 
-          <button
-            className="btn btn-lg btn-primary btn-round"
-            style={{background: 'rgb(38,155,72)', color: 'white'}}
-            type="submit">
+          <button className="btn btn-primary btn-round" type="submit">
             Sign in
           </button>
+          <div style={{borderBottom: '2px solid green', width: '100%'}}></div>
+          <br />
+          <br />
           <br />
 
-          <p className="mt-3">
-            <NavLink style={{color: 'purple'}} to={'/account/forgot-password'} className>
+          <div className="mt-12">
+            <NavLink
+              style={{color: 'purple', borderBottom: '2px solid green', paddingBottom: '0.15rem'}}
+              to={'/account/forgot-password'}
+              className>
               Forgot password?
             </NavLink>
             <br />
-            <NavLink style={{background: 'smokewhite'}} to="/account/register">
+            <NavLink
+              style={{
+                color: 'green',
+                padding: '0.3rem .6rem',
+              }}
+              to="/account/register">
               Register here!
             </NavLink>
-          </p>
+          </div>
         </form>
         <br />
       </div>
-      <div className="footer" style={{textAlign: 'center'}}>
+
+      <div className="footer" style={{textAlign: 'center', padding: '0 1.2rem 1rem 1.2rem'}}>
         <p>
           <small>| Privacy, Cookies, Security & Legal |</small>
           <small>Notice of Data Collection |</small>
@@ -169,6 +186,6 @@ export const Login = () => {
         </p>
         <p>© 1999 - 2023 Satochi Trade Pro. All rights reserved. NMLSR ID 323801 </p>
       </div>
-    </>
+    </div>
   );
 };

@@ -17,6 +17,7 @@ import {Deposit} from './pages/Dashboard/transactions/Deposit';
 import {Withdrawal} from './pages/Dashboard/transactions/Withdrawal';
 import {Investment} from './pages/Dashboard/transactions/Investing';
 import {SuccessMessage} from './pages/Dashboard/transactions/SuccessMessage';
+import {Support} from './pages/Dashboard/Support';
 
 export const AuthorizedApp = () => {
   const routes = useRoutes([
@@ -37,6 +38,7 @@ export const AuthorizedApp = () => {
     {path: '/dashboard/withdraw', element: <Withdrawal />},
     {path: '/dashboard/investing', element: <Investment />},
     {path: '/dashboard/successful', element: <SuccessMessage />},
+    {path: '/dashboard/support', element: <Support />},
   ]);
 
   return (

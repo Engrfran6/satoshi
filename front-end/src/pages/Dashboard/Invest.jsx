@@ -29,12 +29,18 @@ export const Invest = () => {
   };
 
   const setItem = () => {
-    if (clickedItem) {
+    if ((clickedItem = !null)) {
       dispatch(setSelectedPackage(clickedItem));
       navigate('/dashboard/invest-form');
     } else {
       setAlert('You must select an investment plan to continue!');
     }
+  };
+
+  const isLarge = window.innerWidth > 700; // Adjust the breakpoint as needed
+  const priceStyle = {
+    display: isLarge ? 'grid' : '',
+    gridTemplateColumns: isLarge ? '1fr 1fr 1fr' : '',
   };
 
   return (
@@ -59,7 +65,7 @@ export const Invest = () => {
               <div className="nk-block">
                 <form action="invest-form" className="plan-iv">
                   <div className="plan-iv-currency text-center">
-                    <ul className="nav nav-switch nav-tabs bg-white">
+                    <ul className="nav nav-switch bg-white">
                       <li className="nav-item">
                         <NavLink to="/dashboard/invest#" className="nav-link active">
                           USD
@@ -89,7 +95,7 @@ export const Invest = () => {
                   </div>
 
                   <div>
-                    <ul style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr'}}>
+                    <ul style={priceStyle}>
                       {packages &&
                         packages.map((item, index) => (
                           <li key={index} className="plan-item" style={{width: '100%'}}>
@@ -176,9 +182,7 @@ export const Invest = () => {
 
                   <div className="plan-iv-actions text-center">
                     <small>{alert}</small>
-                    <button
-                      onClick={clickedItem ? setItem : null}
-                      className="btn btn-primary btn-lg">
+                    <button onClick={setItem} className="btn btn-primary btn-lg">
                       <span>Continue to Invest</span>
                       <em className="icon ni ni-arrow-right" />
                     </button>

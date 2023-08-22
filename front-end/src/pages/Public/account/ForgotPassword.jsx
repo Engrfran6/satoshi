@@ -4,18 +4,29 @@ import {userRequest} from '../../../components/Commons/HandleRequest';
 
 export const ForgotPassword = () => {
   const [message, setMessage] = useState('pending');
-  const [error, setError] = useState();
   const navigate = useNavigate();
+  const [emailValidationMessage, setEmailValidationMessage] = useState('');
 
   const [formData, setFormData] = useState({
     email: '',
   });
 
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const validateEmail = (email) => {
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(email);
+  };
+
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value;
+    const isValidEmail = validateEmail(newEmail);
+
+    if (!isValidEmail) {
+      setEmailValidationMessage('Invalid email format');
+    } else {
+      setEmailValidationMessage('');
+    }
+
+    setFormData({...formData, email: newEmail});
   };
 
   const handleSubmit = async (e) => {
@@ -35,6 +46,13 @@ export const ForgotPassword = () => {
     }
   };
 
+  const isMobile = window.innerWidth <= 900; // Adjust the breakpoint as needed
+  const containerStyle = {
+    width: isMobile ? '85%' : '45%',
+    paddingTop: '10%',
+    margin: '0 auto',
+  };
+
   return (
     <section
       style={{
@@ -42,7 +60,7 @@ export const ForgotPassword = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '110vh',
+        marginTop: '20vh',
       }}>
       {message === 'success' ? (
         <div
@@ -69,19 +87,10 @@ export const ForgotPassword = () => {
           </p>
         </div>
       ) : (
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            width: '25%',
-          }}>
-          <span>
-            <h3 style={{color: 'crimson', textAlign: 'center'}} />
-          </span>
-          <span>
-            <h3 style={{color: 'green', textAlign: 'center'}} />
-          </span>
-
-          <h2 className="tex-black mb-4 font-weight-bold">Password Reset</h2>
+        <form onSubmit={handleSubmit} style={containerStyle}>
+          <h2 className="mb-4 font-weight-bold" style={{color: 'green'}}>
+            Password Reset
+          </h2>
 
           <label style={{color: 'black'}} className="font-weight-bold">
             Your Email <span className="text-danger">*</span>
@@ -91,12 +100,14 @@ export const ForgotPassword = () => {
             type="email"
             name="email"
             value={formData.email}
-            onChange={handleInputChange}
+            onChange={handleEmailChange}
             className="form-control font-weight-bold"
             id="email"
             placeholder="name@example.com"
             required
           />
+          <p style={{color: 'red'}}>{emailValidationMessage}</p>
+
           <span style={{color: 'crimson'}} />
           <br />
           <div className="input-group">
@@ -109,22 +120,27 @@ export const ForgotPassword = () => {
             className="btn btn-lg btn-primary btn-round"
             style={{background: 'rgb(38,155,72)', color: 'white'}}
             type="submit">
-            Email password rest link
+            Reset Password
           </button>
           <br />
+          <div style={{borderBottom: '3px solid green', width: '100%'}}></div>
         </form>
       )}
       <br />
-      <div className="text-center col-12">
-        <p className="mt-3 mb-0">
-          <small className="mr-2 text-dark"> Repeat Login ? </small>
-          <NavLink to="/account/login" className="text-dark font-weight-bold">
-            Login
-          </NavLink>
-        </p>
+
+      <div
+        className="text-center col-12"
+        style={{display: 'flex', justifyContent: 'center', gap: '.5rem'}}>
+        <NavLink to="/account/login" className="text-dark font-weight-bold">
+          Login
+        </NavLink>
+        <small>/</small>
+        <NavLink to="/account/register" className="text-dark font-weight-bold">
+          Register
+        </NavLink>
       </div>
 
-      <div className="footer" style={{textAlign: 'center', paddingTop: '25vh'}}>
+      <div className="footer" style={{textAlign: 'center', marginTop: '27vh'}}>
         <p>
           <small>| Privacy, Cookies, Security & Legal |</small>
           <small>Notice of Data Collection |</small>

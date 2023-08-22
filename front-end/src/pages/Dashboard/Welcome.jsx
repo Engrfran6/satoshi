@@ -14,9 +14,9 @@ export const Welcome = () => {
                   <h2 className="nk-block-title fw-normal">Nice, {user.fullName}!</h2>
                   <div className="nk-block-des">
                     <p>
-                      Welcome to our <strong>DashLite Crypto Dashboard</strong>. You are few steps
-                      away to complete your profile. These are required to buy and sell on our
-                      platform! Let’s start!
+                      Welcome to our <strong>Satochi Trade Pro Investment Dashboard</strong>. You
+                      are few steps away to complete your profile. These are required to buy and
+                      sell on our platform! Let’s start!
                     </p>
                   </div>
                 </div>
@@ -199,7 +199,7 @@ export const Welcome = () => {
                               <li>
                                 10+ Digital Crypto Wallet <span>(ETH, BTC, LTC etc)</span>
                               </li>
-                              <li>Receive and send payment with NioWallet</li>
+                              <li>Receive and send payment with STP wallet</li>
                             </ul>
                             <NavLink
                               to="/dashboard/kyc-application"
@@ -349,9 +349,7 @@ export const Welcome = () => {
                         </div>
                       </div>
                       <div className="nk-block-content flex-shrink-0">
-                        <NavLink
-                          to="/dashboard/welcome#"
-                          className="btn btn-lg btn-outline-primary">
+                        <NavLink to="/dashboard/support" className="btn btn-lg btn-outline-primary">
                           Get Support Now
                         </NavLink>
                       </div>
