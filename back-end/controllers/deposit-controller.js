@@ -3,11 +3,12 @@ const Deposit = require('../models/Deposits/DepositModel');
 const Activity = require('../models/Activities/ActivityModel');
 
 const createUserSchema = Joi.object().keys({
-  depAmount: Joi.string(),
-  photo: Joi.string(),
+  depAmount: Joi.required(),
+  // photo: Joi.string().required(),
 });
-
 exports.createDeposit = async (req, res) => {
+  console.log('=========', req.body);
+
   try {
     const user = req.user;
     const doc = req.body;

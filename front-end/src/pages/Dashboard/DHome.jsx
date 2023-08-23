@@ -4,13 +4,15 @@ import {EmailIcon, WhatsappIcon, WhatsappShareButton} from 'react-share';
 import {store} from '../../redux/store';
 import {stringToNumber} from './Store/convertStringToNumber';
 import {sumOfArray} from './calcAccountValues/Summation';
+import {useSelector} from 'react-redux';
+import {getUserData} from '../../components/Commons/HandleRequest';
 
 export const DHome = () => {
   const [recipientEmail, setRecipientEmail] = useState();
   const [show, setShow] = useState(false);
   const [showInner, setShowInner] = useState(false);
-  const navigate = useNavigate();
-  let user = store?.getState()?.user?.user?.user || [];
+  const user = useSelector((state) => state?.user?.user?.user);
+  const token = useSelector((state) => state?.user?.user?.token);
   let investments = store?.getState()?.user?.user?.investments || [];
   let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
 
@@ -45,6 +47,21 @@ export const DHome = () => {
   const totalExpiredInv = expiredInvestments.length ? expiredInvestments.length : 0;
   const totalInv = totalActiveInv + totalExpiredInv;
   const inviteLink = `https://www.satochitradepro.com/${user?.referalId}`;
+
+  const [invest, setInvestments] = useState('');
+  console.log('============', invest);
+  useEffect(() => {
+    getInvestment();
+  }, []);
+
+  const getInvestment = async () => {
+    try {
+      const response = await getUserData('/investment', token);
+      setInvestments(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   return (
     <div style={{paddingTop: '4rem'}}>

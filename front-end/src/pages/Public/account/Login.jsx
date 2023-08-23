@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
-import logo from '../../../assets/sato-logo1.png';
-import {userRequest} from '../../../components/Commons/HandleRequest';
+import logo from '../../../assets/stp-logo2.png';
+import {loginUser} from '../../../components/Commons/HandleRequest';
 import {useDispatch} from 'react-redux';
 import {setUser} from '../../../redux/user-slice';
 
@@ -46,7 +46,7 @@ export const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await userRequest('/auth/login', formData);
+      const response = await loginUser('/auth/login', formData);
 
       const {token, user, investments} = response;
 
@@ -55,38 +55,37 @@ export const Login = () => {
         navigate('/dashboard');
       }
     } catch (error) {
-      setMessage('Invalid Email or Password');
+      setMessage('Invalid Email or Password, Try again!');
     }
   };
   const isMobile = window.innerWidth <= 900; // Adjust the breakpoint as needed
   const containerStyle = {
-    width: isMobile ? '85%' : '45%',
+    width: isMobile ? '85%' : '30%',
   };
 
   return (
-    <div style={{width: '100%'}}>
-      <header
-        style={{
-          position: 'fixed',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '1rem',
-          width: '100%',
-        }}>
-        <div>
-          <NavLink to="/#">
-            <p>SATOCHI TRADE PRO</p>
-          </NavLink>
-        </div>
+    <div>
+      <header className="header-style2 menu_area-light">
+        <div className="navbar-default">
+          <div
+            className="container"
+            style={{
+              padding: '1.5rem 0',
+              position: 'fixed',
+              left: '0',
+              right: '0',
+            }}>
+            <NavLink to="/#">
+              <img style={{width: '15%', height: '3rem'}} src={logo} alt="" />
+            </NavLink>
 
-        <div className="pull-right">
-          <NavLink
-            to="/account/register"
-            style={{background: 'rgb(38,155,72)', color: 'white'}}
-            className="btn btn-primary">
-            Register
-          </NavLink>
+            <NavLink
+              to="/account/register"
+              style={{background: 'rgb(38,155,72)', color: 'white'}}
+              className="btn btn-primary pull-right">
+              Sign Up
+            </NavLink>
+          </div>
         </div>
       </header>
 
@@ -146,7 +145,7 @@ export const Login = () => {
             </div>
           </div>
 
-          <p style={{color: 'red'}}>{message}</p>
+          <p style={{color: 'red', paddingBottom: '10%'}}>{message}</p>
 
           <button className="btn btn-primary btn-round" type="submit">
             Sign in

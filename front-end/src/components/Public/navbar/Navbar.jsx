@@ -42,7 +42,12 @@ export const Navbar = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
 
-  const hiddenRoutes = ['/account/register', '/account/login', '/account/forgot-password'];
+  const hiddenRoutes = [
+    '/account/register',
+    '/account/login',
+    '/account/forgot-password',
+    '/dashboard',
+  ];
   const shouldHideFooter = hiddenRoutes.includes(location.pathname);
   if (shouldHideFooter) {
     return null; // Don't render the footer

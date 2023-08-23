@@ -1,6 +1,8 @@
 import {NavLink} from 'react-router-dom';
 import {store} from '../../../redux/store';
 import {useDispatch} from 'react-redux';
+import {clearToken, resetUser} from '../../../redux/user-slice';
+import {useEffect} from 'react';
 
 export const Header = () => {
   const dispatch = useDispatch();
@@ -12,7 +14,9 @@ export const Header = () => {
     .join('');
 
   const handleLogout = () => {
-    dispatch();
+    dispatch(resetUser);
+    dispatch(clearToken);
+    window.location.reload();
   };
 
   return (
@@ -210,9 +214,9 @@ export const Header = () => {
                 </div>
               </li> */}
               <li className="hide-mb-sm">
-                <a onClick={handleLogout} className="nk-quick-nav-icon">
+                <NavLink onClick={handleLogout} className="nk-quick-nav-icon">
                   <em className="icon ni ni-signout" />
-                </a>
+                </NavLink>
               </li>
               <li className="dropdown user-dropdown order-sm-first">
                 <NavLink className="dropdown-toggle" data-bs-toggle="dropdown">

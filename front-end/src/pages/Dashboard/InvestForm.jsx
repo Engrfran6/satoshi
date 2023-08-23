@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {userRequest} from '../../components/Commons/HandleRequest';
 
 export const InvestForm = () => {
-  let user = store?.getState()?.user?.user?.user || [];
+  const user = useSelector((state) => state.user.user.user);
   const token = useSelector((state) => state.user.user.token);
 
   let myPackage = store?.getState()?.user?.user?.selectedPackage || [];
