@@ -46,7 +46,7 @@ export const KycForm = () => {
                           <div className="form-group">
                             <div className="form-label-group">
                               <label className="form-label">
-                                First Name <span className="text-danger">*</span>
+                                Full Name <span className="text-danger">*</span>
                               </label>
                             </div>
                             <div className="form-control-group">
@@ -58,7 +58,7 @@ export const KycForm = () => {
                           <div className="form-group">
                             <div className="form-label-group">
                               <label className="form-label">
-                                Last Name <span className="text-danger">*</span>
+                                Occupation <span className="text-danger">*</span>
                               </label>
                             </div>
                             <div className="form-control-group">
@@ -70,7 +70,7 @@ export const KycForm = () => {
                           <div className="form-group">
                             <div className="form-label-group">
                               <label className="form-label">
-                                Email Address <span className="text-danger">*</span>
+                                Income Source <span className="text-danger">*</span>
                               </label>
                             </div>
                             <div className="form-control-group">
@@ -82,7 +82,7 @@ export const KycForm = () => {
                           <div className="form-group">
                             <div className="form-label-group">
                               <label className="form-label">
-                                Phone Number <span className="text-danger">*</span>
+                                Annual income ($) <span className="text-danger">*</span>
                               </label>
                             </div>
                             <div className="form-control-group">
@@ -109,7 +109,7 @@ export const KycForm = () => {
                           <div className="form-group">
                             <div className="form-label-group">
                               <label className="form-label">
-                                Telegram Username <span className="text-danger">*</span>
+                                Marital Status <span className="text-danger">*</span>
                               </label>
                             </div>
                             <div className="form-control-group">
@@ -316,7 +316,7 @@ export const KycForm = () => {
                         <li>Make sure that there is no light glare on the card.</li>
                       </ul>
                       <div className="nk-kycfm-upload">
-                        <h6 className="title nk-kycfm-upload-title">Upload Here Your Copy</h6>
+                        <h6 className="title nk-kycfm-upload-title">Upload Front Copy</h6>
                         <div className="row align-items-center">
                           <div className="col-sm-8">
                             <div className="nk-kycfm-upload-box">
@@ -337,7 +337,7 @@ export const KycForm = () => {
                         </div>
                       </div>
                       <div className="nk-kycfm-upload">
-                        <h6 className="title nk-kycfm-upload-title">Upload Here Your Copy</h6>
+                        <h6 className="title nk-kycfm-upload-title">Upload Back Copy</h6>
                         <div className="row align-items-center">
                           <div className="col-sm-8">
                             <div className="nk-kycfm-upload-box">

@@ -18,9 +18,9 @@ api.interceptors.request.use(
   }
 );
 
-export const userRequest = async (alias, userId, token) => {
+export const userRequest = async (alias, formData, token) => {
   try {
-    const response = await api.post(alias, userId, {
+    const response = await api.post(alias, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -32,9 +32,9 @@ export const userRequest = async (alias, userId, token) => {
   }
 };
 
-export const getUserData = async (alias, userId, token) => {
+export const getUserData = async (alias, formData, token) => {
   try {
-    const response = await api.get(alias, userId, {
+    const response = await api.get(alias, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -46,9 +46,9 @@ export const getUserData = async (alias, userId, token) => {
   }
 };
 
-export const deleteUserData = async (alias, userId, token) => {
+export const deleteUserData = async (alias, formData, token) => {
   try {
-    const response = await api.delete(alias, userId, {
+    const response = await api.delete(alias, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -60,13 +60,31 @@ export const deleteUserData = async (alias, userId, token) => {
   }
 };
 
-export const updateUserData = async (alias, userId, token) => {
+export const updateUserData = async (alias, formData, token) => {
   try {
-    const response = await api.patch(alias, userId, {
+    const response = await api.patch(alias, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const loginUser = async (alias, formData) => {
+  try {
+    const response = await api.post(alias, formData);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const registerUser = async (alias, formData) => {
+  try {
+    const response = await api.post(alias, formData);
     return response.data;
   } catch (error) {
     console.error(error);

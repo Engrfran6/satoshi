@@ -18,7 +18,6 @@ export const Withdrawal = () => {
   const [showInner, setShowInner] = useState(false);
   let user = store?.getState()?.user?.user?.user || [];
   let investments = store?.getState()?.user?.user?.investments || [];
-  const dispatch = useDispatch();
   const token = useSelector((state) => state.user.user.token);
 
   const fullName = user?.fullName.split(' ')[0];
