@@ -3,28 +3,28 @@ import {store} from '../../redux/store';
 import {stringToNumber} from './Store/convertStringToNumber';
 import {calculateEndDate} from '../Dashboard/Store/investmentDates';
 import {sumOfArray} from './calcAccountValues/Summation';
+import {useSelector} from 'react-redux';
+import {useEffect, useState} from 'react';
+import {fetchData} from '../../components/Commons/HandleRequest';
 
 export const Schemes = () => {
-  let user = store?.getState()?.user?.user?.user || [];
-  let investments = store?.getState()?.user?.user?.investments || [];
+  const user = useSelector((state) => state?.user?.user?.user);
+  const token = useSelector((state) => state?.user?.user?.token);
+
+  const [investments, setInvestments] = useState([]);
   let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
+  useEffect(() => {
+    getInvestment();
+  }, []);
 
-  // const token = useSelector((state) => state.user.user.token);
-  // const [investments, setInvestments] = useState(null);
-
-  // useEffect(() => {
-  //   getInvest();
-  // }, []);
-
-  // const getInvest = async () => {
-  //   try {
-  //     const response = getUserData('/investment', token);
-  //     console.log('invest', response.data);
-  //     setInvestments(response.data);
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error);
-  //   }
-  // };
+  const getInvestment = async () => {
+    try {
+      const response = await fetchData('/investment', token);
+      setInvestments(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const balance = stringToNumber(user?.balance);
   const totalInvested = sumOfArray(investments, 'invAmount');

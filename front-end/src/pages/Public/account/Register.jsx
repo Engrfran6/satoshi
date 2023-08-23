@@ -135,8 +135,15 @@ export const Register = () => {
   const isMobile = window.innerWidth <= 900; // Adjust the breakpoint as needed
   const containerStyle = {
     width: isMobile ? '85%' : '30%',
-    paddingTop: '7%',
+    paddingTop: isMobile ? '10%' : '7%',
     margin: '0 auto',
+  };
+  const isSmall = window.innerWidth <= 800; // Adjust the breakpoint as needed
+  const small = {};
+
+  const isSize = window.innerWidth <= 700; // Adjust the breakpoint as needed
+  const size = {
+    fontSize: isSize ? '0.6rem' : '',
   };
 
   const goBack = () => {
@@ -166,26 +173,27 @@ export const Register = () => {
 
   return (
     <div>
-      <header className="header-style2 menu_area-light">
+      <header className={`${small}header-style2 menu_area-light`}>
         <div className="navbar-default">
-          <div
-            className="container"
-            style={{
-              padding: '1.5rem 0',
-              position: 'fixed',
-              left: '0',
-              right: '0',
-            }}>
-            <NavLink to="/#">
-              <img style={{width: '15%', height: '3rem'}} src={logo} alt="" />
-            </NavLink>
+          <div className="container">
+            <div className="row align-items-center">
+              <div className=" col-lg-12">
+                <div className="menu_area alt-font">
+                  <nav className={`navbar navbar-expand-lg navbar-light`}>
+                    <NavLink to="/#">
+                      <img style={{width: '65%', height: '2.5rem'}} src={logo} alt="" />
+                    </NavLink>
 
-            <NavLink
-              to="/account/login"
-              style={{background: 'rgb(38,155,72)', color: 'white'}}
-              className="btn btn-primary pull-right">
-              Login
-            </NavLink>
+                    <NavLink
+                      to="/account/login"
+                      style={{background: 'rgb(38,155,72)', color: 'white'}}
+                      className="btn btn-primary pull-right">
+                      Login
+                    </NavLink>
+                  </nav>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </header>
@@ -198,7 +206,7 @@ export const Register = () => {
           <h3 style={{color: 'green', textAlign: 'center'}} />
         </span>
         <h2
-          className=" mb-4 font-weight-bold"
+          className={`${size} mb-4 font-weight-bold`}
           style={{
             width: 'max-content',
             padding: '0 0 2rem 0',

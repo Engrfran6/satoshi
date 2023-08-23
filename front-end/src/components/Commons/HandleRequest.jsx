@@ -45,10 +45,36 @@ export const getUserData = async (alias, formData, token) => {
     throw error;
   }
 };
+export const fetchData = async (alias, token) => {
+  try {
+    const response = await api.get(alias, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
 export const deleteUserData = async (alias, formData, token) => {
   try {
     const response = await api.delete(alias, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+export const deleteLoginActivity = async (alias, token) => {
+  try {
+    const response = await api.delete(alias, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

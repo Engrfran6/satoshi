@@ -24,7 +24,7 @@ exports.createWithdraw = async (req, res) => {
 
     const withdraw = new Withdraw(params);
     await withdraw.save();
-    const activity = new Activity({title: 'created a deposit', user: user._id});
+    const activity = new Activity({title: 'Withdrawal', user: user._id});
     await activity.save();
     if (withdraw) {
       return res.status(201).json({

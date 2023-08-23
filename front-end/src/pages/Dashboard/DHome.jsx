@@ -5,22 +5,33 @@ import {store} from '../../redux/store';
 import {stringToNumber} from './Store/convertStringToNumber';
 import {sumOfArray} from './calcAccountValues/Summation';
 import {useSelector} from 'react-redux';
-import {getUserData} from '../../components/Commons/HandleRequest';
+import {fetchData, getUserData} from '../../components/Commons/HandleRequest';
 
 export const DHome = () => {
   const [recipientEmail, setRecipientEmail] = useState();
   const [show, setShow] = useState(false);
+  let data = useSelector((state) => state?.user?.user?.user);
+  const [user, setUser] = useState();
   const [showInner, setShowInner] = useState(false);
-  const user = useSelector((state) => state?.user?.user?.user);
   const token = useSelector((state) => state?.user?.user?.token);
-  let investments = store?.getState()?.user?.user?.investments || [];
-  let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
 
-  const handleShow = () => {
-    setShow(!show);
-  };
-  const handleShowInner = () => {
-    setShowInner(!showInner);
+  useEffect(() => {
+    setUser(data);
+  }, []);
+
+  const [investments, setInvestments] = useState([]);
+  let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
+  useEffect(() => {
+    getInvestment();
+  }, []);
+
+  const getInvestment = async () => {
+    try {
+      const response = await fetchData('/investment', token);
+      setInvestments(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
 
   const fullName = user?.fullName;
@@ -30,7 +41,6 @@ export const DHome = () => {
   const balanceInAccount = balance + totalInvested + totalProfits;
   const totalAvailableBalanceAndInv = balance + totalInvested;
 
-  // ===============not working yet=============
   const referalBonus = investments.reduce((total, document) => {
     return total + (document.referalBonus || 0);
   }, 0);
@@ -41,26 +51,17 @@ export const DHome = () => {
   const Total = monthlyProfit + referalBonus + rewards;
 
   const totalJoined = investments?.referalBonus?.length || 0;
-  // ===========================================
 
   const totalActiveInv = investments.length ? investments.length : 0;
   const totalExpiredInv = expiredInvestments.length ? expiredInvestments.length : 0;
   const totalInv = totalActiveInv + totalExpiredInv;
   const inviteLink = `https://www.satochitradepro.com/${user?.referalId}`;
 
-  const [invest, setInvestments] = useState('');
-  console.log('============', invest);
-  useEffect(() => {
-    getInvestment();
-  }, []);
-
-  const getInvestment = async () => {
-    try {
-      const response = await getUserData('/investment', token);
-      setInvestments(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
+  const handleShow = () => {
+    setShow(!show);
+  };
+  const handleShowInner = () => {
+    setShowInner(!showInner);
   };
 
   return (

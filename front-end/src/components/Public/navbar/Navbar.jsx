@@ -66,8 +66,8 @@ export const Navbar = () => {
             <div className="col-12 col-lg-12">
               <div className="menu_area alt-font">
                 <nav className={`${fixed} navbar navbar-expand-lg navbar-light`}>
-                  <NavLink to="/"> SATOCHI TRADE PRO </NavLink>
-                  <div className="navbar-header navbar-header-custom">
+                  <div style={{flex: '0%'}} className="navbar-header navbar-header-custom">
+                    {/* <NavLink to="/"> SATOCHI TRADE PRO </NavLink> */}
                     <NavLink to="/" className="navbar-brand logo2">
                       <p
                         style={{
@@ -81,6 +81,7 @@ export const Navbar = () => {
                       </p>
                     </NavLink>
                   </div>
+
                   {/* <div className="navbar-toggler" /> */}
                   <StyledBurger open={open} onClick={() => setOpen(!open)}>
                     <div className="hamburger" />
@@ -92,7 +93,6 @@ export const Navbar = () => {
                   <div open={open}>
                     <ul
                       className="navbar-nav ml-auto"
-                      id="nav"
                       style={{display: 'flex', alignItems: 'center'}}>
                       <li>
                         <NavLink to="/">Home</NavLink>

@@ -67,24 +67,25 @@ export const Login = () => {
     <div>
       <header className="header-style2 menu_area-light">
         <div className="navbar-default">
-          <div
-            className="container"
-            style={{
-              padding: '1.5rem 0',
-              position: 'fixed',
-              left: '0',
-              right: '0',
-            }}>
-            <NavLink to="/#">
-              <img style={{width: '15%', height: '3rem'}} src={logo} alt="" />
-            </NavLink>
+          <div className="container">
+            <div className="row align-items-center">
+              <div className=" col-lg-12">
+                <div className="menu_area alt-font">
+                  <nav className={`navbar navbar-expand-lg navbar-light`}>
+                    <NavLink to="/#">
+                      <img style={{width: '65%', height: '2.5rem'}} src={logo} alt="" />
+                    </NavLink>
 
-            <NavLink
-              to="/account/register"
-              style={{background: 'rgb(38,155,72)', color: 'white'}}
-              className="btn btn-primary pull-right">
-              Sign Up
-            </NavLink>
+                    <NavLink
+                      to="/account/register"
+                      style={{background: 'rgb(38,155,72)', color: 'white'}}
+                      className="btn btn-primary pull-right">
+                      Sign Up
+                    </NavLink>
+                  </nav>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </header>
