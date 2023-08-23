@@ -1,6 +1,55 @@
+import {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 import {NavLink} from 'react-router-dom';
+import {deleteLoginActivity, fetchData} from '../../components/Commons/HandleRequest';
+import Swal from 'sweetalert2';
 
 export const ProfileActivity = () => {
+  let token = useSelector((state) => state?.user?.user?.token);
+
+  const [loginActivity, setLoginActivity] = useState([]);
+  useEffect(() => {
+    getActivity();
+  }, []);
+
+  const getActivity = async () => {
+    try {
+      const response = await fetchData('/activity', token);
+      setLoginActivity(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const deleteActivity = async () => {
+    if (loginActivity) {
+      try {
+        const response = await deleteLoginActivity('/activity', token);
+        if (response.status == 'success') {
+          deleteAlert;
+        }
+      } catch (error) {
+        errorAlert();
+      }
+    }
+  };
+
+  const deleteAlert = () => {
+    Swal.fire({
+      title: 'Deleted!',
+      text: 'log cleared',
+      timer: 700,
+    });
+  };
+
+  const errorAlert = () => {
+    Swal.fire({
+      title: 'Sorrry!',
+      text: 'you have no activity to delete',
+      timer: 1500,
+    });
+  };
+
   return (
     <>
       <div className="nk-content nk-content-lg nk-content-fluid">
@@ -29,10 +78,11 @@ export const ProfileActivity = () => {
               <div className="nk-block">
                 <div className="nk-block-title-group mb-3">
                   <h6 className="nk-block-title title">Activity on your account</h6>
-                  <NavLink to="/dashboard/profile-activity#" className="link link-danger">
+                  <NavLink onClick={deleteActivity} className="link link-danger">
                     Clear log
                   </NavLink>
                 </div>
+
                 <div className="card card-bordered">
                   <table className="table table-ulogs">
                     <thead className="table-light">
@@ -53,161 +103,26 @@ export const ProfileActivity = () => {
                         </th>
                       </tr>
                     </thead>
+
                     <tbody>
-                      <tr>
-                        <td className="tb-col-os">Chrome on Window</td>
-                        <td className="tb-col-ip">
-                          <span className="sub-text">192.149.122.128</span>
-                        </td>
-                        <td className="tb-col-time">
-                          <span className="sub-text">11:34 PM</span>
-                        </td>
-                        <td className="tb-col-action" />
-                      </tr>
-                      <tr>
-                        <td className="tb-col-os">Mozilla on Window</td>
-                        <td className="tb-col-ip">
-                          <span className="sub-text">86.188.154.225</span>
-                        </td>
-                        <td className="tb-col-time">
-                          <span className="sub-text">
-                            Nov 20, 2019 <span className="d-none d-sm-inline-block">10:34 PM</span>
-                          </span>
-                        </td>
-                        <td className="tb-col-action">
-                          <NavLink
-                            to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1">
-                            <em className="icon ni ni-cross" />
-                          </NavLink>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="tb-col-os">Chrome on iMac</td>
-                        <td className="tb-col-ip">
-                          <span className="sub-text">192.149.122.128</span>
-                        </td>
-                        <td className="tb-col-time">
-                          <span className="sub-text">
-                            Nov 12, 2019 <span className="d-none d-sm-inline-block">08:56 PM</span>
-                          </span>
-                        </td>
-                        <td className="tb-col-action">
-                          <NavLink
-                            to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1">
-                            <em className="icon ni ni-cross" />
-                          </NavLink>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="tb-col-os">Chrome on Window</td>
-                        <td className="tb-col-ip">
-                          <span className="sub-text">192.149.122.128</span>
-                        </td>
-                        <td className="tb-col-time">
-                          <span className="sub-text">
-                            Nov 03, 2019 <span className="d-none d-sm-inline-block">04:29 PM</span>
-                          </span>
-                        </td>
-                        <td className="tb-col-action">
-                          <NavLink
-                            to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1">
-                            <em className="icon ni ni-cross" />
-                          </NavLink>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="tb-col-os">Mozilla on Window</td>
-                        <td className="tb-col-ip">
-                          <span className="sub-text">86.188.154.225</span>
-                        </td>
-                        <td className="tb-col-time">
-                          <span className="sub-text">
-                            Oct 29, 2019 <span className="d-none d-sm-inline-block">09:38 AM</span>
-                          </span>
-                        </td>
-                        <td className="tb-col-action">
-                          <NavLink
-                            to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1">
-                            <em className="icon ni ni-cross" />
-                          </NavLink>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="tb-col-os">Chrome on iMac</td>
-                        <td className="tb-col-ip">
-                          <span className="sub-text">192.149.122.128</span>
-                        </td>
-                        <td className="tb-col-time">
-                          <span className="sub-text">
-                            Oct 23, 2019 <span className="d-none d-sm-inline-block">04:16 PM</span>
-                          </span>
-                        </td>
-                        <td className="tb-col-action">
-                          <NavLink
-                            to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1">
-                            <em className="icon ni ni-cross" />
-                          </NavLink>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="tb-col-os">Chrome on Window</td>
-                        <td className="tb-col-ip">
-                          <span className="sub-text">192.149.122.128</span>
-                        </td>
-                        <td className="tb-col-time">
-                          <span className="sub-text">
-                            Oct 15, 2019 <span className="d-none d-sm-inline-block">11:41 PM</span>
-                          </span>
-                        </td>
-                        <td className="tb-col-action">
-                          <NavLink
-                            to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1">
-                            <em className="icon ni ni-cross" />
-                          </NavLink>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="tb-col-os">Mozilla on Window</td>
-                        <td className="tb-col-ip">
-                          <span className="sub-text">86.188.154.225</span>
-                        </td>
-                        <td className="tb-col-time">
-                          <span className="sub-text">
-                            Oct 13, 2019 <span className="d-none d-sm-inline-block">05:43 AM</span>
-                          </span>
-                        </td>
-                        <td className="tb-col-action">
-                          <NavLink
-                            to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1">
-                            <em className="icon ni ni-cross" />
-                          </NavLink>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="tb-col-os">Chrome on iMac</td>
-                        <td className="tb-col-ip">
-                          <span className="sub-text">192.149.122.128</span>
-                        </td>
-                        <td className="tb-col-time">
-                          <span className="sub-text">
-                            Oct 03, 2019 <span className="d-none d-sm-inline-block">04:12 AM</span>
-                          </span>
-                        </td>
-                        <td className="tb-col-action">
-                          <NavLink
-                            to="/dashboard/profile-activity#"
-                            className="link-cross me-sm-n1">
-                            <em className="icon ni ni-cross" />
-                          </NavLink>
-                        </td>
-                      </tr>
+                      {loginActivity?.map((item) => (
+                        <tr>
+                          <td className="tb-col-os">{item.browser}</td>
+                          <td className="tb-col-ip">
+                            <span className="sub-text">{item.ip}</span>
+                          </td>
+                          <td className="tb-col-time">
+                            <span className="sub-text">{item.createdAt}</span>
+                          </td>
+                          <td className="tb-col-action">
+                            <NavLink
+                              to="/dashboard/profile-activity#"
+                              className="link-cross me-sm-n1">
+                              <em className="icon ni ni-cross" />
+                            </NavLink>
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>

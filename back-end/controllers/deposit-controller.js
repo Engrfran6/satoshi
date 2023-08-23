@@ -7,8 +7,6 @@ const createUserSchema = Joi.object().keys({
   // photo: Joi.string().required(),
 });
 exports.createDeposit = async (req, res) => {
-  console.log('=========', req.body);
-
   try {
     const user = req.user;
     const doc = req.body;
@@ -25,7 +23,7 @@ exports.createDeposit = async (req, res) => {
 
     const deposit = new Deposit(params);
     await deposit.save();
-    const activity = new Activity({title: 'created a deposit', user: user._id});
+    const activity = new Activity({title: 'Deposit', user: user._id});
     await activity.save();
     if (deposit) {
       return res.status(201).json({

@@ -36,7 +36,7 @@ exports.createInvestment = async (req, res) => {
 
     const investment = new Investment(params);
     await investment.save();
-    const activity = new Activity({title: 'started a new investment', user: user._id});
+    const activity = new Activity({title: 'new investment', user: user._id});
     await activity.save();
     if (investment) {
       return res.status(201).json({
