@@ -3,7 +3,6 @@ import axios from 'axios';
 
 const API_URL = 'https://satochitradebackend.onrender.com'; //My backend URL
 
-
 const api = axios.create({
   baseURL: API_URL,
 });
@@ -17,9 +16,9 @@ api.interceptors.request.use(
   }
 );
 
-export const userRequest = async (alias, formData, token) => {
+export const getUserData = async (alias, formData, token) => {
   try {
-    const response = await api.post(alias, formData, {
+    const response = await api.get(alias, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -31,9 +30,9 @@ export const userRequest = async (alias, formData, token) => {
   }
 };
 
-export const getUserData = async (alias, formData, token) => {
+export const userRequest = async (alias, formData, token) => {
   try {
-    const response = await api.get(alias, formData, {
+    const response = await api.post(alias, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
