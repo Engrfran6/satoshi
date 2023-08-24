@@ -1,14 +1,14 @@
 // api.js
 import axios from 'axios';
-import {useSelector} from 'react-redux';
+const dotenv = require('dotenv');
+dotenv.config();
 
-const API_URL = 'http://localhost:8000'; //My backend URL
+const API_URL = process.env.VITE_API_BASE_URL; //My backend URL
 
 const api = axios.create({
   baseURL: API_URL,
 });
 
-// Add a request interceptor
 api.interceptors.request.use(
   (config) => {
     return config;
