@@ -3,6 +3,7 @@ import {store} from '../redux/store';
 
 // eslint-disable-next-line no-undef
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+console.log('=======', apiBaseUrl);
 
 export const userService = {
   loginUser: async (email, password) => {

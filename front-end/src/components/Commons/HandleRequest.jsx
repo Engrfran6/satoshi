@@ -1,9 +1,9 @@
 // api.js
 import axios from 'axios';
-const dotenv = require('dotenv');
-dotenv.config();
 
-const API_URL = process.env.VITE_API_BASE_URL; //My backend URL
+// const API_URL = 'http://localhost:8000'; //My backend URL
+
+const API_URL = 'https://satochitradebackend.onrender.com'; //My backend URL
 
 const api = axios.create({
   baseURL: API_URL,
