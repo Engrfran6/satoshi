@@ -1,9 +1,7 @@
 // api.js
 import axios from 'axios';
-const dotenv = require('dotenv');
-dotenv.config();
 
-const API_URL = process.env.VITE_API_BASE_URL; //My backend URL
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const api = axios.create({
   baseURL: API_URL,
