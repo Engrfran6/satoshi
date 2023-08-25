@@ -2,7 +2,8 @@ import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
 import {registerUser} from '../../../components/Commons/HandleRequest';
 import Swal from 'sweetalert2';
-import logo from '../../../assets/stp-logo2.png';
+import logo from '../../../assets/stf-logo2.png';
+import {styled} from 'styled-components';
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -97,57 +98,51 @@ export const Register = () => {
     setFormData({...formData, phoneNumber: newPhoneNumber});
   };
 
-  // console.log(phoneNumber);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await loginUser('/auth/login', formData);
 
-  // const handleLogin = async () => {
-  //   try {
-  //     const response = await userRequest('/auth/login', {
-  //       email: formData.email,
-  //       password: formData.password,
-  //     });
-  //     const {token, user, investments} = response;
-  //     if (response.status === 'success') {
-  //       dispatch(setUser({token: token, user, investments}));
-  //       navigate('/dashboard');
-  //     }
-  //   } catch (error) {
-  //     setMessage('Invalid Email or Password');
-  //   }
-  // };
+      const {token, user, investments} = response;
+
+      dispatch(setUser({token: token, user, investments}));
+
+      navigate('/dashboard');
+    } catch (error) {
+      setMessage('Invalid Email or Password, Try again!');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const response = await registerUser('/auth/register', formData);
-      if (response.status == 'success') {
+      if (response.status === 'success') {
         setMessage('success');
         showSuccessAlert();
+      } else if (response.status === 'failed') {
+        const duplicateKeyErrorRegex = /index: (\w+)_1.*\{ (\w+): "([^"]+)" \}/;
+        const match = response.message.match(duplicateKeyErrorRegex);
 
-        // handleLogin();
+        if (match) {
+          const [, indexName, propertyName, propertyValue] = match;
+          showErrorAlert(propertyName, propertyValue, indexName);
+        }
       }
     } catch (error) {
-      setMessage('failed');
-      showErrorAlert();
+      networkErrorAlert();
     }
   };
 
-  const isMobile = window.innerWidth <= 900; // Adjust the breakpoint as needed
-  const containerStyle = {
-    width: isMobile ? '85%' : '30%',
-    paddingTop: isMobile ? '10%' : '7%',
-    margin: '0 auto',
-  };
-  const isSmall = window.innerWidth <= 800; // Adjust the breakpoint as needed
-  const small = {};
-
-  const isSize = window.innerWidth <= 700; // Adjust the breakpoint as needed
-  const size = {
-    fontSize: isSize ? '0.6rem' : '',
-  };
-
-  const goBack = () => {
-    window.location.reload();
+  const showErrorAlert = (propertyName, propertyValue, indexName) => {
+    Swal.fire({
+      title: 'Request failed',
+      text: `${propertyName} already exists: ${propertyValue} in index: ${indexName}`,
+      icon: 'error',
+      confirmButtonText: 'OK',
+      confirmButtonColor: 'red',
+    });
   };
 
   const showSuccessAlert = () => {
@@ -161,60 +156,86 @@ export const Register = () => {
       navigate('/account/login');
     });
   };
-  const showErrorAlert = () => {
+  const networkErrorAlert = () => {
     Swal.fire({
-      title: 'Registration failed',
-      text: 'Email already exist !',
+      title: 'Server error, please try again',
+      text: (`${foundProperty} already exists:`, propertyValue),
       icon: 'error',
       confirmButtonText: 'OK',
       confirmButtonColor: 'red',
     });
   };
 
+  const Div = styled.div`
+    position: fixed;
+    width: 100%;
+    display: flex;
+    background-color: white;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 10%;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+
+    .listitem {
+      padding: 0.3rem 1rem;
+      background-color: rgb(38, 155, 71);
+      color: white;
+      border-radius: 0.4rem;
+    }
+
+    @media screen and (max-width: 600px) {
+      padding: 0.5rem 8%;
+      font-size: 0.6rem;
+
+      .img {
+        width: 80px;
+        height: 2.5rem;
+      }
+
+      .listitem {
+        padding: 0.25rem 0.9rem;
+      }
+    }
+  `;
+
+  const H2 = styled.h2`
+    font-size: 1.7rem;
+    padding: 6% 2rem 2rem 0;
+    color: rgb(38, 155, 71);
+    margin-top: 0;
+
+    @media screen and (max-width: 600px) {
+      font-size: 1.3rem;
+      padding: 12% 2rem 1rem 0;
+    }
+    @media screen and (max-width: 1025px) {
+      font-size: 1.6rem;
+      padding: 25% 2rem 1rem 0;
+    }
+  `;
+
+  const isMobile = window.innerWidth <= 600; // Adjust the breakpoint as needed
+  const isPad = window.innerWidth <= 10250; // Adjust the breakpoint as needed
+  const containerStyle = {
+    width: isMobile ? '85%' : isPad ? '45%' : '30%',
+    paddingTop: isMobile ? '6%' : '4.5%',
+    margin: '0 auto',
+  };
+
   return (
     <div>
-      <header className={`${small}header-style2 menu_area-light`}>
-        <div className="navbar-default">
-          <div className="container">
-            <div className="row align-items-center">
-              <div className=" col-lg-12">
-                <div className="menu_area alt-font">
-                  <nav className={`navbar navbar-expand-lg navbar-light`}>
-                    <NavLink to="/#">
-                      <img style={{width: '65%', height: '2.5rem'}} src={logo} alt="" />
-                    </NavLink>
+      <Div>
+        <NavLink to="/#">
+          <img width={130} className="img" src={logo} alt="" />
+        </NavLink>
 
-                    <NavLink
-                      to="/account/login"
-                      style={{background: 'rgb(38,155,72)', color: 'white'}}
-                      className="btn btn-primary pull-right">
-                      Login
-                    </NavLink>
-                  </nav>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+        <NavLink className="listitem" to="/account/login">
+          Login
+        </NavLink>
+      </Div>
 
       <form onSubmit={handleSubmit} style={containerStyle}>
-        <span>
-          <h3 style={{color: 'crimson', textAlign: 'center'}} />
-        </span>
-        <span>
-          <h3 style={{color: 'green', textAlign: 'center'}} />
-        </span>
-        <h2
-          className={`${size} mb-4 font-weight-bold`}
-          style={{
-            width: 'max-content',
-            padding: '0 0 2rem 0',
-            color: 'green',
-            fontSize: '2.1rem',
-          }}>
-          Create an account with Us!
-        </h2>
+        <H2>Create an account with Us!</H2>
 
         <label style={{color: 'black'}} className="font-weight-bold">
           Full Name
