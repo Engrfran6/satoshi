@@ -6,7 +6,6 @@ import {setUser} from '../../../redux/user-slice';
 import {styled} from 'styled-components';
 import Swal from 'sweetalert2';
 import {userLogin} from '../../../components/Commons/HandleRequest';
-import {userService} from '../../../services/userService';
 
 export const Login = () => {
   const dispatch = useDispatch();
@@ -57,7 +56,7 @@ export const Login = () => {
         dispatch(setUser({token, user}));
         const firstName = user.fullName.split(' ')[0];
         successAlert(firstName);
-        navigate('/dashboard');
+        // navigate('/dasboard');
       } else if (error === 'invalid credentials') {
         console.log('response error', error);
         setMessage('Invalid Email or Password, Try again!');
