@@ -47,6 +47,7 @@ routerConfig.forEach((rou) => {
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
+  console.log('process.env.PORT ===================', req.query)
   next(createError(404));
 });
 

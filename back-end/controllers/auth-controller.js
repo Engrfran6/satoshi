@@ -2,8 +2,8 @@ const Joi = require('@hapi/joi');
 const bcrypt = require('bcryptjs');
 
 const User = require('../models/Users/UserModel');
-const Package = require('../models/Packages/PackageModel');
-const Activity = require('../models/Activities/ActivityModel');
+const Account = require('../models/Account/AccountModel');
+
 const Investment = require('../models/Investment/InvestmentModel');
 
 const createUserSchema = Joi.object().keys({
@@ -11,6 +11,7 @@ const createUserSchema = Joi.object().keys({
   password: Joi.string().required(),
   username: Joi.string().required(),
   phoneNumber: Joi.string().required(),
+  role: Joi.string(),
   email: Joi.string()
     .required()
     .email({tlds: {allow: false}}),
@@ -47,6 +48,17 @@ exports.register = async (req, res) => {
       referalId: genrateReferal,
     };
 
+    const accParams = {
+      name: doc.email,
+      fullName: doc.fullName,
+      username: doc.username,
+      phoneNumber: doc.phoneNumber,
+      password: generatedPassword,
+      referalId: genrateReferal,
+    };
+
+
+    const acc = new Account()
     const user = new User(params);
     await user.save();
     delete user.password;
@@ -100,6 +112,16 @@ exports.authorizeAccount = async (req, res) => {
   res.status(200).json({
     status: 'success',
     user: req.user,
+  });
+};
+
+exports.getUsers = async (req, res) => {
+  const users = await User.retrievePaginated({
+    ...req.query,
+  });
+  res.status(200).json({
+    status: 'success',
+    ...users
   });
 };
 
