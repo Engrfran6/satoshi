@@ -14,7 +14,7 @@ const App = () => {
         setAuthentictaed(false);
       }
     });
-  }, [authenticated]);
+  }, []);
 
   return <>{authenticated ? <AuthorizedApp /> : <UnauthorizedApp />}</>;
 };

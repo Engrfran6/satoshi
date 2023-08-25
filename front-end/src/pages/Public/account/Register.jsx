@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
-import {registerUser} from '../../../components/Commons/HandleRequest';
+import {registerUser, userLogin} from '../../../components/Commons/HandleRequest';
 import Swal from 'sweetalert2';
 import logo from '../../../assets/stf-logo2.png';
 import {styled} from 'styled-components';
@@ -101,7 +101,7 @@ export const Register = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await loginUser('/auth/login', formData);
+      const response = await userLogin('/auth/login', formData);
 
       const {token, user, investments} = response;
 
@@ -215,7 +215,7 @@ export const Register = () => {
   `;
 
   const isMobile = window.innerWidth <= 600; // Adjust the breakpoint as needed
-  const isPad = window.innerWidth <= 10250; // Adjust the breakpoint as needed
+  const isPad = window.innerWidth <= 1025; // Adjust the breakpoint as needed
   const containerStyle = {
     width: isMobile ? '85%' : isPad ? '45%' : '30%',
     paddingTop: isMobile ? '6%' : '4.5%',

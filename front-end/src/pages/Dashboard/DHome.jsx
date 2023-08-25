@@ -1,11 +1,11 @@
 import {useEffect, useState} from 'react';
-import {NavLink, useNavigate} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {EmailIcon, WhatsappIcon, WhatsappShareButton} from 'react-share';
 import {store} from '../../redux/store';
 import {stringToNumber} from './Store/convertStringToNumber';
 import {sumOfArray} from './calcAccountValues/Summation';
 import {useSelector} from 'react-redux';
-import {fetchData, getUserData} from '../../components/Commons/HandleRequest';
+import {fetchData} from '../../components/Commons/HandleRequest';
 
 export const DHome = () => {
   const [recipientEmail, setRecipientEmail] = useState();
@@ -17,7 +17,7 @@ export const DHome = () => {
 
   useEffect(() => {
     setUser(data);
-  }, []);
+  }, [user]);
 
   const [investments, setInvestments] = useState([]);
   let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];

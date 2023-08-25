@@ -1,10 +1,12 @@
 import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
 import logo from '../../../assets/stf-logo2.png';
-import {loginUser} from '../../../components/Commons/HandleRequest';
 import {useDispatch} from 'react-redux';
 import {setUser} from '../../../redux/user-slice';
 import {styled} from 'styled-components';
+import Swal from 'sweetalert2';
+import {userLogin} from '../../../components/Commons/HandleRequest';
+import {userService} from '../../../services/userService';
 
 export const Login = () => {
   const dispatch = useDispatch();
@@ -46,18 +48,33 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await loginUser('/auth/login', formData);
+      const response = await userLogin('/auth/login', formData);
+      const {token, user, status, error} = response;
 
-      const {token, user, investments} = response;
-
-      if (response.status === 'success') {
-        dispatch(setUser({token: token, user, investments}));
+      if (status === 'success') {
+        dispatch(setUser({token, user}));
+        const firstName = user.fullName.split(' ')[0];
+        successAlert(firstName);
         navigate('/dashboard');
+      } else if (error === 'invalid credentials') {
+        console.log('response error', error);
+        setMessage('Invalid Email or Password, Try again!');
+      } else {
+        setMessage('An error occurred while processing your request. Please try again later.');
       }
-    } catch (error) {
-      setMessage('Invalid Email or Password, Try again!');
+    } catch (err) {
+      setMessage('Error connecting to the server, please try again later!');
     }
+  };
+
+  const successAlert = (firstName) => {
+    Swal.fire({
+      title: `Welcome!  ${firstName}`,
+      timer: 1000,
+      timerProgressBar: true,
+    });
   };
 
   const Ul = styled.div`
@@ -77,11 +94,6 @@ export const Login = () => {
       border-radius: 0.4rem;
     }
 
-    /* .img {
-      width: 5rem;
-      height: 1.5rem;
-    } */
-
     @media screen and (max-width: 600px) {
       padding: 0.5rem 8%;
       font-size: 0.6rem;
@@ -97,13 +109,16 @@ export const Login = () => {
     }
   `;
 
-  const isMobile = window.innerWidth <= 900; // Adjust the breakpoint as needed
+  const isMobile = window.innerWidth <= 600; // Adjust the breakpoint as needed
+  const isPad = window.innerWidth <= 1025; // Adjust the breakpoint as needed
   const containerStyle = {
-    width: isMobile ? '85%' : '30%',
+    width: isMobile ? '85%' : isPad ? '45%' : '30%',
+    paddingTop: isMobile ? '30%' : isPad ? '35%' : '4.5%',
+    margin: '0 auto',
   };
 
   return (
-    <div>
+    <div style={{width: '100%'}}>
       <Ul>
         <NavLink to="/#">
           <img width={130} className="img" src={logo} alt="" />

@@ -1,10 +1,10 @@
 import {NavLink, useNavigate} from 'react-router-dom';
-import {store} from '../../../redux/store';
 import {useDispatch, useSelector} from 'react-redux';
 import {clearToken, resetUser} from '../../../redux/user-slice';
 import Swal from 'sweetalert2';
 import {useEffect, useState} from 'react';
 import {fetchData} from '../../Commons/HandleRequest';
+import logo from '../../../assets/stf-logo1.png';
 
 export const Header = () => {
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ export const Header = () => {
 
   const handleLogout = () => {
     Swal.fire({
-      title: `HELLO ${fullName}`,
+      title: `HELLO ${user?.fullName.split('')[0]} `,
       text: 'Are you sure you want to log out?',
       icon: 'question',
       showCancelButton: true,
@@ -43,12 +43,12 @@ export const Header = () => {
       if (result.isConfirmed) {
         dispatch(resetUser);
         dispatch(clearToken);
-        window.location.replace('/');
-
         Swal.fire({
           title: `GoodBye ${user?.fullName.split('')[0]} !`,
           text: 'You have been successfully logged out.',
           icon: 'success',
+          showConfirmButton: false,
+          timer: 1500,
         }).then(() => {
           window.location.reload();
           navigate('/');
@@ -65,6 +65,12 @@ export const Header = () => {
         <div className="nk-header-wrap">
           <div className="nk-header-menu" data-content="headerNav">
             <ul className="nk-menu nk-menu-main">
+              <li className="nk-menu-item">
+                <NavLink to="/dashboard#" className="nk-menu-link flex-column">
+                  <img width={130} src={logo} alt="logo" />
+                  <small style={{color: 'white'}}>Dashboard</small>
+                </NavLink>
+              </li>
               <li className="nk-menu-item">
                 <NavLink to="/dashboard#" className="nk-menu-link">
                   <span className="nk-menu-text">Overview</span>
