@@ -11,9 +11,7 @@ module.exports = [
   ['/package', packageRouter],
   ['/deposit', depositRouter],
   ['/investment', investRouter],
-];
 
-module.exports = [
   ['/btc', paymentRoutes.btcRouter],
   ['/bank', paymentRoutes.bankRouter],
   ['/usdt', paymentRoutes.usdtRouter],
