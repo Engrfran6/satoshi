@@ -1,8 +1,9 @@
 import {client} from '../utils/api-client';
 import {store} from '../redux/store';
+import {API_URL} from '../components/Commons/HandleRequest';
 
-// eslint-disable-next-line no-undef
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+// const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+const apiBaseUrl = API_URL;
 
 export const userService = {
   loginUser: async (email, password) => {

@@ -1,15 +1,18 @@
-const  { Schema, model } = require('mongoose');
-const AutoGeneratePlugin = require('../schema_plugins')
+const {Schema, model} = require('mongoose');
+const AutoGeneratePlugin = require('../schema_plugins');
 
-const activitySchema = new Schema({
-  title: {
-    type: String,
+const activitySchema = new Schema(
+  {
+    title: {
+      type: String,
+    },
+    user: {
+      type: Schema.Types.String,
+      ref: 'User',
+    },
   },
-  user: {
-    type: Schema.Types.String,
-    ref: 'User'
-  },
-},{versionKey: false});
+  {versionKey: false}
+);
 
 activitySchema.plugin(AutoGeneratePlugin);
 

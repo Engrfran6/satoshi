@@ -1,34 +1,49 @@
 import {NavLink} from 'react-router-dom';
 import {store} from '../../redux/store';
 import {stringToNumber} from './Store/convertStringToNumber';
-import {sumArray} from './Store/sumIndexArray';
-import {removeCommasFromNumber} from './Store/removeCommas';
 import {calculateEndDate} from '../Dashboard/Store/investmentDates';
+import {sumOfArray} from './calcAccountValues/Summation';
+import {useSelector} from 'react-redux';
+import {useEffect, useState} from 'react';
+import {fetchData} from '../../components/Commons/HandleRequest';
 
 export const Schemes = () => {
-  let user = store?.getState()?.user?.user?.user || [];
-  let investments = store?.getState()?.user?.user?.investments || [];
+  const user = useSelector((state) => state?.user?.user?.user);
+  const token = useSelector((state) => state?.user?.user?.token);
+
+  const [investments, setInvestments] = useState([]);
   let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
+  useEffect(() => {
+    getInvestment();
+  }, []);
 
-  console.log('=================', investments);
+  const getInvestment = async () => {
+    try {
+      const response = await fetchData('/investment', token);
+      setInvestments(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-  const username = user?.username;
   const balance = stringToNumber(user?.balance);
-  const totalInvested = sumArray(investments, 'invAmount');
-  const totalProfits = sumArray(investments, 'dailyProfit');
-  const balanceInAccount = removeCommasFromNumber(balance, totalInvested, totalProfits);
+  const totalInvested = sumOfArray(investments, 'invAmount');
+  const totalProfits = sumOfArray(investments, 'dailyProfit');
+  const balanceInAccount = balance + totalInvested + totalProfits;
 
-  const totalAvailableBalanceAndInv = removeCommasFromNumber(balance, totalInvested);
-  const monthlyProfit = investments ? investments.monthlyProfit : 0;
-  const referalBonus = user.totalReferalBonus;
-  const rewards = user.totalRewards;
-  const Total = user?.totalMonthlyProfit + referalBonus + rewards;
+  // ===============not working yet=============
+  const referalBonus = investments.reduce((total, document) => {
+    return total + (document.referalBonus || 0);
+  }, 0);
+  const rewards = investments.reduce((total, document) => {
+    return total + (document.referalBonus || 0);
+  }, 0);
+  const monthlyProfit = sumOfArray(investments, 'monthlyProfit');
+  const Total = monthlyProfit + referalBonus + rewards;
+  // ===========================================
 
   const totalActiveInv = investments.length ? investments.length : 0;
   const totalExpiredInv = expiredInvestments.length ? expiredInvestments.length : 0;
-  const totalInv = totalActiveInv + totalExpiredInv;
-  const inviteLink = `https://www.satochitradepro.com/${user?.referal}`;
-  calculateEndDate(investments.createdAt, '30');
 
   return (
     <>

@@ -3,7 +3,7 @@ import {store} from '../../../redux/store';
 export const SuccessMessage = () => {
   let user = store?.getState()?.user?.user?.user || [];
   let myPackage = store?.getState()?.user?.user?.selectedPackage || [];
-  let amount = store?.getState()?.user?.user?.selectedPaymentOption || [];
+  let amount = store?.getState()?.user?.user?.investAmount || [];
   return (
     <div
       style={{
@@ -22,13 +22,12 @@ export const SuccessMessage = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          alignItems: 'center',
           gap: '1rem',
         }}>
         <h5 style={{color: 'green'}}>Congratutions!!!</h5> <h5>{user?.username}</h5>
       </div>
       <br /> <br />
-      <div>
+      <h5>
         You have successfully invested
         <small style={{padding: '.3rem', fontWeight: 'bold', color: 'green', fontSize: '1.1rem'}}>
           ${amount}
@@ -39,7 +38,7 @@ export const SuccessMessage = () => {
           _{myPackage.name}
         </small>
         plan.
-      </div>
+      </h5>
     </div>
   );
 };

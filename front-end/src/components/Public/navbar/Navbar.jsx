@@ -1,152 +1,327 @@
 import {useLocation} from 'react-router-dom';
-
 import {NavLink} from 'react-router-dom';
+import styled from 'styled-components';
+import {useState} from 'react';
+import {SlArrowDown} from 'react-icons/sl';
+import logo from '../../../assets/stf-logo2.png';
+
+const Header = styled.nav`
+  display: flex;
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+  align-items: center;
+  padding: 1rem 9rem;
+  border-bottom: 0.4px solid gray;
+  background-color: #f4f1f1;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, rgb(38, 155, 71));
+
+  .nav-left {
+    flex: 10%;
+    border-right: 0.2px solid rgb(38, 155, 71);
+
+    /* .img {
+      width: 5rem;
+      height: 1.5rem;
+    } */
+  }
+
+  .nav-center {
+    flex: 80%;
+
+    ul {
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      gap: 1.8rem;
+
+      .list-items {
+        padding: 0.5rem 0.9rem;
+        color: white;
+
+        .list-item {
+          color: rgb(38, 155, 71);
+          font-size: 1rem;
+          font-weight: bold;
+          padding: 0.5rem;
+        }
+
+        .list-item:hover {
+          border-bottom: 2px solid rgb(48, 160, 80);
+        }
+
+        .list-item-inner {
+          position: absolute;
+          right: 24.5rem;
+
+          .list-item-inner-link {
+            color: rgb(48, 160, 80);
+          }
+        }
+      }
+
+      .sign-up {
+        padding-left: 3rem;
+        border-left: 0.2px solid rgb(38, 155, 71);
+
+        .link {
+          padding: 0.5rem 1rem;
+          background-color: rgb(38, 155, 71);
+          color: white;
+          border-radius: 0.4rem;
+        }
+      }
+    }
+
+    .active {
+      color: blue;
+    }
+    .clicked {
+      background-color: red;
+    }
+  }
+
+  .nav-right {
+    flex: 3%;
+
+    .link {
+      display: flex;
+      float: right;
+      padding: 0.5rem 1rem;
+      background-color: rgb(38, 155, 71);
+      color: white;
+      border-radius: 0.4rem;
+    }
+  }
+
+  .hide {
+    display: none;
+  }
+  /* ================media querry================== */
+  @media screen and (max-width: 600px) {
+    padding: 0.7rem 50% 0.7rem 1rem;
+    height: 4rem;
+
+    .nav-left {
+      flex: 5%;
+      padding-right: 0;
+
+      .img-logo {
+        width: 80px;
+        height: 2.5rem;
+      }
+    }
+
+    .nav-center {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 70%;
+      height: max-content;
+      border-bottom: 4rem solid green;
+      z-index: 99;
+      opacity: 0.9;
+
+      /* display: block; */
+      /* display: ${(open) => (open ? 'block' : 'none')}; */
+      display: ${(props) => (props.isOpen ? 'block' : 'none')};
+      transform: ${({open}) => (open ? 'translateX(100%)' : 'translateX(0)')};
+      ul {
+        flex-direction: column;
+        padding-top: 5rem;
+        align-items: center;
+
+        gap: 1.8rem;
+
+        height: max-content;
+        width: 100%;
+        background-color: white;
+
+        .list-items {
+          padding: 0.5rem 0.1rem;
+          color: white;
+
+          .list-item-inner {
+            position: absolute;
+            right: 3.3rem;
+          }
+        }
+
+        .sign-up {
+          padding-left: 3rem;
+          border-left: none;
+          padding-left: 0;
+          padding-bottom: 1.6rem;
+
+          .link {
+            padding: 0.5rem 1rem;
+            background-color: rgb(38, 155, 71);
+            color: white;
+            border-radius: 0.4rem;
+          }
+        }
+      }
+
+      .active {
+        color: blue;
+      }
+      .clicked {
+        background-color: red;
+      }
+    }
+
+    .hide {
+      display: block;
+    }
+
+    .show {
+      display: none;
+    }
+  }
+`;
+
+const StyledBurger = styled.div`
+  position: absolute;
+  height: 2.8rem;
+  right: 3.5rem;
+  border-radius: 0.3rem;
+  z-index: 999999;
+  display: none;
+
+  .hamburger {
+    width: 2.4rem;
+    height: 0.25rem;
+    background-color: ${({open}) => (open ? '#ccc' : '#333')};
+    border-radius: 10px;
+    transform-origin: 4.5px;
+    transition: all 0.3s linear;
+    background-color: green;
+    margin: 0.4rem;
+    &:nth-child(1) {
+      transform: ${({open}) => (open ? 'rotate(45deg)' : 'rotate(0)')};
+    }
+    &:nth-child(2) {
+      transform: ${({open}) => (open ? 'translateX(100%)' : 'translateX(0)')};
+      opacity: ${({open}) => (open ? 0 : 1)};
+    }
+    &:nth-child(3) {
+      transform: ${({open}) => (open ? 'rotate(-45deg)' : 'rotate(0)')};
+    }
+  }
+
+  @media (max-width: 700px) {
+    display: flex;
+    /* justify-content: space-around; */
+    flex-flow: column nowrap;
+    right: 1rem;
+
+    .hamburger {
+      transform-origin: 0;
+    }
+  }
+`;
+
 export const Navbar = () => {
+  const [open, setOpen] = useState(false);
+  const [show, setShow] = useState(false);
+  const [clicked, setClicked] = useState(false);
   const location = useLocation();
-  const hiddenRoutes = ['/account/register', '/account/login', '/account/forgot-password'];
 
+  const hiddenRoutes = [
+    '/account/register',
+    '/account/login',
+    '/account/forgot-password',
+    '/dashboard',
+  ];
   const shouldHideFooter = hiddenRoutes.includes(location.pathname);
-
   if (shouldHideFooter) {
     return null; // Don't render the footer
   }
 
+  const isSmall = window.innerWidth <= 700;
+  const fixed = {
+    position: isSmall ? 'fixed' : 'block',
+  };
+
   return (
-    <header style={{background: 'rgb(2,19,32)'}} className="header-style2 menu_area-light">
-      <div className="navbar-default">
-        <span className="w3-bar-item w3-right">
-          <ul>
-            <li>
-              <NavLink to="/">
-                <div className="dropdown">
-                  <div id="google_translate_element" />
-                </div>
-                <style
-                  dangerouslySetInnerHTML={{
-                    __html:
-                      '\n                                            .goog-logo-link {\n                                                display: none !important;\n                                            }\n\n                                            .goog-te-gadget {\n                                                color: transparent !important;\n                                            }\n\n                                            .goog-te-gadget .goog-te-combo {\n                                                color: black !important;\n                                            }\n\n                                            .goog-te-gadget-icon {\n                                                display: none !important;\n                                                background: url("url for the icon") 0 0 no-repeat !important;\n                                            }\n\n                                            /* HIDE the google translate toolbar */\n                                            .goog-te-banner-frame.skiptranslate {\n                                                display: none !important;\n                                                margin-top: 0px !important;\n                                            }\n                                        ',
-                  }}
-                />
-              </NavLink>
-            </li>
-            <NavLink to="/"></NavLink>
-          </ul>
-          <NavLink to="/"></NavLink>
-        </span>
-        <NavLink to="/">
-          {/* start top search */}
-          <div className="top-search bg-theme">
-            <div className="container">
-              <form className="search-form" action="index#" method="GET" acceptCharset="utf-8">
-                <div className="input-group">
-                  <span className="input-group-addon cursor-pointer">
-                    <button
-                      className="search-form_submit fas fa-search font-size18 text-white"
-                      type="submit"
-                    />
-                  </span>
-                  <input
-                    type="text"
-                    className="search-form_input form-control"
-                    name="s"
-                    autoComplete="off"
-                    placeholder="Type & hit enter..."
-                  />
-                  <span className="input-group-addon close-search">
-                    <i className="fas fa-times font-size18 line-height-28 margin-5px-top" />
-                  </span>
-                </div>
-              </form>
-            </div>
-          </div>
-          {/* end top search */}
+    <Header isOpen={open}>
+      <div className="nav-left">
+        <NavLink className="logo" to="/">
+          <img className="img-logo" width={130} src={logo} alt="" />
         </NavLink>
-        <div className="container">
-          <NavLink to="/"></NavLink>
-          <div className="row align-items-center">
-            <NavLink to="/"></NavLink>
-            <div className="col-12 col-lg-12">
-              <NavLink to="/"></NavLink>
-              <div className="menu_area alt-font">
-                <NavLink to="/"></NavLink>
-                <nav className="navbar navbar-expand-lg navbar-light no-padding">
-                  <NavLink to="/">
-                    {/* <link
-                      rel="icon"
-                      href="https://satoshitradepro.com/img/logos/logo.png"
-                      type="image/png"
-                    /> */}
-                    {/* <p style={{fontSize: '1rem', color: 'green', fontWeight: 'bolder'}}>
-                      SATOCHI TRADE PRO
-                    </p> */}
-                  </NavLink>
-                  <div className="navbar-header navbar-header-custom">
-                    <NavLink to="/" className="navbar-brand logo2">
-                      {/* <img id="logo" src="img/logos/logo-2-light.png" alt="logo" /> */}
-                      <p
-                        style={{
-                          width: 'max-content',
-                          fontSize: '1rem',
-                          color: 'white',
-                          fontWeight: 'bolder',
-                        }}>
-                        SATOCHI TRADE PRO
-                      </p>
-                    </NavLink>
-                  </div>
-                  <div className="navbar-toggler" />
-                  {/* menu area */}
-                  <ul className="navbar-nav ml-auto" id="nav" style={{display: 'none'}}>
-                    <li>
-                      <NavLink to="/">Home</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/crypto">Crypto Assets</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/realestate">Real Estate</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/loan">Crypto Loans</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/pricing">Pricing</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/company">Company</NavLink>
-                      <ul>
-                        <li>
-                          <NavLink to="/terms">Terms &amp; Conditions</NavLink>
-                        </li>
-                      </ul>
-                    </li>
-                    <li>
-                      <NavLink
-                        to="/account/register"
-                        className="butn small theme"
-                        style={{height: '50%', marginTop: '17%'}}>
-                        <span>SIGN UP</span>
-                      </NavLink>
-                    </li>
-                  </ul>
-                  {/* end menu area */}
-                  {/* start attribute navigation */}
-                  <div className="attr-nav sm-no-margin sm-margin-70px-right xs-margin-65px-right">
-                    <span className="sm-margin-20px-right xs-margin-5px-right">
-                      <NavLink to="/account/login" className="butn small theme">
-                        {/* <i class="fa fa-user-circle">Account</i> */}
-                        <span>LOGIN</span>
-                      </NavLink>
-                    </span>
-                    {/* <li class="search"><NavLink to="/javascript:void(0)"><i class="fas fa-search"></i></NavLink></li> */}
-                  </div>
-                  {/* end attribute navigation */}
-                </nav>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-    </header>
+
+      <StyledBurger open={open} onClick={() => setOpen(!open)}>
+        <div className="hamburger" />
+        <div className="hamburger" />
+        <div className="hamburger" />
+      </StyledBurger>
+
+      <div className="nav-center">
+        <ul className={clicked ? 'clicked' : ''}>
+          <li className="list-items">
+            <NavLink activeClassName="active" className="list-item" to="/">
+              Home
+            </NavLink>
+          </li>
+          <li className="list-items">
+            <NavLink activeClassName="active" className="list-item" to="/crypto">
+              Crypto Assets
+            </NavLink>
+          </li>
+          <li className="list-items">
+            <NavLink activeClassName="active" className="list-item" to="/realestate">
+              Real Estate
+            </NavLink>
+          </li>
+          <li className="list-items">
+            <NavLink activeClassName="active" className="list-item" to="/loan">
+              Crypto Loans
+            </NavLink>
+          </li>
+          <li className="list-items">
+            <NavLink activeClassName="active" className="list-item" to="/pricing">
+              Pricing
+            </NavLink>
+          </li>
+          <li className="list-items">
+            <NavLink activeClassName="active" className="list-item" to="/company">
+              Company
+            </NavLink>
+            <span
+              onClick={() => setShow(!show)}
+              style={{color: 'black', cursor: 'pointer', fontWeight: 'bolder'}}>
+              {show ? <SlArrowDown /> : <SlArrowDown />}
+            </span>
+            {show && (
+              <ul>
+                <li className="list-item-inner">
+                  <NavLink className="list-item-inner-link" to="/terms">
+                    Terms &amp; Conditions
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+          </li>
+          <li className="nav-right hide">
+            <NavLink className="link" to="/account/login">
+              LOGIN
+            </NavLink>
+          </li>
+
+          <li className="sign-up">
+            <NavLink className="link" to="/account/register">
+              SIGN UP
+            </NavLink>
+          </li>
+        </ul>
+      </div>
+
+      <div className="nav-right show">
+        <NavLink className="link" to="/account/login">
+          LOGIN
+        </NavLink>
+      </div>
+    </Header>
   );
 };

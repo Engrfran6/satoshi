@@ -29,13 +29,18 @@ export const Invest = () => {
   };
 
   const setItem = () => {
-    if (item) {
+    if (clickedItem) {
       dispatch(setSelectedPackage(clickedItem));
       navigate('/dashboard/invest-form');
     } else {
       setAlert('You must select an investment plan to continue!');
-      navigate('/dashboard/invest#');
     }
+  };
+
+  const isLarge = window.innerWidth > 700; // Adjust the breakpoint as needed
+  const priceStyle = {
+    display: isLarge ? 'grid' : '',
+    gridTemplateColumns: isLarge ? '1fr 1fr 1fr' : '',
   };
 
   return (
@@ -60,7 +65,7 @@ export const Invest = () => {
               <div className="nk-block">
                 <form action="invest-form" className="plan-iv">
                   <div className="plan-iv-currency text-center">
-                    <ul className="nav nav-switch nav-tabs bg-white">
+                    <ul className="nav nav-switch bg-white">
                       <li className="nav-item">
                         <NavLink to="/dashboard/invest#" className="nav-link active">
                           USD
@@ -90,7 +95,7 @@ export const Invest = () => {
                   </div>
 
                   <div>
-                    <ul style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr'}}>
+                    <ul style={priceStyle}>
                       {packages &&
                         packages.map((item, index) => (
                           <li key={index} className="plan-item" style={{width: '100%'}}>

@@ -19,6 +19,7 @@ export const Profile = () => {
     'createdAt',
     'updatedAt',
     'lockedBalance',
+    'status',
   ]; // Add any fields you want to exclude
   const handleInputChange = (event, field) => {
     const {value} = event.target;

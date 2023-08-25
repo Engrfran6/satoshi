@@ -1,10 +1,10 @@
-const { Router } = require('express');
-const { protect } = require('../middlewares/auth-middleware');
-const { createDeposit, getDeposits } = require('../controllers/deposit-controller');
+const {Router} = require('express');
+const {protect} = require('../middlewares/auth-middleware');
+const {createDeposit, getDeposits} = require('../controllers/deposit-controller');
 
-const packageRouter = Router();
+const depositRouter = Router();
 
-packageRouter.get('/', protect, getDeposits);
-packageRouter.post('/create', protect, createDeposit);
+depositRouter.get('/', protect, getDeposits);
+depositRouter.post('/create', protect, createDeposit);
 
-module.exports = packageRouter;
+module.exports = depositRouter;

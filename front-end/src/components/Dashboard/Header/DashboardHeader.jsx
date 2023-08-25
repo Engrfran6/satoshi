@@ -1,11 +1,31 @@
-import {NavLink} from 'react-router-dom';
-import {store} from '../../../redux/store';
-import {useDispatch} from 'react-redux';
-import {resetUser} from '../../../redux/user-slice';
+import {NavLink, useNavigate} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {clearToken, resetUser} from '../../../redux/user-slice';
+import Swal from 'sweetalert2';
+import {useEffect, useState} from 'react';
+import {fetchData} from '../../Commons/HandleRequest';
+import logo from '../../../assets/stf-logo1.png';
+import {styled} from 'styled-components';
 
 export const Header = () => {
   const dispatch = useDispatch();
-  let user = store?.getState()?.user?.user.user;
+  const navigate = useNavigate();
+  let user = useSelector((state) => state?.user?.user?.user);
+  let token = useSelector((state) => state?.user?.user?.token);
+
+  const [activity, setActivity] = useState([]);
+  useEffect(() => {
+    getActivity();
+  }, []);
+
+  const getActivity = async () => {
+    try {
+      const response = await fetchData('/activity', token);
+      setActivity(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const initials = user?.fullName
     .split(' ')
@@ -13,76 +33,190 @@ export const Header = () => {
     .join('');
 
   const handleLogout = () => {
-    dispatch(resetUser());
+    Swal.fire({
+      title: `HELLO ${user?.fullName.split('')[0]} `,
+      text: 'Are you sure you want to log out?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(resetUser);
+        dispatch(clearToken);
+        Swal.fire({
+          title: `GoodBye ${user?.fullName.split('')[0]} !`,
+          text: 'You have been successfully logged out.',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          window.location.reload();
+          navigate('/');
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Action cancelled, no action needed
+      }
+    });
   };
+
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const StyledBurger = styled.div`
+    position: absolute;
+    height: 2.8rem;
+    left: 0;
+    color: white;
+    border-radius: 0.3rem;
+    z-index: 999999;
+    display: none;
+
+    .hamburger {
+      width: 2.6rem;
+      height: 0.5rem;
+      background-color: ${({open}) => (open ? '#ccc' : '#333')};
+      border-radius: 10px;
+      transform-origin: 4.5px;
+      transition: all 0.3s linear;
+      background-color: white;
+      margin: 0.4rem;
+      &:nth-child(1) {
+        transform: ${({open}) => (open ? 'rotate(45deg)' : 'rotate(0)')};
+      }
+      &:nth-child(2) {
+        transform: ${({open}) => (open ? 'translateX(100%)' : 'translateX(0)')};
+        opacity: ${({open}) => (open ? 0 : 1)};
+      }
+      &:nth-child(3) {
+        transform: ${({open}) => (open ? 'rotate(-45deg)' : 'rotate(0)')};
+      }
+    }
+
+    @media (max-width: 700px) {
+      display: flex;
+      flex-flow: column nowrap;
+
+      .hamburger {
+        transform-origin: 0;
+      }
+    }
+  `;
+
+  const Div = styled.div`
+    .my-nav-toggle {
+      display: ${(props) => (props.isOpen ? 'block' : 'none')};
+    }
+    @media screen and (max-width: 600px) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding-top: 20%;
+      background-color: rgb(38, 155, 71);
+      color: white;
+    }
+  `;
+  const IMG = styled.div`
+    @media screen and (max-width: 600px) {
+      padding-left: 4rem;
+    }
+  `;
 
   return (
     <div className="nk-header nk-header-fluid nk-header-fixed is-theme  nk-header-fixed">
       <div className="container-xl wide-lg">
         <div className="nk-header-wrap">
-          <div className="nk-header-menu" data-content="headerNav">
-            <ul className="nk-menu nk-menu-main">
-              <li className="nk-menu-item">
+          {/* ================================================================== */}
+          <StyledBurger open={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
+            <div className="hamburger" />
+            <div className="hamburger" />
+            <div className="hamburger" />
+          </StyledBurger>
+
+          <IMG className="nk-header-brand">
+            <NavLink to="/" className="logo-link">
+              <img width={100} src={logo} alt="logo" className="logo-light logo-img" />
+              <span className="nio-version text-white">Dashboard</span>
+            </NavLink>
+          </IMG>
+
+          {/* ====================================================== */}
+          <Div isOpen={menuOpen}>
+            {/* <div className="nk-header-mobile">
+              <div className="nk-header-brand">
+                <NavLink to="/" className="logo-link">
+                  <img width={80} src={logo} alt="logo" className="logo-dark logo-img" />
+
+                  <span class="nio-version">Dashboard</span>
+                </NavLink>
+              </div>
+              <div className="nk-menu-trigger me-n2">
+                <NavLink
+                  to="/#"
+                  className="nk-nav-toggle nk-quick-nav-icon"
+                  data-target="headerNav">
+                  <em className="icon ni ni-arrow-left"></em>
+                </NavLink>
+              </div>
+            </div> */}
+            {/* ====================================================== */}
+            <ul className=" my-nav-toggle ">
+              <li className="nk-menu-item ">
                 <NavLink to="/dashboard#" className="nk-menu-link">
-                  <span className="nk-menu-text">Overview</span>
+                  <span className="nk-menu-text text-white">Overview</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item">
                 <NavLink to="/dashboard/schemes" className="nk-menu-link">
-                  <span className="nk-menu-text">MY Plan</span>
+                  <span className="nk-menu-text text-white">MY Plan</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item">
                 <NavLink to="/dashboard/invest" className="nk-menu-link">
-                  <span className="nk-menu-text">Invest</span>
+                  <span className="nk-menu-text text-white">Invest</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item">
                 <NavLink to="/dashboard/profile" className="nk-menu-link">
-                  <span className="nk-menu-text">Profile</span>
+                  <span className="nk-menu-text text-white">Profile</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item active has-sub">
                 <NavLink className="nk-menu-link nk-menu-toggle">
-                  <span className="nk-menu-text">Pages</span>
+                  <span className="nk-menu-text text-white">Pages</span>
                 </NavLink>
                 <ul className="nk-menu-sub">
                   <li className="nk-menu-item">
                     <NavLink to="/dashboard/welcome" className="nk-menu-link">
-                      <span className="nk-menu-text">Welcome / Intro</span>
+                      <span className="nk-menu-text text-white">Welcome / Intro</span>
                     </NavLink>
                   </li>
-                  <li className="nk-menu-item">
-                    <NavLink to="/dashboard/invest-form" className="nk-menu-link">
-                      <span className="nk-menu-text">Investment Process</span>
-                    </NavLink>
-                  </li>
+
                   <li className="nk-menu-item">
                     <NavLink to="/dashboard/scheme-details" className="nk-menu-link">
-                      <span className="nk-menu-text">Investment Details</span>
+                      <span className="nk-menu-text text-white">Investment Details</span>
                     </NavLink>
                   </li>
                   <li className="nk-menu-item">
                     <NavLink to="/dashboard/kyc-application" className="nk-menu-link">
-                      <span className="nk-menu-text">KYC - Get Started</span>
+                      <span className="nk-menu-text text-white">KYC - Get Started</span>
                     </NavLink>
                   </li>
                   <li className="nk-menu-item">
                     <NavLink to="/dashboard/kyc-form" className="nk-menu-link">
-                      <span className="nk-menu-text">KYC - Application Form</span>
+                      <span className="nk-menu-text text-white">KYC - Application Form</span>
                     </NavLink>
                   </li>
                   <li className="nk-menu-item">
                     <NavLink to="/dashboard/" className="nk-menu-link">
-                      <span className="nk-menu-text">
-                        Main Dashboard <em className="icon ni ni-external" />{' '}
+                      <span className="nk-menu-text text-white">
+                        Main Dashboard <em className="icon ni ni-external" />
                       </span>
                     </NavLink>
                   </li>
                 </ul>
               </li>
             </ul>
-          </div>
+          </Div>
 
           <div className="nk-header-tools">
             <ul className="nk-quick-nav">
@@ -97,123 +231,35 @@ export const Header = () => {
                     <span className="sub-title nk-dropdown-title">Notifications</span>
                     <NavLink>Mark All as Read</NavLink>
                   </div>
+
                   <div className="dropdown-body">
                     <div className="nk-notification">
-                      <div className="nk-notification-item dropdown-inner">
-                        <div className="nk-notification-icon">
-                          <em className="icon icon-circle bg-warning-dim ni ni-curve-down-right" />
-                        </div>
-                        <div className="nk-notification-content">
-                          <div className="nk-notification-text">
-                            You have requested to <span>Widthdrawl</span>
+                      {activity?.slice(-5).map((item) => (
+                        <div className="nk-notification-item dropdown-inner">
+                          <div className="nk-notification-icon">
+                            <em className="icon icon-circle bg-warning-dim ni ni-curve-down-right" />
                           </div>
-                          <div className="nk-notification-time">2 hrs ago</div>
-                        </div>
-                      </div>
-                      <div className="nk-notification-item dropdown-inner">
-                        <div className="nk-notification-icon">
-                          <em className="icon icon-circle bg-success-dim ni ni-curve-down-left" />
-                        </div>
-                        <div className="nk-notification-content">
-                          <div className="nk-notification-text">
-                            Your <span>Deposit Order</span> is placed
+                          <div className="nk-notification-content">
+                            <div className="nk-notification-text">
+                              You have requested a <span>{item.title} </span>
+                            </div>
+                            <div className="nk-notification-time">{item.createdAt}</div>
                           </div>
-                          <div className="nk-notification-time">2 hrs ago</div>
                         </div>
-                      </div>
-                      <div className="nk-notification-item dropdown-inner">
-                        <div className="nk-notification-icon">
-                          <em className="icon icon-circle bg-warning-dim ni ni-curve-down-right" />
-                        </div>
-                        <div className="nk-notification-content">
-                          <div className="nk-notification-text">
-                            You have requested to <span>Widthdrawl</span>
-                          </div>
-                          <div className="nk-notification-time">2 hrs ago</div>
-                        </div>
-                      </div>
-                      <div className="nk-notification-item dropdown-inner">
-                        <div className="nk-notification-icon">
-                          <em className="icon icon-circle bg-success-dim ni ni-curve-down-left" />
-                        </div>
-                        <div className="nk-notification-content">
-                          <div className="nk-notification-text">
-                            Your <span>Deposit Order</span> is placed
-                          </div>
-                          <div className="nk-notification-time">2 hrs ago</div>
-                        </div>
-                      </div>
-                      <div className="nk-notification-item dropdown-inner">
-                        <div className="nk-notification-icon">
-                          <em className="icon icon-circle bg-warning-dim ni ni-curve-down-right" />
-                        </div>
-                        <div className="nk-notification-content">
-                          <div className="nk-notification-text">
-                            You have requested to <span>Widthdrawl</span>
-                          </div>
-                          <div className="nk-notification-time">2 hrs ago</div>
-                        </div>
-                      </div>
-                      <div className="nk-notification-item dropdown-inner">
-                        <div className="nk-notification-icon">
-                          <em className="icon icon-circle bg-success-dim ni ni-curve-down-left" />
-                        </div>
-                        <div className="nk-notification-content">
-                          <div className="nk-notification-text">
-                            Your <span>Deposit Order</span> is placed
-                          </div>
-                          <div className="nk-notification-time">2 hrs ago</div>
-                        </div>
-                      </div>
+                      ))}
                     </div>
                   </div>
+
                   <div className="dropdown-foot center">
                     <NavLink>View All</NavLink>
                   </div>
                 </div>
               </li>
-              {/* <li className="dropdown language-dropdown d-none d-sm-flex me-n1">
-                <NavLink
-                  to="/dashboard/invest#"
-                  className="dropdown-toggle nk-quick-nav-icon"
-                  data-bs-toggle="dropdown">
-                  <div className="quick-icon">
-                    <img className="icon" src="../images/flags/english-sq.png" alt="" />
-                  </div>
-                </NavLink>
-                <div className="dropdown-menu dropdown-menu-end dropdown-menu-s1">
-                  <ul className="language-list">
-                    <li>
-                      <NavLink to="/dashboard/invest#" className="language-item">
-                        <img src="../images/flags/english.png" alt="" className="language-flag" />
-                        <span className="language-name">English</span>
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/dashboard/invest#" className="language-item">
-                        <img src="../images/flags/spanish.png" alt="" className="language-flag" />
-                        <span className="language-name">Español</span>
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/dashboard/invest#" className="language-item">
-                        <img src="../images/flags/french.png" alt="" className="language-flag" />
-                        <span className="language-name">Français</span>
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/dashboard/invest#" className="language-item">
-                        <img src="../images/flags/turkey.png" alt="" className="language-flag" />
-                        <span className="language-name">Türkçe</span>
-                      </NavLink>
-                    </li>
-                  </ul>
-                </div>
-              </li> */}
+
               <li className="hide-mb-sm">
-                <a onClick={handleLogout} className="nk-quick-nav-icon">
+                <NavLink onClick={handleLogout} className="nk-quick-nav-icon">
                   <em className="icon ni ni-signout" />
-                </a>
+                </NavLink>
               </li>
               <li className="dropdown user-dropdown order-sm-first">
                 <NavLink className="dropdown-toggle" data-bs-toggle="dropdown">
@@ -252,7 +298,7 @@ export const Header = () => {
                   <div className="dropdown-inner user-account-info" style={{display: 'block'}}>
                     <h6 className="overline-title-alt">Account Balance</h6>
                     <div className="user-balance">
-                      {user?.balance} <small className="currency currency-usd">USD</small>
+                      $ {user?.balance} <small className="currency currency-usd">USD</small>
                     </div>
                     <div className="user-balance-sub">
                       Locked{' '}
@@ -289,10 +335,10 @@ export const Header = () => {
                   <div className="dropdown-inner">
                     <ul className="link-list">
                       <li>
-                        <button onClick={handleLogout}>
+                        <p onClick={handleLogout}>
                           <em className="icon ni ni-signout" />
                           <span>Sign out</span>
-                        </button>
+                        </p>
                       </li>
                     </ul>
                   </div>

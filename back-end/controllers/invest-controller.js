@@ -16,10 +16,10 @@ exports.createInvestment = async (req, res) => {
       return res.status(400).json({error: error.details[0].message});
     }
 
-    if (Number(doc.invAmount) > Number(user.balance)) {
+    if (Number(doc.invAmount) > Number(user?.balance)) {
       return res.status(400).json({error: 'You cant invest more than your balance'});
     }
-    const userId = user._id;
+    const userId = user?._id;
     const params = {
       user: userId,
       invAmount: doc.invAmount,
@@ -36,7 +36,7 @@ exports.createInvestment = async (req, res) => {
 
     const investment = new Investment(params);
     await investment.save();
-    const activity = new Activity({title: 'started a new investment', user: user._id});
+    const activity = new Activity({title: 'new investment', user: user._id});
     await activity.save();
     if (investment) {
       return res.status(201).json({

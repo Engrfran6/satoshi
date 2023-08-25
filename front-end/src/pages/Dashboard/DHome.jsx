@@ -1,32 +1,39 @@
 import {useEffect, useState} from 'react';
 import {NavLink} from 'react-router-dom';
-import {EmailIcon, EmailShareButton, WhatsappIcon, WhatsappShareButton} from 'react-share';
+import {EmailIcon, WhatsappIcon, WhatsappShareButton} from 'react-share';
 import {store} from '../../redux/store';
-import {sumArray} from '../Dashboard/Store/sumIndexArray';
 import {stringToNumber} from './Store/convertStringToNumber';
-import {removeCommasFromNumber} from './Store/removeCommas';
 import {sumOfArray} from './calcAccountValues/Summation';
+import {useSelector} from 'react-redux';
+import {fetchData} from '../../components/Commons/HandleRequest';
 
 export const DHome = () => {
   const [recipientEmail, setRecipientEmail] = useState();
   const [show, setShow] = useState(false);
+  let data = useSelector((state) => state?.user?.user?.user);
+  const [user, setUser] = useState();
   const [showInner, setShowInner] = useState(false);
-  let user = store?.getState()?.user?.user?.user || [];
-  let investments = store?.getState()?.user?.user?.investments || [];
+  const token = useSelector((state) => state?.user?.user?.token);
+
+  useEffect(() => {
+    setUser(data);
+  }, [user]);
+
+  const [investments, setInvestments] = useState([]);
   let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
+  useEffect(() => {
+    getInvestment();
+  }, []);
 
-  const handleShow = () => {
-    setShow(!show);
+  const getInvestment = async () => {
+    try {
+      const response = await fetchData('/investment', token);
+      setInvestments(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
-  const handleShowInner = () => {
-    setShowInner(!showInner);
-  };
 
-  console.log('Checking===============', user.balance + 200333);
-  console.log('INVESTMENT===============', investments);
-  console.log('USER===============', user);
-
-  const username = user?.username;
   const fullName = user?.fullName;
   const balance = stringToNumber(user?.balance);
   const totalInvested = sumOfArray(investments, 'invAmount');
@@ -34,7 +41,6 @@ export const DHome = () => {
   const balanceInAccount = balance + totalInvested + totalProfits;
   const totalAvailableBalanceAndInv = balance + totalInvested;
 
-  // ===============not working yet=============
   const referalBonus = investments.reduce((total, document) => {
     return total + (document.referalBonus || 0);
   }, 0);
@@ -44,16 +50,19 @@ export const DHome = () => {
   const monthlyProfit = sumOfArray(investments, 'monthlyProfit');
   const Total = monthlyProfit + referalBonus + rewards;
 
-  // const referalBonusLenght = !investments ? null : investments.referalBonus.length;
-  // ===========================================
+  const totalJoined = investments?.referalBonus?.length || 0;
 
   const totalActiveInv = investments.length ? investments.length : 0;
   const totalExpiredInv = expiredInvestments.length ? expiredInvestments.length : 0;
   const totalInv = totalActiveInv + totalExpiredInv;
   const inviteLink = `https://www.satochitradepro.com/${user?.referalId}`;
-  // const totalJoined = investments.referalBonus.length ? investments?.referalBonus.length : 0;
 
-  console.log('Checking total invested===============', totalProfits);
+  const handleShow = () => {
+    setShow(!show);
+  };
+  const handleShowInner = () => {
+    setShowInner(!showInner);
+  };
 
   return (
     <div style={{paddingTop: '4rem'}}>
@@ -465,14 +474,12 @@ export const DHome = () => {
                         </div>
                         <div className="nk-refwg-info g-3">
                           <div className="nk-refwg-sub">
-                            {/* <div className="title">{referalBonusLenght}</div> */}
+                            <div className="title">{totalJoined}</div>
                             <div className="sub-text">Total Joined</div>
                           </div>
                           <div className="nk-refwg-sub">
-                            <div className="sub-text">
-                              Referral Earn
-                              <small>{referalBonus}</small>
-                            </div>
+                            <div className="title">{referalBonus}</div>
+                            <div className="sub-text">Referral Earn</div>
                           </div>
                         </div>
                       </div>

@@ -3,10 +3,9 @@ const Deposit = require('../models/Deposits/DepositModel');
 const Activity = require('../models/Activities/ActivityModel');
 
 const createUserSchema = Joi.object().keys({
-  depAmount: Joi.string().required(),
-  photo: Joi.string(),
+  depAmount: Joi.required(),
+  // photo: Joi.string().required(),
 });
-
 exports.createDeposit = async (req, res) => {
   try {
     const user = req.user;
@@ -24,7 +23,7 @@ exports.createDeposit = async (req, res) => {
 
     const deposit = new Deposit(params);
     await deposit.save();
-    const activity = new Activity({title: 'created a deposit', user: user._id});
+    const activity = new Activity({title: 'Deposit', user: user._id});
     await activity.save();
     if (deposit) {
       return res.status(201).json({

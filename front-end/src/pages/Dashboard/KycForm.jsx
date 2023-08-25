@@ -1,4 +1,85 @@
+import {useState} from 'react';
+
 export const KycForm = () => {
+  const [formData, setFormData] = useState({
+    fullName: '',
+    occupation: '',
+    incomeSource: '',
+    annualIncome: '',
+    dateOfBirth: '',
+    maritalStatus: '',
+    // ========
+    address1: '',
+    address2: '',
+    city: '',
+    state: '',
+    nationality: '',
+    zipCode: '',
+    // ========
+    idCardFront: null,
+    idCardBack: null,
+    proofOfAddress: null,
+    selfie: null,
+  });
+
+  const [uploadedImages, setUploadedImages] = useState({
+    idfront: null,
+    idback: null,
+    addressproof: null,
+    selfie: null,
+  });
+
+  const handleInputChange = (event) => {
+    const {name, value} = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleFileUpload = (event) => {
+    const {name, files} = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: files[0],
+    }));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    errorAlert();
+    console.log(formData);
+  };
+
+  const renderImage = (image) => {
+    if (image) {
+      return <img src={URL.createObjectURL(image)} alt="ID Front" style={{maxWidth: '100%'}} />;
+    }
+    return null;
+  };
+
+  const successAlert = () => {
+    Swal.fire({
+      title: `Thank You ${formData?.fullName.split(' ')[0]}!`,
+      text: `You have successfully completed your KYC, wait 24~hours for verication status`,
+      icon: 'success',
+      confirmButtonText: 'Great',
+      confirmButtonColor: 'green',
+    }).then(() => {
+      navigate('/dashboard');
+    });
+  };
+
+  const errorAlert = () => {
+    Swal.fire({
+      title: 'Verification failed',
+      text: 'Please try again with correct information!',
+      icon: 'error',
+      confirmButtonText: 'OK',
+      confirmButtonColor: 'red',
+    });
+  };
+
   return (
     <div className="nk-content nk-content-lg nk-content-fluid">
       <div className="container-xl wide-lg">
@@ -46,11 +127,17 @@ export const KycForm = () => {
                           <div className="form-group">
                             <div className="form-label-group">
                               <label className="form-label">
-                                First Name <span className="text-danger">*</span>
+                                Full Name <span className="text-danger">*</span>
                               </label>
                             </div>
                             <div className="form-control-group">
-                              <input type="text" className="form-control form-control-lg" />
+                              <input
+                                type="text"
+                                className="form-control"
+                                name="firstName"
+                                value={formData.fullName}
+                                onChange={handleInputChange}
+                              />
                             </div>
                           </div>
                         </div>
@@ -58,11 +145,17 @@ export const KycForm = () => {
                           <div className="form-group">
                             <div className="form-label-group">
                               <label className="form-label">
-                                Last Name <span className="text-danger">*</span>
+                                Occupation <span className="text-danger">*</span>
                               </label>
                             </div>
                             <div className="form-control-group">
-                              <input type="text" className="form-control form-control-lg" />
+                              <input
+                                type="text"
+                                className="form-control"
+                                name="occupation"
+                                value={formData.occupation}
+                                onChange={handleInputChange}
+                              />
                             </div>
                           </div>
                         </div>
@@ -70,11 +163,17 @@ export const KycForm = () => {
                           <div className="form-group">
                             <div className="form-label-group">
                               <label className="form-label">
-                                Email Address <span className="text-danger">*</span>
+                                Income Source <span className="text-danger">*</span>
                               </label>
                             </div>
                             <div className="form-control-group">
-                              <input type="text" className="form-control form-control-lg" />
+                              <input
+                                type="text"
+                                className="form-control"
+                                name="occupation"
+                                value={formData.incomeSource}
+                                onChange={handleInputChange}
+                              />
                             </div>
                           </div>
                         </div>
@@ -82,11 +181,17 @@ export const KycForm = () => {
                           <div className="form-group">
                             <div className="form-label-group">
                               <label className="form-label">
-                                Phone Number <span className="text-danger">*</span>
+                                Annual income ($) <span className="text-danger">*</span>
                               </label>
                             </div>
                             <div className="form-control-group">
-                              <input type="text" className="form-control form-control-lg" />
+                              <input
+                                type="text"
+                                className="form-control"
+                                name="annualIncome"
+                                value={formData.annualIncome}
+                                onChange={handleInputChange}
+                              />
                             </div>
                           </div>
                         </div>
@@ -99,8 +204,11 @@ export const KycForm = () => {
                             </div>
                             <div className="form-control-group">
                               <input
-                                type="text"
-                                className="form-control form-control-lg date-picker-alt"
+                                type="date"
+                                className="form-control"
+                                name="dateOfBirth"
+                                value={formData.dateOfBirth}
+                                onChange={handleInputChange}
                               />
                             </div>
                           </div>
@@ -109,11 +217,17 @@ export const KycForm = () => {
                           <div className="form-group">
                             <div className="form-label-group">
                               <label className="form-label">
-                                Telegram Username <span className="text-danger">*</span>
+                                Marital Status <span className="text-danger">*</span>
                               </label>
                             </div>
                             <div className="form-control-group">
-                              <input type="text" className="form-control form-control-lg" />
+                              <input
+                                type="text"
+                                className="form-control"
+                                name="maritalStatus"
+                                value={formData.maritalStatus}
+                                onChange={handleInputChange}
+                              />
                             </div>
                           </div>
                         </div>
@@ -147,7 +261,13 @@ export const KycForm = () => {
                               </label>
                             </div>
                             <div className="form-control-group">
-                              <input type="text" className="form-control form-control-lg" />
+                              <input
+                                type="text"
+                                className="form-control form-control-lg"
+                                name="address1"
+                                value={formData.address1}
+                                onChange={handleInputChange}
+                              />
                             </div>
                           </div>
                         </div>
@@ -157,7 +277,13 @@ export const KycForm = () => {
                               <label className="form-label">Address Line 2</label>
                             </div>
                             <div className="form-control-group">
-                              <input type="text" className="form-control form-control-lg" />
+                              <input
+                                type="text"
+                                className="form-control form-control-lg"
+                                name="address2"
+                                value={formData.address2}
+                                onChange={handleInputChange}
+                              />
                             </div>
                           </div>
                         </div>
@@ -169,7 +295,13 @@ export const KycForm = () => {
                               </label>
                             </div>
                             <div className="form-control-group">
-                              <input type="text" className="form-control form-control-lg" />
+                              <input
+                                type="text"
+                                className="form-control form-control-lg"
+                                name="city"
+                                value={formData.city}
+                                onChange={handleInputChange}
+                              />
                             </div>
                           </div>
                         </div>
@@ -181,7 +313,13 @@ export const KycForm = () => {
                               </label>
                             </div>
                             <div className="form-control-group">
-                              <input type="text" className="form-control form-control-lg" />
+                              <input
+                                type="text"
+                                className="form-control form-control-lg"
+                                name="state"
+                                value={formData.state}
+                                onChange={handleInputChange}
+                              />
                             </div>
                           </div>
                         </div>
@@ -193,7 +331,13 @@ export const KycForm = () => {
                               </label>
                             </div>
                             <div className="form-control-group">
-                              <input type="text" className="form-control form-control-lg" />
+                              <input
+                                type="text"
+                                className="form-control form-control-lg"
+                                name="nationality"
+                                value={formData.nationality}
+                                onChange={handleInputChange}
+                              />
                             </div>
                           </div>
                         </div>
@@ -205,7 +349,13 @@ export const KycForm = () => {
                               </label>
                             </div>
                             <div className="form-control-group">
-                              <input type="text" className="form-control form-control-lg" />
+                              <input
+                                type="text"
+                                className="form-control form-control-lg"
+                                name="zipCode"
+                                value={formData.zipCode}
+                                onChange={handleInputChange}
+                              />
                             </div>
                           </div>
                         </div>
@@ -316,43 +466,131 @@ export const KycForm = () => {
                         <li>Make sure that there is no light glare on the card.</li>
                       </ul>
                       <div className="nk-kycfm-upload">
-                        <h6 className="title nk-kycfm-upload-title">Upload Here Your Copy</h6>
+                        <h6 className="title nk-kycfm-upload-title">Upload Front Copy</h6>
                         <div className="row align-items-center">
                           <div className="col-sm-8">
                             <div className="nk-kycfm-upload-box">
                               <div className="upload-zone">
                                 <div className="dz-message" data-dz-message="">
                                   <span className="dz-message-text">Drag and drop file</span>
-                                  <span className="dz-message-or">or</span>
-                                  <button className="btn btn-primary">SELECT</button>
+                                  <span style={{padding: '0 0.4rem'}} className="dz-message-or">
+                                    or
+                                  </span>
+                                  <label className="btn btn-primary">
+                                    SELECT
+                                    <input
+                                      type="file"
+                                      accept=".jpg, .png, .pdf"
+                                      onChange={(e) => handleFileUpload(e, 'idProof')}
+                                      style={{display: 'none'}}
+                                    />
+                                  </label>
                                 </div>
                               </div>
                             </div>
                           </div>
-                          <div className="col-sm-4 d-none d-sm-block">
+                          <div
+                            style={{width: '30%', height: '6.5rem', border: '1px solid grey'}}
+                            className="col-sm-4 d-none d-sm-block">
+                            <div className="mx-md-4">{renderImage(uploadedImages.idProof)}</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="nk-kycfm-upload">
+                        <h6 className="title nk-kycfm-upload-title">Upload Back Copy</h6>
+                        <div className="row align-items-center">
+                          <div className="col-sm-8">
+                            <div className="nk-kycfm-upload-box">
+                              <div className="upload-zone">
+                                <div className="dz-message" data-dz-message="">
+                                  <span className="dz-message-text">Drag and drop file</span>
+                                  <span style={{padding: '0 0.4rem'}} className="dz-message-or">
+                                    or
+                                  </span>
+                                  <label className="btn btn-primary">
+                                    SELECT
+                                    <input
+                                      type="file"
+                                      accept=".jpg, .png, .pdf"
+                                      onChange={(e) => handleFileUpload(e, 'idProof')}
+                                      style={{display: 'none'}}
+                                    />
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            style={{width: '30%', height: '6.5rem', border: '1px solid grey'}}
+                            className="col-sm-4 d-none d-sm-block">
                             <div className="mx-md-4">
-                              <img src="../images/icons/id-front.svg" alt="ID Front" />
+                              <div className="mx-md-4">{renderImage(uploadedImages.idProof)}</div>
                             </div>
                           </div>
                         </div>
                       </div>
                       <div className="nk-kycfm-upload">
-                        <h6 className="title nk-kycfm-upload-title">Upload Here Your Copy</h6>
+                        <h6 className="title nk-kycfm-upload-title">Address verification</h6>
                         <div className="row align-items-center">
                           <div className="col-sm-8">
                             <div className="nk-kycfm-upload-box">
                               <div className="upload-zone">
                                 <div className="dz-message" data-dz-message="">
                                   <span className="dz-message-text">Drag and drop file</span>
-                                  <span className="dz-message-or">or</span>
-                                  <button className="btn btn-primary">SELECT</button>
+                                  <span style={{padding: '0 0.4rem'}} className="dz-message-or">
+                                    or
+                                  </span>
+                                  <label className="btn btn-primary">
+                                    SELECT
+                                    <input
+                                      type="file"
+                                      accept=".jpg, .png, .pdf"
+                                      onChange={(e) => handleFileUpload(e, 'idProof')}
+                                      style={{display: 'none'}}
+                                    />
+                                  </label>
                                 </div>
                               </div>
                             </div>
                           </div>
-                          <div className="col-sm-4 d-none d-sm-block">
+                          <div
+                            style={{width: '30%', height: '6.5rem', border: '1px solid grey'}}
+                            className="col-sm-4 d-none d-sm-block">
                             <div className="mx-md-4">
-                              <img src="../images/icons/id-back.svg" alt="ID Back" />
+                              <div className="mx-md-4">{renderImage(uploadedImages.idProof)}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="nk-kycfm-upload">
+                        <h6 className="title nk-kycfm-upload-title">Selfie</h6>
+                        <div className="row align-items-center">
+                          <div className="col-sm-8">
+                            <div className="nk-kycfm-upload-box">
+                              <div className="upload-zone">
+                                <div className="dz-message" data-dz-message="">
+                                  <span className="dz-message-text">Drag and drop file</span>
+                                  <span style={{padding: '0 0.4rem'}} className="dz-message-or">
+                                    or
+                                  </span>
+                                  <label className="btn btn-primary">
+                                    SELECT
+                                    <input
+                                      type="file"
+                                      accept=".jpg, .png, .pdf"
+                                      onChange={(e) => handleFileUpload(e, 'idProof')}
+                                      style={{display: 'none'}}
+                                    />
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            style={{width: '30%', height: '6.5rem', border: '1px solid grey'}}
+                            className="col-sm-4 d-none d-sm-block">
+                            <div className="mx-md-4">
+                              <div className="mx-md-4">{renderImage(uploadedImages.idProof)}</div>
                             </div>
                           </div>
                         </div>
@@ -381,8 +619,8 @@ export const KycForm = () => {
                         </div>
                       </div>
                       <div className="nk-kycfm-action pt-2">
-                        <button type="submit" className="btn btn-lg btn-primary">
-                          Process for Verify
+                        <button onClick={handleSubmit} className="btn btn-lg btn-primary">
+                          Process
                         </button>
                       </div>
                     </div>

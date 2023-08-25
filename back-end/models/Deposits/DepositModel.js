@@ -14,10 +14,6 @@ const depositSchema = new Schema(
     photo: {
       type: String,
     },
-    account: {
-      type: Schema.Types.String,
-      ref: 'Account',
-    },
     user: {
       type: Schema.Types.String,
       ref: 'User',

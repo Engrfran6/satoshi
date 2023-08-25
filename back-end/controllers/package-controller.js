@@ -12,6 +12,7 @@ const createPackageSchema = Joi.object().keys({
   minDeposit: Joi.string().required(),
   maxDeposit: Joi.string().required(),
   totalPercentageReturn: Joi.string().required(),
+  referalBonus: Joi.string().required(),
 });
 
 exports.createPackage = async (req, res) => {
@@ -27,6 +28,7 @@ exports.createPackage = async (req, res) => {
       minDeposit,
       maxDeposit,
       totalPercentageReturn,
+      referalBonus,
     } = req.body;
 
     const {error} = createPackageSchema.validate({...doc});
@@ -41,6 +43,7 @@ exports.createPackage = async (req, res) => {
     dailyLoss = Number(dailyLoss);
     minDeposit = Number(minDeposit);
     maxDeposit = Number(maxDeposit);
+    referalBonus = Number(referalBonus);
     totalPercentageReturn = Number(totalPercentageReturn);
 
     const package = new Package({
@@ -54,6 +57,7 @@ exports.createPackage = async (req, res) => {
       maxDeposit,
       totalPercentageReturn,
       duration: doc.duration,
+      referalBonus: doc.referalBonus,
     });
 
     await package.save();
