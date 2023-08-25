@@ -21,6 +21,7 @@ import {Support} from './pages/Dashboard/Support';
 
 export const AuthorizedApp = () => {
   const routes = useRoutes([
+    {path: '/', element: <DHome />},
     {path: '/dashboard', element: <DHome />},
     {path: '/dashboard/invest', element: <Invest />},
     {path: '/dashboard/welcome', element: <Welcome />},

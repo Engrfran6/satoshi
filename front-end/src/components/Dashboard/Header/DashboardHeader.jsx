@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import {useEffect, useState} from 'react';
 import {fetchData} from '../../Commons/HandleRequest';
 import logo from '../../../assets/stf-logo1.png';
+import {styled} from 'styled-components';
 
 export const Header = () => {
   const dispatch = useDispatch();
@@ -59,75 +60,163 @@ export const Header = () => {
     });
   };
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const StyledBurger = styled.div`
+    position: absolute;
+    height: 2.8rem;
+    left: 0;
+    color: white;
+    border-radius: 0.3rem;
+    z-index: 999999;
+    display: none;
+
+    .hamburger {
+      width: 2.6rem;
+      height: 0.5rem;
+      background-color: ${({open}) => (open ? '#ccc' : '#333')};
+      border-radius: 10px;
+      transform-origin: 4.5px;
+      transition: all 0.3s linear;
+      background-color: white;
+      margin: 0.4rem;
+      &:nth-child(1) {
+        transform: ${({open}) => (open ? 'rotate(45deg)' : 'rotate(0)')};
+      }
+      &:nth-child(2) {
+        transform: ${({open}) => (open ? 'translateX(100%)' : 'translateX(0)')};
+        opacity: ${({open}) => (open ? 0 : 1)};
+      }
+      &:nth-child(3) {
+        transform: ${({open}) => (open ? 'rotate(-45deg)' : 'rotate(0)')};
+      }
+    }
+
+    @media (max-width: 700px) {
+      display: flex;
+      flex-flow: column nowrap;
+
+      .hamburger {
+        transform-origin: 0;
+      }
+    }
+  `;
+
+  const Div = styled.div`
+    .my-nav-toggle {
+      display: ${(props) => (props.isOpen ? 'block' : 'none')};
+    }
+    @media screen and (max-width: 600px) {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding-top: 20%;
+      background-color: rgb(38, 155, 71);
+      color: white;
+    }
+  `;
+  const IMG = styled.div`
+    @media screen and (max-width: 600px) {
+      padding-left: 4rem;
+    }
+  `;
+
   return (
     <div className="nk-header nk-header-fluid nk-header-fixed is-theme  nk-header-fixed">
       <div className="container-xl wide-lg">
         <div className="nk-header-wrap">
-          <div className="nk-header-menu" data-content="headerNav">
-            <ul className="nk-menu nk-menu-main">
-              <li className="nk-menu-item">
-                <NavLink to="/dashboard#" className="nk-menu-link flex-column">
-                  <img width={130} src={logo} alt="logo" />
-                  <small style={{color: 'white'}}>Dashboard</small>
+          {/* ================================================================== */}
+          <StyledBurger open={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
+            <div className="hamburger" />
+            <div className="hamburger" />
+            <div className="hamburger" />
+          </StyledBurger>
+
+          <IMG className="nk-header-brand">
+            <NavLink to="/" className="logo-link">
+              <img width={100} src={logo} alt="logo" className="logo-light logo-img" />
+              <span className="nio-version text-white">Dashboard</span>
+            </NavLink>
+          </IMG>
+
+          {/* ====================================================== */}
+          <Div isOpen={menuOpen}>
+            {/* <div className="nk-header-mobile">
+              <div className="nk-header-brand">
+                <NavLink to="/" className="logo-link">
+                  <img width={80} src={logo} alt="logo" className="logo-dark logo-img" />
+
+                  <span class="nio-version">Dashboard</span>
                 </NavLink>
-              </li>
-              <li className="nk-menu-item">
+              </div>
+              <div className="nk-menu-trigger me-n2">
+                <NavLink
+                  to="/#"
+                  className="nk-nav-toggle nk-quick-nav-icon"
+                  data-target="headerNav">
+                  <em className="icon ni ni-arrow-left"></em>
+                </NavLink>
+              </div>
+            </div> */}
+            {/* ====================================================== */}
+            <ul className=" my-nav-toggle ">
+              <li className="nk-menu-item ">
                 <NavLink to="/dashboard#" className="nk-menu-link">
-                  <span className="nk-menu-text">Overview</span>
+                  <span className="nk-menu-text text-white">Overview</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item">
                 <NavLink to="/dashboard/schemes" className="nk-menu-link">
-                  <span className="nk-menu-text">MY Plan</span>
+                  <span className="nk-menu-text text-white">MY Plan</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item">
                 <NavLink to="/dashboard/invest" className="nk-menu-link">
-                  <span className="nk-menu-text">Invest</span>
+                  <span className="nk-menu-text text-white">Invest</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item">
                 <NavLink to="/dashboard/profile" className="nk-menu-link">
-                  <span className="nk-menu-text">Profile</span>
+                  <span className="nk-menu-text text-white">Profile</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item active has-sub">
                 <NavLink className="nk-menu-link nk-menu-toggle">
-                  <span className="nk-menu-text">Pages</span>
+                  <span className="nk-menu-text text-white">Pages</span>
                 </NavLink>
                 <ul className="nk-menu-sub">
                   <li className="nk-menu-item">
                     <NavLink to="/dashboard/welcome" className="nk-menu-link">
-                      <span className="nk-menu-text">Welcome / Intro</span>
+                      <span className="nk-menu-text text-white">Welcome / Intro</span>
                     </NavLink>
                   </li>
 
                   <li className="nk-menu-item">
                     <NavLink to="/dashboard/scheme-details" className="nk-menu-link">
-                      <span className="nk-menu-text">Investment Details</span>
+                      <span className="nk-menu-text text-white">Investment Details</span>
                     </NavLink>
                   </li>
                   <li className="nk-menu-item">
                     <NavLink to="/dashboard/kyc-application" className="nk-menu-link">
-                      <span className="nk-menu-text">KYC - Get Started</span>
+                      <span className="nk-menu-text text-white">KYC - Get Started</span>
                     </NavLink>
                   </li>
                   <li className="nk-menu-item">
                     <NavLink to="/dashboard/kyc-form" className="nk-menu-link">
-                      <span className="nk-menu-text">KYC - Application Form</span>
+                      <span className="nk-menu-text text-white">KYC - Application Form</span>
                     </NavLink>
                   </li>
                   <li className="nk-menu-item">
                     <NavLink to="/dashboard/" className="nk-menu-link">
-                      <span className="nk-menu-text">
-                        Main Dashboard <em className="icon ni ni-external" />{' '}
+                      <span className="nk-menu-text text-white">
+                        Main Dashboard <em className="icon ni ni-external" />
                       </span>
                     </NavLink>
                   </li>
                 </ul>
               </li>
             </ul>
-          </div>
+          </Div>
 
           <div className="nk-header-tools">
             <ul className="nk-quick-nav">
@@ -246,10 +335,10 @@ export const Header = () => {
                   <div className="dropdown-inner">
                     <ul className="link-list">
                       <li>
-                        <button onClick={handleLogout}>
+                        <p onClick={handleLogout}>
                           <em className="icon ni ni-signout" />
                           <span>Sign out</span>
-                        </button>
+                        </p>
                       </li>
                     </ul>
                   </div>

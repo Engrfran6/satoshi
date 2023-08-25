@@ -123,7 +123,8 @@ const Header = styled.nav`
       opacity: 0.9;
 
       /* display: block; */
-      display: ${(open) => (open ? 'block' : 'none')};
+      /* display: ${(open) => (open ? 'block' : 'none')}; */
+      display: ${(props) => (props.isOpen ? 'block' : 'none')};
       transform: ${({open}) => (open ? 'translateX(100%)' : 'translateX(0)')};
       ul {
         flex-direction: column;
@@ -181,13 +182,9 @@ const Header = styled.nav`
 
 const StyledBurger = styled.div`
   position: absolute;
-  height: 2.5rem;
-  width: 3.15rem;
-  top: 1.32rem;
+  height: 2.8rem;
   right: 3.5rem;
-  background-color: white;
   border-radius: 0.3rem;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, rgb(38, 155, 71));
   z-index: 999999;
   display: none;
 
@@ -198,7 +195,7 @@ const StyledBurger = styled.div`
     border-radius: 10px;
     transform-origin: 4.5px;
     transition: all 0.3s linear;
-    background-color: grey;
+    background-color: green;
     margin: 0.4rem;
     &:nth-child(1) {
       transform: ${({open}) => (open ? 'rotate(45deg)' : 'rotate(0)')};
@@ -214,13 +211,12 @@ const StyledBurger = styled.div`
 
   @media (max-width: 700px) {
     display: flex;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     flex-flow: column nowrap;
     right: 1rem;
-    top: 0.7rem;
 
     .hamburger {
-      transform-origin: 1.4px;
+      transform-origin: 0;
     }
   }
 `;
@@ -247,22 +243,15 @@ export const Navbar = () => {
     position: isSmall ? 'fixed' : 'block',
   };
 
-  if (open) {
-    console.log('i am open');
-  }
-  if (!open) {
-    console.log('i am closed');
-  }
-
   return (
-    <Header open={open}>
+    <Header isOpen={open}>
       <div className="nav-left">
         <NavLink className="logo" to="/">
           <img className="img-logo" width={130} src={logo} alt="" />
         </NavLink>
       </div>
 
-      <StyledBurger open={!open} onClick={() => setOpen(!open)}>
+      <StyledBurger open={open} onClick={() => setOpen(!open)}>
         <div className="hamburger" />
         <div className="hamburger" />
         <div className="hamburger" />
