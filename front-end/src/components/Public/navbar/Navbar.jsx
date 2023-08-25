@@ -1,24 +1,205 @@
 import {useLocation} from 'react-router-dom';
-import logo from '../../../images/logo.jpg';
 import {NavLink} from 'react-router-dom';
 import styled from 'styled-components';
 import {useState} from 'react';
+import {SlArrowDown} from 'react-icons/sl';
+import logo from '../../../assets/stf-logo2.png';
+
+const Header = styled.nav`
+  display: flex;
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+  align-items: center;
+  padding: 1rem 9rem;
+  border-bottom: 0.4px solid gray;
+  background-color: #f4f1f1;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, rgb(38, 155, 71));
+
+  .nav-left {
+    flex: 10%;
+    border-right: 0.2px solid rgb(38, 155, 71);
+
+    /* .img {
+      width: 5rem;
+      height: 1.5rem;
+    } */
+  }
+
+  .nav-center {
+    flex: 80%;
+
+    ul {
+      display: flex;
+      align-items: center;
+      justify-content: end;
+      gap: 1.8rem;
+
+      .list-items {
+        padding: 0.5rem 0.9rem;
+        color: white;
+
+        .list-item {
+          color: rgb(38, 155, 71);
+          font-size: 1rem;
+          font-weight: bold;
+          padding: 0.5rem;
+        }
+
+        .list-item:hover {
+          border-bottom: 2px solid rgb(48, 160, 80);
+        }
+
+        .list-item-inner {
+          position: absolute;
+          right: 24.5rem;
+
+          .list-item-inner-link {
+            color: rgb(48, 160, 80);
+          }
+        }
+      }
+
+      .sign-up {
+        padding-left: 3rem;
+        border-left: 0.2px solid rgb(38, 155, 71);
+
+        .link {
+          padding: 0.5rem 1rem;
+          background-color: rgb(38, 155, 71);
+          color: white;
+          border-radius: 0.4rem;
+        }
+      }
+    }
+
+    .active {
+      color: blue;
+    }
+    .clicked {
+      background-color: red;
+    }
+  }
+
+  .nav-right {
+    flex: 3%;
+
+    .link {
+      display: flex;
+      float: right;
+      padding: 0.5rem 1rem;
+      background-color: rgb(38, 155, 71);
+      color: white;
+      border-radius: 0.4rem;
+    }
+  }
+
+  .hide {
+    display: none;
+  }
+  /* ================media querry================== */
+  @media screen and (max-width: 600px) {
+    padding: 0.7rem 50% 0.7rem 1rem;
+    height: 4rem;
+
+    .nav-left {
+      flex: 5%;
+      padding-right: 0;
+
+      .img-logo {
+        width: 80px;
+        height: 2.5rem;
+      }
+    }
+
+    .nav-center {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 70%;
+      height: max-content;
+      border-bottom: 4rem solid green;
+      z-index: 99;
+      opacity: 0.9;
+
+      /* display: block; */
+      display: ${(open) => (open ? 'block' : 'none')};
+      transform: ${({open}) => (open ? 'translateX(100%)' : 'translateX(0)')};
+      ul {
+        flex-direction: column;
+        padding-top: 5rem;
+        align-items: center;
+
+        gap: 1.8rem;
+
+        height: max-content;
+        width: 100%;
+        background-color: white;
+
+        .list-items {
+          padding: 0.5rem 0.1rem;
+          color: white;
+
+          .list-item-inner {
+            position: absolute;
+            right: 3.3rem;
+          }
+        }
+
+        .sign-up {
+          padding-left: 3rem;
+          border-left: none;
+          padding-left: 0;
+          padding-bottom: 1.6rem;
+
+          .link {
+            padding: 0.5rem 1rem;
+            background-color: rgb(38, 155, 71);
+            color: white;
+            border-radius: 0.4rem;
+          }
+        }
+      }
+
+      .active {
+        color: blue;
+      }
+      .clicked {
+        background-color: red;
+      }
+    }
+
+    .hide {
+      display: block;
+    }
+
+    .show {
+      display: none;
+    }
+  }
+`;
 
 const StyledBurger = styled.div`
   position: absolute;
-  height: 2rem;
-  top: 0.75rem;
-  right: 1.5rem;
+  height: 2.5rem;
+  width: 3.15rem;
+  top: 1.32rem;
+  right: 3.5rem;
+  background-color: white;
+  border-radius: 0.3rem;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, rgb(38, 155, 71));
+  z-index: 999999;
   display: none;
 
   .hamburger {
-    width: 2.2rem;
+    width: 2.4rem;
     height: 0.25rem;
     background-color: ${({open}) => (open ? '#ccc' : '#333')};
     border-radius: 10px;
-    transform-origin: 1px;
+    transform-origin: 4.5px;
     transition: all 0.3s linear;
-    background-color: white;
+    background-color: grey;
+    margin: 0.4rem;
     &:nth-child(1) {
       transform: ${({open}) => (open ? 'rotate(45deg)' : 'rotate(0)')};
     }
@@ -35,11 +216,19 @@ const StyledBurger = styled.div`
     display: flex;
     justify-content: space-around;
     flex-flow: column nowrap;
+    right: 1rem;
+    top: 0.7rem;
+
+    .hamburger {
+      transform-origin: 1.4px;
+    }
   }
 `;
 
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [show, setShow] = useState(false);
+  const [clicked, setClicked] = useState(false);
   const location = useLocation();
 
   const hiddenRoutes = [
@@ -58,88 +247,92 @@ export const Navbar = () => {
     position: isSmall ? 'fixed' : 'block',
   };
 
+  if (open) {
+    console.log('i am open');
+  }
+  if (!open) {
+    console.log('i am closed');
+  }
+
   return (
-    <header className="header-style2 menu_area-light">
-      <div className="navbar-default">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-12 col-lg-12">
-              <div className="menu_area alt-font">
-                <nav className={`${fixed} navbar navbar-expand-lg navbar-light`}>
-                  <div style={{flex: '0%'}} className="navbar-header navbar-header-custom">
-                    {/* <NavLink to="/"> SATOCHI TRADE PRO </NavLink> */}
-                    <NavLink to="/" className="navbar-brand logo2">
-                      <p
-                        style={{
-                          width: 'max-content',
-                          fontSize: '1rem',
-                          color: 'white',
-                          fontWeight: 'bolder',
-                          fontFamily: 'Ysabeau Infant',
-                        }}>
-                        SATOCHI TRADE PRO
-                      </p>
-                    </NavLink>
-                  </div>
-
-                  {/* <div className="navbar-toggler" /> */}
-                  <StyledBurger open={open} onClick={() => setOpen(!open)}>
-                    <div className="hamburger" />
-                    <div className="hamburger" />
-                    <div className="hamburger" />
-                  </StyledBurger>
-
-                  {/* menu area */}
-                  <div open={open}>
-                    <ul
-                      className="navbar-nav ml-auto"
-                      style={{display: 'flex', alignItems: 'center'}}>
-                      <li>
-                        <NavLink to="/">Home</NavLink>
-                      </li>
-                      <li>
-                        <NavLink to="/crypto">Crypto Assets</NavLink>
-                      </li>
-                      <li>
-                        <NavLink to="/realestate">Real Estate</NavLink>
-                      </li>
-                      <li>
-                        <NavLink to="/loan">Crypto Loans</NavLink>
-                      </li>
-                      <li>
-                        <NavLink to="/pricing">Pricing</NavLink>
-                      </li>
-                      <li>
-                        <NavLink to="/company">Company</NavLink>
-                        <ul>
-                          <li>
-                            <NavLink to="/terms">Terms &amp; Conditions</NavLink>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <span className="sm-margin-20px-right xs-margin-5px-right">
-                          <NavLink to="/account/register" className="butn small theme">
-                            <span>SIGN UP</span>
-                          </NavLink>
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div className="attr-nav sm-no-margin sm-margin-70px-right xs-margin-65px-right">
-                    <span className="sm-margin-20px-right xs-margin-5px-right">
-                      <NavLink to="/account/login" className="butn small theme">
-                        <span> LOGIN</span>
-                      </NavLink>
-                    </span>
-                  </div>
-                </nav>
-              </div>
-            </div>
-          </div>
-        </div>
+    <Header open={open}>
+      <div className="nav-left">
+        <NavLink className="logo" to="/">
+          <img className="img-logo" width={130} src={logo} alt="" />
+        </NavLink>
       </div>
-    </header>
+
+      <StyledBurger open={!open} onClick={() => setOpen(!open)}>
+        <div className="hamburger" />
+        <div className="hamburger" />
+        <div className="hamburger" />
+      </StyledBurger>
+
+      <div className="nav-center">
+        <ul className={clicked ? 'clicked' : ''}>
+          <li className="list-items">
+            <NavLink activeClassName="active" className="list-item" to="/">
+              Home
+            </NavLink>
+          </li>
+          <li className="list-items">
+            <NavLink activeClassName="active" className="list-item" to="/crypto">
+              Crypto Assets
+            </NavLink>
+          </li>
+          <li className="list-items">
+            <NavLink activeClassName="active" className="list-item" to="/realestate">
+              Real Estate
+            </NavLink>
+          </li>
+          <li className="list-items">
+            <NavLink activeClassName="active" className="list-item" to="/loan">
+              Crypto Loans
+            </NavLink>
+          </li>
+          <li className="list-items">
+            <NavLink activeClassName="active" className="list-item" to="/pricing">
+              Pricing
+            </NavLink>
+          </li>
+          <li className="list-items">
+            <NavLink activeClassName="active" className="list-item" to="/company">
+              Company
+            </NavLink>
+            <span
+              onClick={() => setShow(!show)}
+              style={{color: 'black', cursor: 'pointer', fontWeight: 'bolder'}}>
+              {show ? <SlArrowDown /> : <SlArrowDown />}
+            </span>
+            {show && (
+              <ul>
+                <li className="list-item-inner">
+                  <NavLink className="list-item-inner-link" to="/terms">
+                    Terms &amp; Conditions
+                  </NavLink>
+                </li>
+              </ul>
+            )}
+          </li>
+          <li className="nav-right hide">
+            <NavLink className="link" to="/account/login">
+              LOGIN
+            </NavLink>
+          </li>
+
+          <li className="sign-up">
+            <NavLink className="link" to="/account/register">
+              SIGN UP
+            </NavLink>
+          </li>
+        </ul>
+      </div>
+
+      <div className="nav-right show">
+        <NavLink className="link" to="/account/login">
+          LOGIN
+        </NavLink>
+      </div>
+    </Header>
   );
 };

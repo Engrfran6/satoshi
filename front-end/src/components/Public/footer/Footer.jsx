@@ -1,4 +1,5 @@
 import {useLocation} from 'react-router-dom';
+import logo from '../../../assets/stf-logo2.png';
 
 export const Footer = () => {
   const location = useLocation();
@@ -19,8 +20,9 @@ export const Footer = () => {
       <div className="container">
         <div className="row">
           <div className="col-lg-4 col-md-6 sm-margin-30px-bottom">
-            {/* <img alt="footer-logo" src="img/logos/logo-footer-dark.png" /> */}
-            <h2>Satochi Trade Pro</h2>
+            <h2>
+              <img className="img-logo" width={180} src={logo} alt="logo" />
+            </h2>
             <p className="margin-20px-top text-default-color">
               We are a digital assets trading and managment company, providing blockchain-backed
               investment products to investors, who wish to create financial stabilty and security

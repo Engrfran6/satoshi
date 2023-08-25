@@ -43,10 +43,10 @@ export const Header = () => {
       if (result.isConfirmed) {
         dispatch(resetUser);
         dispatch(clearToken);
-        window.location.reload();
+        window.location.replace('/');
 
         Swal.fire({
-          title: `GoodBye ${initials}`,
+          title: `GoodBye ${user?.fullName.split('')[0]} !`,
           text: 'You have been successfully logged out.',
           icon: 'success',
         }).then(() => {
