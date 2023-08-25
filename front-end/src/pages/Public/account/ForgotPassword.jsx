@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
 import {userRequest} from '../../../components/Commons/HandleRequest';
-import logo from '../../../assets/stp-logo2.png';
+import logo from '../../../assets/stf-logo2.png';
 import {styled} from 'styled-components';
 
 export const ForgotPassword = () => {
@@ -48,13 +48,6 @@ export const ForgotPassword = () => {
     }
   };
 
-  const isMobile = window.innerWidth <= 900; // Adjust the breakpoint as needed
-  const containerStyle = {
-    width: isMobile ? '85%' : '30%',
-    paddingTop: '5%',
-    margin: '0 auto',
-  };
-
   const Ul = styled.div`
     width: 100%;
     display: flex;
@@ -64,18 +57,13 @@ export const ForgotPassword = () => {
     padding: 1rem 10%;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 
-    .img {
-      width: 5rem;
-      height: 1.5rem;
-    }
-
     @media screen and (max-width: 600px) {
       padding: 0.5rem 8%;
       font-size: 0.6rem;
 
       .img {
-        width: 3.5rem;
-        height: 1rem;
+        width: 80px;
+        height: 2.5rem;
       }
     }
   `;
@@ -106,11 +94,19 @@ export const ForgotPassword = () => {
     }
   `;
 
+  const isMobile = window.innerWidth <= 600; // Adjust the breakpoint as needed
+  const isPad = window.innerWidth <= 1025; // Adjust the breakpoint as needed
+  const containerStyle = {
+    width: isMobile ? '85%' : isPad ? '45%' : '30%',
+    paddingTop: isMobile ? '0' : isPad ? '5%' : '1%',
+    margin: '0 auto',
+  };
+
   return (
     <div>
       <Ul>
         <NavLink to="/#">
-          <img className="img" src={logo} alt="" />
+          <img width={130} className="img" src={logo} alt="" />
         </NavLink>
       </Ul>
 
@@ -120,7 +116,7 @@ export const ForgotPassword = () => {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          marginTop: '14vh',
+          marginTop: '8vh',
         }}>
         {message === 'success' ? (
           <div
@@ -200,7 +196,7 @@ export const ForgotPassword = () => {
           </NavLink>
         </Sign>
 
-        <div className="footer" style={{textAlign: 'center', marginTop: '24vh'}}>
+        <div className="footer" style={{textAlign: 'center', marginTop: '12vh'}}>
           <p>
             <small>| Privacy, Cookies, Security & Legal |</small>
             <small>Notice of Data Collection |</small>

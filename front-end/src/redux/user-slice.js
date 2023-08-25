@@ -3,7 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
-    user: null,
+    user: undefined,
   },
   reducers: {
     setUser(state, action) {
@@ -32,9 +32,9 @@ export const userSlice = createSlice({
       state.user.selectedDepositAmount = action.payload;
     },
     resetUser(state) {
-      state.user = null;
+      state.user = undefined;
       localStorage.setItem('persist:root', '');
-      state.user.token = null;
+      state.user.token = undefined;
       state.user.investments = [];
       localStorage.removeItem('token');
       localStorage.removeItem('user');
