@@ -65,7 +65,7 @@ const userSchema = new Schema(
       type: String,
       enum: ['user', 'admin'],
       default: 'user',
-    }
+    },
   },
   {versionKey: false}
 );
@@ -92,7 +92,7 @@ userSchema.methods.getSignedJwtToken = function (expires) {
 
 userSchema.statics.retrieve = function (data) {
   return this.find(data.query)
-    .sort(data.sort ? (data.sort === 'desc' ? { createdAt: -1 } : { createdAt: 1 }) : { createdAt: -1 })
+    .sort(data.sort ? (data.sort === 'desc' ? {createdAt: -1} : {createdAt: 1}) : {createdAt: -1})
     .limit(parseInt(data.limit, 10) || 10)
     .skip(parseInt(data.page, 10) || 0);
 };
@@ -134,3 +134,43 @@ userSchema.statics.retrievePaginated = async function (data) {
 
 const User = model('User', userSchema);
 module.exports = User;
+
+// // ==========================ADMIN =======================================================
+
+// // Admin Schema (similar to user schema)
+// const adminSchema = new Schema({
+//   email: {
+//     type: String,
+//     required: true,
+//     unique: true,
+//   },
+//   password: {
+//     type: String,
+//     required: true,
+//   },
+//   role: {
+//     type: String,
+//     default: 'admin',
+//   },
+// });
+
+// adminSchema.pre(
+//   'save',
+//   async function (next) {
+//     const admin = this;
+//     if (!admin.isModified('password')) return next();
+
+//     const salt = await bcrypt.genSalt(10);
+//     const hash = await bcrypt.hash(admin.password, salt);
+//     admin.password = hash;
+//     next();
+//   },
+//   {versionKey: false}
+// );
+
+// adminSchema.methods.comparePassword = async function (password) {
+//   return bcrypt.compare(password, this.password);
+// };
+
+// const Admin = model('Admin', userSchema);
+// module.exports = Admin;

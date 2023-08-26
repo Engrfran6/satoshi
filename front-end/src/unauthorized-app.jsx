@@ -12,6 +12,7 @@ import {Information} from './pages/Public/Information';
 import {Login} from './pages/Public/account/Login';
 import {Register} from './pages/Public/account/Register';
 import {ForgotPassword} from './pages/Public/account/ForgotPassword';
+import {AdminRegister} from './pages/Public/account/AdminRegister';
 
 export const UnauthorizedApp = () => {
   const routes = useRoutes([
@@ -27,6 +28,8 @@ export const UnauthorizedApp = () => {
     {path: '/account/login', element: <Login />},
     {path: '/account/register', element: <Register />},
     {path: '/account/forgot-password', element: <ForgotPassword />},
+    {path: '/account/admin-register', element: <AdminRegister />},
+    {path: '*', element: <PublicHome />},
   ]);
 
   return (

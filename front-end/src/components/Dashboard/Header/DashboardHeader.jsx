@@ -2,14 +2,13 @@ import {NavLink, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {clearToken, resetUser} from '../../../redux/user-slice';
 import Swal from 'sweetalert2';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {fetchData} from '../../Commons/HandleRequest';
 import logo from '../../../assets/stf-logo1.png';
 import {styled} from 'styled-components';
 
 export const Header = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   let user = useSelector((state) => state?.user?.user?.user);
   let token = useSelector((state) => state?.user?.user?.token);
 
@@ -51,8 +50,7 @@ export const Header = () => {
           showConfirmButton: false,
           timer: 1500,
         }).then(() => {
-          window.location.reload();
-          navigate('/');
+          window.location.replace('/');
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         // Action cancelled, no action needed
@@ -61,6 +59,10 @@ export const Header = () => {
   };
 
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleMenuItemClick = () => {
+    setMenuOpen(false);
+  };
 
   const StyledBurger = styled.div`
     position: absolute;
@@ -103,21 +105,50 @@ export const Header = () => {
   `;
 
   const Div = styled.div`
-    .my-nav-toggle {
-      display: ${(props) => (props.isOpen ? 'block' : 'none')};
+    display: block;
+    opacity: 0.9;
+    position: absolute;
+
+    ul > li {
+      padding: 0.5rem;
     }
-    @media screen and (max-width: 600px) {
+
+    .ul-inner li {
+      padding: 0.3rem;
+    }
+
+    .myhide {
+      display: none;
+    }
+
+    .my-nav-toggle {
+    }
+
+    @media screen and (max-width: 724px) {
       position: absolute;
       top: 0;
       left: 0;
+      height: max-content;
       padding-top: 20%;
-      background-color: rgb(38, 155, 71);
       color: white;
+      display: ${(isopen) => (!isopen ? 'block' : 'none')};
+      background-color: red;
+
+      ul {
+        flex-direction: column;
+      }
+
+      .myclose {
+        display: none;
+      }
     }
   `;
+
   const IMG = styled.div`
-    @media screen and (max-width: 600px) {
+    display: none;
+    @media screen and (max-width: 724px) {
       padding-left: 4rem;
+      display: block;
     }
   `;
 
@@ -125,14 +156,13 @@ export const Header = () => {
     <div className="nk-header nk-header-fluid nk-header-fixed is-theme  nk-header-fixed">
       <div className="container-xl wide-lg">
         <div className="nk-header-wrap">
-          {/* ================================================================== */}
           <StyledBurger open={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
             <div className="hamburger" />
             <div className="hamburger" />
             <div className="hamburger" />
           </StyledBurger>
 
-          <IMG className="nk-header-brand">
+          <IMG className="nk-header-brand myhide">
             <NavLink to="/" className="logo-link">
               <img width={100} src={logo} alt="logo" className="logo-light logo-img" />
               <span className="nio-version text-white">Dashboard</span>
@@ -140,74 +170,89 @@ export const Header = () => {
           </IMG>
 
           {/* ====================================================== */}
-          <Div isOpen={menuOpen}>
-            {/* <div className="nk-header-mobile">
-              <div className="nk-header-brand">
-                <NavLink to="/" className="logo-link">
-                  <img width={80} src={logo} alt="logo" className="logo-dark logo-img" />
+          <Div isopen={menuOpen}>
+            <ul
+              className="nk-menu nk-menu-main "
+              style={{display: 'flex', alignItems: 'center', padding: '0'}}>
+              <li className="myclose" style={{paddingRight: '3rem'}}>
+                <NavLink to="/dashboard#">
+                  <img width={100} src={logo} alt="logo" />
+                  <span className="nio-version text-white">Dashboard</span>
+                </NavLink>
+              </li>
 
-                  <span class="nio-version">Dashboard</span>
-                </NavLink>
-              </div>
-              <div className="nk-menu-trigger me-n2">
-                <NavLink
-                  to="/#"
-                  className="nk-nav-toggle nk-quick-nav-icon"
-                  data-target="headerNav">
-                  <em className="icon ni ni-arrow-left"></em>
-                </NavLink>
-              </div>
-            </div> */}
-            {/* ====================================================== */}
-            <ul className=" my-nav-toggle ">
               <li className="nk-menu-item ">
-                <NavLink to="/dashboard#" className="nk-menu-link">
+                <NavLink to="/dashboard#" className="nk-menu-link" onClick={handleMenuItemClick}>
                   <span className="nk-menu-text text-white">Overview</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item">
-                <NavLink to="/dashboard/schemes" className="nk-menu-link">
+                <NavLink
+                  to="/dashboard/schemes"
+                  className="nk-menu-link"
+                  onClick={handleMenuItemClick}>
                   <span className="nk-menu-text text-white">MY Plan</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item">
-                <NavLink to="/dashboard/invest" className="nk-menu-link">
+                <NavLink
+                  to="/dashboard/invest"
+                  className="nk-menu-link"
+                  onClick={handleMenuItemClick}>
                   <span className="nk-menu-text text-white">Invest</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item">
-                <NavLink to="/dashboard/profile" className="nk-menu-link">
+                <NavLink
+                  to="/dashboard/profile"
+                  className="nk-menu-link"
+                  onClick={handleMenuItemClick}>
                   <span className="nk-menu-text text-white">Profile</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item active has-sub">
-                <NavLink className="nk-menu-link nk-menu-toggle">
+                <NavLink className="nk-menu-link nk-menu-toggle" onClick={handleMenuItemClick}>
                   <span className="nk-menu-text text-white">Pages</span>
                 </NavLink>
-                <ul className="nk-menu-sub">
+                <ul className="nk-menu-sub ul-inner">
                   <li className="nk-menu-item">
-                    <NavLink to="/dashboard/welcome" className="nk-menu-link">
+                    <NavLink
+                      to="/dashboard/welcome"
+                      className="nk-menu-link"
+                      onClick={handleMenuItemClick}>
                       <span className="nk-menu-text text-white">Welcome / Intro</span>
                     </NavLink>
                   </li>
 
                   <li className="nk-menu-item">
-                    <NavLink to="/dashboard/scheme-details" className="nk-menu-link">
+                    <NavLink
+                      to="/dashboard/scheme-details"
+                      className="nk-menu-link"
+                      onClick={handleMenuItemClick}>
                       <span className="nk-menu-text text-white">Investment Details</span>
                     </NavLink>
                   </li>
                   <li className="nk-menu-item">
-                    <NavLink to="/dashboard/kyc-application" className="nk-menu-link">
+                    <NavLink
+                      to="/dashboard/kyc-application"
+                      className="nk-menu-link"
+                      onClick={handleMenuItemClick}>
                       <span className="nk-menu-text text-white">KYC - Get Started</span>
                     </NavLink>
                   </li>
                   <li className="nk-menu-item">
-                    <NavLink to="/dashboard/kyc-form" className="nk-menu-link">
+                    <NavLink
+                      to="/dashboard/kyc-form"
+                      className="nk-menu-link"
+                      onClick={handleMenuItemClick}>
                       <span className="nk-menu-text text-white">KYC - Application Form</span>
                     </NavLink>
                   </li>
                   <li className="nk-menu-item">
-                    <NavLink to="/dashboard/" className="nk-menu-link">
+                    <NavLink
+                      to="/dashboard/"
+                      className="nk-menu-link"
+                      onClick={handleMenuItemClick}>
                       <span className="nk-menu-text text-white">
                         Main Dashboard <em className="icon ni ni-external" />
                       </span>
