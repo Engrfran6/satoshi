@@ -8,7 +8,9 @@ import logo from '../../../assets/stf-logo2.png';
 const Header = styled.nav`
   display: flex;
   position: fixed;
-  width: 100%;
+  width: 99.55%;
+  margin: 0 0.2%;
+  justify-content: center;
   z-index: 999;
   align-items: center;
   padding: 1rem 9rem;
@@ -19,11 +21,6 @@ const Header = styled.nav`
   .nav-left {
     flex: 10%;
     border-right: 0.2px solid rgb(38, 155, 71);
-
-    /* .img {
-      width: 5rem;
-      height: 1.5rem;
-    } */
   }
 
   .nav-center {
@@ -98,7 +95,7 @@ const Header = styled.nav`
     display: none;
   }
   /* ================media querry================== */
-  @media screen and (max-width: 600px) {
+  @media screen and (max-width: 724px), (max-width: 1024px) {
     padding: 0.7rem 50% 0.7rem 1rem;
     height: 4rem;
 
@@ -122,10 +119,9 @@ const Header = styled.nav`
       z-index: 99;
       opacity: 0.9;
 
-      /* display: block; */
-      /* display: ${(open) => (open ? 'block' : 'none')}; */
       display: ${(props) => (props.isOpen ? 'block' : 'none')};
-      transform: ${({open}) => (open ? 'translateX(100%)' : 'translateX(0)')};
+      transition: opacity 0.3s ease, transform 0.3s ease;
+
       ul {
         flex-direction: column;
         padding-top: 5rem;
@@ -209,9 +205,17 @@ const StyledBurger = styled.div`
     }
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: 724px) {
     display: flex;
-    /* justify-content: space-around; */
+    flex-flow: column nowrap;
+    right: 1rem;
+
+    .hamburger {
+      transform-origin: 0;
+    }
+  }
+  @media (min-width: 724px) {
+    display: flex;
     flex-flow: column nowrap;
     right: 1rem;
 
@@ -226,6 +230,10 @@ export const Navbar = () => {
   const [show, setShow] = useState(false);
   const [clicked, setClicked] = useState(false);
   const location = useLocation();
+
+  const handleMenuItemClick = () => {
+    setOpen(false);
+  };
 
   const hiddenRoutes = [
     '/account/register',
@@ -260,32 +268,56 @@ export const Navbar = () => {
       <div className="nav-center">
         <ul className={clicked ? 'clicked' : ''}>
           <li className="list-items">
-            <NavLink activeClassName="active" className="list-item" to="/">
+            <NavLink
+              activeClassName="active"
+              className="list-item"
+              to="/"
+              onClick={handleMenuItemClick}>
               Home
             </NavLink>
           </li>
           <li className="list-items">
-            <NavLink activeClassName="active" className="list-item" to="/crypto">
+            <NavLink
+              activeClassName="active"
+              className="list-item"
+              to="/crypto"
+              onClick={handleMenuItemClick}>
               Crypto Assets
             </NavLink>
           </li>
           <li className="list-items">
-            <NavLink activeClassName="active" className="list-item" to="/realestate">
+            <NavLink
+              activeClassName="active"
+              className="list-item"
+              to="/realestate"
+              onClick={handleMenuItemClick}>
               Real Estate
             </NavLink>
           </li>
           <li className="list-items">
-            <NavLink activeClassName="active" className="list-item" to="/loan">
+            <NavLink
+              activeClassName="active"
+              className="list-item"
+              to="/loan"
+              onClick={handleMenuItemClick}>
               Crypto Loans
             </NavLink>
           </li>
           <li className="list-items">
-            <NavLink activeClassName="active" className="list-item" to="/pricing">
+            <NavLink
+              activeClassName="active"
+              className="list-item"
+              to="/pricing"
+              onClick={handleMenuItemClick}>
               Pricing
             </NavLink>
           </li>
           <li className="list-items">
-            <NavLink activeClassName="active" className="list-item" to="/company">
+            <NavLink
+              activeClassName="active"
+              className="list-item"
+              to="/company"
+              onClick={handleMenuItemClick}>
               Company
             </NavLink>
             <span
@@ -296,7 +328,10 @@ export const Navbar = () => {
             {show && (
               <ul>
                 <li className="list-item-inner">
-                  <NavLink className="list-item-inner-link" to="/terms">
+                  <NavLink
+                    className="list-item-inner-link"
+                    to="/terms"
+                    onClick={handleMenuItemClick}>
                     Terms &amp; Conditions
                   </NavLink>
                 </li>
@@ -304,13 +339,13 @@ export const Navbar = () => {
             )}
           </li>
           <li className="nav-right hide">
-            <NavLink className="link" to="/account/login">
+            <NavLink className="link" to="/account/login" onClick={handleMenuItemClick}>
               LOGIN
             </NavLink>
           </li>
 
           <li className="sign-up">
-            <NavLink className="link" to="/account/register">
+            <NavLink className="link" to="/account/register" onClick={handleMenuItemClick}>
               SIGN UP
             </NavLink>
           </li>
@@ -318,7 +353,7 @@ export const Navbar = () => {
       </div>
 
       <div className="nav-right show">
-        <NavLink className="link" to="/account/login">
+        <NavLink className="link" to="/account/login" onClick={handleMenuItemClick}>
           LOGIN
         </NavLink>
       </div>

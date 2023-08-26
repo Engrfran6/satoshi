@@ -1,71 +1,66 @@
-import { client} from '../utils/api-client'
-import { store } from '../redux/store';
+import {client} from '../utils/api-client';
+import {store} from '../redux/store';
 
-const serverUrl = process.env.REACT_APP_API_BASE_URL ;
+const serverUrl = process.env.REACT_APP_API_BASE_URL;
 
-export const userService =  {
-
+export const userService = {
   loginUser: async (email, password) => {
     try {
-      const url = `${serverUrl}/auth/login`
-      const method = 'POST'
-      const response = await client(url, method, { email, password });
-      if (!response)
-        throw new Error("Cannot login");
-      return response
+      const url = `${serverUrl}/auth/login`;
+      const method = 'POST';
+      const response = await client(url, method, {email, password});
+      if (!response) throw new Error('Cannot login');
+      return response;
     } catch (e) {
-      throw e
+      throw e;
     }
   },
 
   verifyToken: async () => {
     try {
-      const url = `${serverUrl}/auth/authorize`
-      const method = 'GET'
+      const url = `${serverUrl}/auth/authorize`;
+      const method = 'GET';
       const response = await client(url, method);
-      if (!response)
-        throw new Error("Not Authorized");
-      return response
+      if (!response) throw new Error('Not Authorized');
+      return response;
     } catch (e) {
-      throw e
+      throw e;
     }
   },
 
-  getUsers:async () => {
+  getUsers: async () => {
     try {
-      const url = `${serverUrl}/auth/users?limit=50`
-      const method = 'GET'
+      const url = `${serverUrl}/auth/users?limit=50`;
+      const method = 'GET';
       const response = await client(url, method);
-      if (!response)
-        throw new Error("Not Authorized");
-      return response
+      if (!response) throw new Error('Not Authorized');
+      return response;
     } catch (e) {
-      throw e
+      throw e;
     }
   },
 
   fetchUserFromStore: () => {
-    let user = store?.getState()?.user?.user
+    let user = store?.getState()?.user?.user;
     let token;
     if (user) {
-      token = user.token || ''
+      token = user.token || '';
     }
     return {
       user,
-      token
-    }
+      token,
+    };
   },
 
-  searchUsers:async (data) => {
+  searchUsers: async (data) => {
     try {
-      const url = `${serverUrl}/search`
-      const method = 'POST'
-      const response = await client(url, method, { ...data });
-      if (!response)
-        throw new Error("Cannot Create bundle");
-      return response
+      const url = `${serverUrl}/search`;
+      const method = 'POST';
+      const response = await client(url, method, {...data});
+      if (!response) throw new Error('Cannot Create bundle');
+      return response;
     } catch (e) {
-      throw e
+      throw e;
     }
   },
-}
+};

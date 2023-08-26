@@ -5,6 +5,7 @@ const depositRouter = require('./deposit_routes');
 const investRouter = require('./investment_routes');
 const paymentRoutes = require('./paymentOption_routes');
 const withdrawRouter = require('./withdraw_routes');
+const activityRouter = require('./activities_routes');
 
 module.exports = [
   ['/', indexRouter],
@@ -13,6 +14,7 @@ module.exports = [
   ['/deposit', depositRouter],
   ['/withdraw', withdrawRouter],
   ['/investment', investRouter],
+  ['/activity', activityRouter],
   ['/btc', paymentRoutes.btcRouter],
   ['/bank', paymentRoutes.bankRouter],
   ['/usdt', paymentRoutes.usdtRouter],

@@ -5,6 +5,7 @@ const User = require('../models/Users/UserModel');
 const Account = require('../models/Account/AccountModel');
 
 const Investment = require('../models/Investment/InvestmentModel');
+const Admin = require('../models/Users/UserModel');
 
 const createUserSchema = Joi.object().keys({
   fullName: Joi.string().required(),
@@ -15,11 +16,6 @@ const createUserSchema = Joi.object().keys({
   email: Joi.string()
     .required()
     .email({tlds: {allow: false}}),
-});
-
-const LoginSchema = Joi.object().keys({
-  password: Joi.string().required(),
-  email: Joi.string().email({tlds: {allow: false}}),
 });
 
 exports.register = async (req, res) => {
@@ -57,8 +53,7 @@ exports.register = async (req, res) => {
       referalId: genrateReferal,
     };
 
-
-    const acc = new Account()
+    const acc = new Account();
     const user = new User(params);
     await user.save();
     delete user.password;
@@ -75,6 +70,11 @@ exports.register = async (req, res) => {
     });
   }
 };
+
+const LoginSchema = Joi.object().keys({
+  password: Joi.string().required(),
+  email: Joi.string().email({tlds: {allow: false}}),
+});
 
 exports.login = async (req, res) => {
   try {
@@ -121,7 +121,7 @@ exports.getUsers = async (req, res) => {
   });
   res.status(200).json({
     status: 'success',
-    ...users
+    ...users,
   });
 };
 
@@ -132,3 +132,46 @@ const generateRandomNumber = () => {
   }
   return randomNumbers.join('');
 };
+
+// // ============================ADMIN==================================================
+
+// const createAdminSchema = Joi.object().keys({
+//   password: Joi.string().required(),
+//   role: Joi.string(),
+//   email: Joi.string()
+//     .required()
+//     .email({tlds: {allow: false}}),
+// });
+
+// exports.registerAdmin = async (req, res) => {
+//   try {
+//     const adminDoc = req.body;
+//     const {error} = createAdminSchema.validate({...doc});
+//     if (error) {
+//       return res.status(400).json({error: error.details[0].message});
+//     }
+
+//     const saltAdmin = await bcrypt.genSalt(10);
+//     const generatedAdminPassword = await bcrypt.hash(doc.password, saltAdmin);
+
+//     const adminParams = {
+//       email: adminDoc.email,
+//       password: generatedAdminPassword,
+//     };
+
+//     const admin = new Admin(adminParams);
+//     await admin.save();
+//     delete admin.password;
+//     if (admin) {
+//       return res.status(201).json({
+//         status: 'success',
+//         data: admin,
+//       });
+//     }
+//   } catch (e) {
+//     res.status(500).json({
+//       status: 'failed',
+//       message: e.message,
+//     });
+//   }
+// };

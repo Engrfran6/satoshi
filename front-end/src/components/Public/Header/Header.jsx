@@ -111,7 +111,7 @@ export const Header = () => {
         cursor: pointer;
       }
 
-      @media screen and (max-width: 1024px) {
+      @media screen and (min-width: 725px) {
         .center {
           align-items: start;
           padding: 7rem 0 0 0;
