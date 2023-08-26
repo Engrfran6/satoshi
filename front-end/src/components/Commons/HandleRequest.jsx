@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // export const API_URL = 'http://localhost:8000'; //My backend URL
-export const API_URL = 'https://satochitradebackend.onrender.com'; //My backend URL
+const API_URL = 'https://satochitradebackend.onrender.com'; //My backend URL
 
 const api = axios.create({
   baseURL: API_URL,
