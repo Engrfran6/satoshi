@@ -1,11 +1,102 @@
-import {NavLink, useNavigate} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {clearToken, resetUser} from '../../../redux/user-slice';
 import Swal from 'sweetalert2';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {fetchData} from '../../Commons/HandleRequest';
 import logo from '../../../assets/stf-logo1.png';
 import {styled} from 'styled-components';
+
+const StyledBurger = styled.div`
+  position: absolute;
+  height: 2.8rem;
+  left: 0;
+  color: white;
+  border-radius: 0.3rem;
+  z-index: 999999;
+  display: none;
+
+  .hamburger {
+    width: 2.6rem;
+    height: 0.5rem;
+    background-color: ${(props) => (props.open ? '#ccc' : '#333')};
+    border-radius: 10px;
+    transform-origin: 4.5px;
+    transition: all 0.3s linear;
+    background-color: white;
+    margin: 0.4rem;
+    &:nth-child(1) {
+      transform: ${(props) => (props.open ? 'rotate(45deg)' : 'rotate(0)')};
+    }
+    &:nth-child(2) {
+      transform: ${(props) => (props.open ? 'translateX(100%)' : 'translateX(0)')};
+      opacity: ${(props) => (props.open ? 0 : 1)};
+    }
+    &:nth-child(3) {
+      transform: ${(props) => (props.open ? 'rotate(-45deg)' : 'rotate(0)')};
+    }
+  }
+
+  @media (max-width: 700px) {
+    display: flex;
+    flex-flow: column nowrap;
+
+    .hamburger {
+      transform-origin: 0;
+    }
+  }
+  @media (max-width: 1024px) {
+    display: flex;
+    flex-flow: column nowrap;
+
+    .hamburger {
+      transform-origin: 0;
+    }
+  }
+`;
+
+const Div = styled.div`
+  opacity: 0.9;
+  position: absolute;
+
+  ul > li {
+    padding: 0.5rem;
+  }
+
+  .ul-inner li {
+    padding: 0.3rem;
+  }
+
+  .myhide {
+    display: none;
+  }
+
+  @media screen and (max-width: 724px) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: max-content;
+    padding-top: 20%;
+    background-color: #29ab6a;
+    display: ${(props) => (props.open ? 'block' : 'none')};
+
+    ul {
+      flex-direction: column;
+    }
+
+    .myclose {
+      display: none;
+    }
+  }
+`;
+
+const IMG = styled.div`
+  display: none;
+  @media screen and (max-width: 724px) {
+    padding-left: 4rem;
+    display: block;
+  }
+`;
 
 export const Header = () => {
   const dispatch = useDispatch();
@@ -64,94 +155,6 @@ export const Header = () => {
     setMenuOpen(false);
   };
 
-  const StyledBurger = styled.div`
-    position: absolute;
-    height: 2.8rem;
-    left: 0;
-    color: white;
-    border-radius: 0.3rem;
-    z-index: 999999;
-    display: none;
-
-    .hamburger {
-      width: 2.6rem;
-      height: 0.5rem;
-      background-color: ${({open}) => (open ? '#ccc' : '#333')};
-      border-radius: 10px;
-      transform-origin: 4.5px;
-      transition: all 0.3s linear;
-      background-color: white;
-      margin: 0.4rem;
-      &:nth-child(1) {
-        transform: ${({open}) => (open ? 'rotate(45deg)' : 'rotate(0)')};
-      }
-      &:nth-child(2) {
-        transform: ${({open}) => (open ? 'translateX(100%)' : 'translateX(0)')};
-        opacity: ${({open}) => (open ? 0 : 1)};
-      }
-      &:nth-child(3) {
-        transform: ${({open}) => (open ? 'rotate(-45deg)' : 'rotate(0)')};
-      }
-    }
-
-    @media (max-width: 700px) {
-      display: flex;
-      flex-flow: column nowrap;
-
-      .hamburger {
-        transform-origin: 0;
-      }
-    }
-  `;
-
-  const Div = styled.div`
-    display: block;
-    opacity: 0.9;
-    position: absolute;
-
-    ul > li {
-      padding: 0.5rem;
-    }
-
-    .ul-inner li {
-      padding: 0.3rem;
-    }
-
-    .myhide {
-      display: none;
-    }
-
-    .my-nav-toggle {
-    }
-
-    @media screen and (max-width: 724px) {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: max-content;
-      padding-top: 20%;
-      color: white;
-      display: ${(isopen) => (!isopen ? 'block' : 'none')};
-      background-color: red;
-
-      ul {
-        flex-direction: column;
-      }
-
-      .myclose {
-        display: none;
-      }
-    }
-  `;
-
-  const IMG = styled.div`
-    display: none;
-    @media screen and (max-width: 724px) {
-      padding-left: 4rem;
-      display: block;
-    }
-  `;
-
   return (
     <div className="nk-header nk-header-fluid nk-header-fixed is-theme  nk-header-fixed">
       <div className="container-xl wide-lg">
@@ -163,20 +166,20 @@ export const Header = () => {
           </StyledBurger>
 
           <IMG className="nk-header-brand myhide">
-            <NavLink to="/" className="logo-link">
-              <img width={100} src={logo} alt="logo" className="logo-light logo-img" />
+            <NavLink to="/dashboard#" className="logo-link">
+              <img width={90} src={logo} alt="logo" className="logo-light logo-img" />
               <span className="nio-version text-white">Dashboard</span>
             </NavLink>
           </IMG>
 
           {/* ====================================================== */}
-          <Div isopen={menuOpen}>
+          <Div open={menuOpen}>
             <ul
               className="nk-menu nk-menu-main "
               style={{display: 'flex', alignItems: 'center', padding: '0'}}>
               <li className="myclose" style={{paddingRight: '3rem'}}>
                 <NavLink to="/dashboard#">
-                  <img width={100} src={logo} alt="logo" />
+                  <img width={90} src={logo} alt="logo" />
                   <span className="nio-version text-white">Dashboard</span>
                 </NavLink>
               </li>
@@ -279,19 +282,24 @@ export const Header = () => {
 
                   <div className="dropdown-body">
                     <div className="nk-notification">
-                      {activity?.slice(-5).map((item) => (
-                        <div className="nk-notification-item dropdown-inner">
-                          <div className="nk-notification-icon">
-                            <em className="icon icon-circle bg-warning-dim ni ni-curve-down-right" />
-                          </div>
-                          <div className="nk-notification-content">
-                            <div className="nk-notification-text">
-                              You have requested a <span>{item.title} </span>
-                            </div>
-                            <div className="nk-notification-time">{item.createdAt}</div>
-                          </div>
-                        </div>
-                      ))}
+                      {activity.length === 0 ? (
+                        <p>No activity data available.</p>
+                      ) : (
+                        // activity?.map((item) => (
+                        //   <div className="nk-notification-item dropdown-inner">
+                        //     <div className="nk-notification-icon">
+                        //       <em className="icon icon-circle bg-warning-dim ni ni-curve-down-right" />
+                        //     </div>
+                        //     <div className="nk-notification-content">
+                        //       <div className="nk-notification-text">
+                        //         You have requested a <span>{item?.title} </span>
+                        //       </div>
+                        //       <div className="nk-notification-time">{item?.createdAt}</div>
+                        //     </div>
+                        //   </div>
+                        // ))
+                        <p>error fetching activites</p>
+                      )}
                     </div>
                   </div>
 

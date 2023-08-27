@@ -21,6 +21,7 @@ import {Support} from './pages/Dashboard/Support';
 
 export const AuthorizedApp = () => {
   const routes = useRoutes([
+    {path: '/', element: <DHome />},
     {path: '/dashboard', element: <DHome />},
     {path: '/dashboard/invest', element: <Invest />},
     {path: '/dashboard/welcome', element: <Welcome />},
@@ -39,7 +40,6 @@ export const AuthorizedApp = () => {
     {path: '/dashboard/investing', element: <Investment />},
     {path: '/dashboard/successful', element: <SuccessMessage />},
     {path: '/dashboard/support', element: <Support />},
-    {path: '*', element: <DHome />},
   ]);
 
   return (

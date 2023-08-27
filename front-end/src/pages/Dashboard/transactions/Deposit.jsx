@@ -190,6 +190,7 @@ export const Deposit = () => {
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
+                                width: '55%',
                               }}>
                               <label style={{fontSize: '2.2rem', paddingTop: '.5rem'}}>$</label>
                               <input
@@ -213,7 +214,7 @@ export const Deposit = () => {
                                 borderRadius: '.5rem',
                                 border: 'none',
                                 marginTop: '1rem',
-                                background: 'rgb(43,55,130)',
+                                background: 'green',
                                 color: 'white',
                               }}>
                               Process Deposit
@@ -238,9 +239,17 @@ export const Deposit = () => {
                               </div>
                             </div>
                             <div className="nk-refwg-action">
-                              <NavLink onClick={handleShow} className="btn btn-primary">
+                              <button
+                                onClick={handleShow}
+                                style={{
+                                  color: 'white',
+                                  border: 'none',
+                                  padding: '0 0.5rem',
+                                  borderRadius: '.4rem',
+                                  backgroundColor: 'green',
+                                }}>
                                 Invite
-                              </NavLink>
+                              </button>
 
                               <div
                                 className="invite_links"
@@ -404,8 +413,6 @@ export const Deposit = () => {
               </div>
             </div>
           </div>
-
-          <Footer />
         </div>
       </div>
     </div>
