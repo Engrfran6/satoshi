@@ -34,10 +34,6 @@ export const userSlice = createSlice({
     resetUser(state) {
       state.user = undefined;
       localStorage.setItem('persist:root', '');
-      state.user.token = undefined;
-      state.user.investments = [];
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
     },
   },
 });
