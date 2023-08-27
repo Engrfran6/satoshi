@@ -56,7 +56,8 @@ const StyledBurger = styled.div`
 `;
 
 const Div = styled.div`
-  opacity: 0.9;
+  opacity: 0.95;
+  border-left: 3.3rem solid green;
   position: absolute;
 
   ul > li {
@@ -77,7 +78,7 @@ const Div = styled.div`
     left: 0;
     height: max-content;
     padding-top: 20%;
-    background-color: #29ab6a;
+    background-color: white;
     display: ${(props) => (props.open ? 'block' : 'none')};
 
     ul {
@@ -186,7 +187,7 @@ export const Header = () => {
 
               <li className="nk-menu-item ">
                 <NavLink to="/dashboard#" className="nk-menu-link" onClick={handleMenuItemClick}>
-                  <span className="nk-menu-text text-white">Overview</span>
+                  <span className="nk-menu-text ">Overview</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item">
@@ -194,7 +195,7 @@ export const Header = () => {
                   to="/dashboard/schemes"
                   className="nk-menu-link"
                   onClick={handleMenuItemClick}>
-                  <span className="nk-menu-text text-white">MY Plan</span>
+                  <span className="nk-menu-text ">MY Plan</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item">
@@ -202,7 +203,7 @@ export const Header = () => {
                   to="/dashboard/invest"
                   className="nk-menu-link"
                   onClick={handleMenuItemClick}>
-                  <span className="nk-menu-text text-white">Invest</span>
+                  <span className="nk-menu-text ">Invest</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item">
@@ -210,12 +211,12 @@ export const Header = () => {
                   to="/dashboard/profile"
                   className="nk-menu-link"
                   onClick={handleMenuItemClick}>
-                  <span className="nk-menu-text text-white">Profile</span>
+                  <span className="nk-menu-text ">Profile</span>
                 </NavLink>
               </li>
               <li className="nk-menu-item active has-sub">
                 <NavLink className="nk-menu-link nk-menu-toggle" onClick={handleMenuItemClick}>
-                  <span className="nk-menu-text text-white">Pages</span>
+                  <span className="nk-menu-text ">Pages</span>
                 </NavLink>
                 <ul className="nk-menu-sub ul-inner">
                   <li className="nk-menu-item">
@@ -223,7 +224,7 @@ export const Header = () => {
                       to="/dashboard/welcome"
                       className="nk-menu-link"
                       onClick={handleMenuItemClick}>
-                      <span className="nk-menu-text text-white">Welcome / Intro</span>
+                      <span className="nk-menu-text ">Welcome / Intro</span>
                     </NavLink>
                   </li>
 
@@ -232,7 +233,7 @@ export const Header = () => {
                       to="/dashboard/scheme-details"
                       className="nk-menu-link"
                       onClick={handleMenuItemClick}>
-                      <span className="nk-menu-text text-white">Investment Details</span>
+                      <span className="nk-menu-text ">Investment Details</span>
                     </NavLink>
                   </li>
                   <li className="nk-menu-item">
@@ -240,7 +241,7 @@ export const Header = () => {
                       to="/dashboard/kyc-application"
                       className="nk-menu-link"
                       onClick={handleMenuItemClick}>
-                      <span className="nk-menu-text text-white">KYC - Get Started</span>
+                      <span className="nk-menu-text ">KYC - Get Started</span>
                     </NavLink>
                   </li>
                   <li className="nk-menu-item">
@@ -248,7 +249,7 @@ export const Header = () => {
                       to="/dashboard/kyc-form"
                       className="nk-menu-link"
                       onClick={handleMenuItemClick}>
-                      <span className="nk-menu-text text-white">KYC - Application Form</span>
+                      <span className="nk-menu-text ">KYC - Application Form</span>
                     </NavLink>
                   </li>
                   <li className="nk-menu-item">
@@ -256,7 +257,7 @@ export const Header = () => {
                       to="/dashboard/"
                       className="nk-menu-link"
                       onClick={handleMenuItemClick}>
-                      <span className="nk-menu-text text-white">
+                      <span className="nk-menu-text ">
                         Main Dashboard <em className="icon ni ni-external" />
                       </span>
                     </NavLink>

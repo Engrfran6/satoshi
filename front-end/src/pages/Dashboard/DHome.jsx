@@ -350,12 +350,17 @@ export const DHome = () => {
                           </div>
                         </div>
                         <div className="nk-refwg-action">
-                          <NavLink
+                          <button
                             onClick={handleShow}
-                            to="/dashboard#"
-                            className="btn btn-primary">
+                            style={{
+                              color: 'white',
+                              border: 'none',
+                              padding: '0 0.5rem',
+                              borderRadius: '.4rem',
+                              backgroundColor: 'green',
+                            }}>
                             Invite
-                          </NavLink>
+                          </button>
 
                           <div
                             className="invite_links"
