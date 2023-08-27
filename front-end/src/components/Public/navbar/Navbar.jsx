@@ -119,7 +119,7 @@ const Header = styled.nav`
       z-index: 99;
       opacity: 0.9;
 
-      display: ${(props) => (props.isOpen ? 'block' : 'none')};
+      display: ${(props) => (props.open ? 'block' : 'none')};
       transition: opacity 0.3s ease, transform 0.3s ease;
 
       ul {
@@ -187,21 +187,21 @@ const StyledBurger = styled.div`
   .hamburger {
     width: 2.4rem;
     height: 0.25rem;
-    background-color: ${({open}) => (open ? '#ccc' : '#333')};
+    background-color: ${(props) => (props.open ? '#ccc' : '#333')};
     border-radius: 10px;
     transform-origin: 4.5px;
     transition: all 0.3s linear;
     background-color: green;
     margin: 0.4rem;
     &:nth-child(1) {
-      transform: ${({open}) => (open ? 'rotate(45deg)' : 'rotate(0)')};
+      transform: ${(props) => (props.open ? 'rotate(45deg)' : 'rotate(0)')};
     }
     &:nth-child(2) {
-      transform: ${({open}) => (open ? 'translateX(100%)' : 'translateX(0)')};
-      opacity: ${({open}) => (open ? 0 : 1)};
+      transform: ${(props) => (props.open ? 'translateX(100%)' : 'translateX(0)')};
+      opacity: ${(props) => (props.open ? 0 : 1)};
     }
     &:nth-child(3) {
-      transform: ${({open}) => (open ? 'rotate(-45deg)' : 'rotate(0)')};
+      transform: ${(props) => (props.open ? 'rotate(-45deg)' : 'rotate(0)')};
     }
   }
 
@@ -252,7 +252,7 @@ export const Navbar = () => {
   };
 
   return (
-    <Header isOpen={open}>
+    <Header open={open}>
       <div className="nav-left">
         <NavLink className="logo" to="/">
           <img className="img-logo" width={130} src={logo} alt="" />
@@ -268,56 +268,32 @@ export const Navbar = () => {
       <div className="nav-center">
         <ul className={clicked ? 'clicked' : ''}>
           <li className="list-items">
-            <NavLink
-              activeClassName="active"
-              className="list-item"
-              to="/"
-              onClick={handleMenuItemClick}>
+            <NavLink className="list-item" to="/" onClick={handleMenuItemClick}>
               Home
             </NavLink>
           </li>
           <li className="list-items">
-            <NavLink
-              activeClassName="active"
-              className="list-item"
-              to="/crypto"
-              onClick={handleMenuItemClick}>
+            <NavLink className="list-item" to="/crypto" onClick={handleMenuItemClick}>
               Crypto Assets
             </NavLink>
           </li>
           <li className="list-items">
-            <NavLink
-              activeClassName="active"
-              className="list-item"
-              to="/realestate"
-              onClick={handleMenuItemClick}>
+            <NavLink className="list-item" to="/realestate" onClick={handleMenuItemClick}>
               Real Estate
             </NavLink>
           </li>
           <li className="list-items">
-            <NavLink
-              activeClassName="active"
-              className="list-item"
-              to="/loan"
-              onClick={handleMenuItemClick}>
+            <NavLink className="list-item" to="/loan" onClick={handleMenuItemClick}>
               Crypto Loans
             </NavLink>
           </li>
           <li className="list-items">
-            <NavLink
-              activeClassName="active"
-              className="list-item"
-              to="/pricing"
-              onClick={handleMenuItemClick}>
+            <NavLink className="list-item" to="/pricing" onClick={handleMenuItemClick}>
               Pricing
             </NavLink>
           </li>
           <li className="list-items">
-            <NavLink
-              activeClassName="active"
-              className="list-item"
-              to="/company"
-              onClick={handleMenuItemClick}>
+            <NavLink className="list-item" to="/company" onClick={handleMenuItemClick}>
               Company
             </NavLink>
             <span

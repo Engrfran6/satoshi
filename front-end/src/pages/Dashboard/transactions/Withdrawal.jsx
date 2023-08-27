@@ -110,7 +110,7 @@ export const Withdrawal = () => {
                           color: 'red',
                           fontSize: '1rem',
                         }}>
-                        You need to complete your kyc verification! to unable withdrawal
+                        Complete your kyc verification to enable withdrawal !!!
                       </div>
                     </div>
                   </div>
@@ -195,27 +195,36 @@ export const Withdrawal = () => {
                         <div className="nk-news-list">
                           {/* <NavLink className="nk-news-item" to ="/dashboard#"> */}
 
-                          <form onSubmit={handleSubmit} style={{width: '30%', margin: '0 auto'}}>
+                          <form
+                            onSubmit={handleSubmit}
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'column',
+                              width: '100%',
+                              alignItems: 'start',
+                              justifyContent: 'center',
+                              // margin: '0 auto',
+                            }}>
                             <label>Withdrawal:</label>
                             <div
                               style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center',
+                                // justifyContent: 'center',
+                                width: '55%',
                               }}>
-                              <label style={{fontSize: '2.2rem', paddingTop: '.5rem'}}>$</label>
+                              <label style={{fontSize: '2rem', paddingTop: '.5rem'}}>$</label>
                               <input
                                 style={{
-                                  fontSize: '1.2rem',
+                                  fontSize: '.9rem',
                                   border: 'none',
                                   borderBottom: '2px solid grey',
-                                  width: '100%',
                                   height: '5vh',
                                 }}
                                 type="text"
                                 value={withdrawal}
                                 onChange={handleInputChange}
-                                placeholder="Enter the withdrawal amount"
+                                placeholder="Withdrawal amount"
                               />
                             </div>
                             <p style={{color: user?.balance < parseFloat(withdrawal) ? 'red' : ''}}>
@@ -226,8 +235,8 @@ export const Withdrawal = () => {
                                 padding: '.5rem 1.5rem',
                                 borderRadius: '.5rem',
                                 border: 'none',
-                                marginTop: '1rem',
-                                background: 'rgb(43,55,130)',
+                                opacity: '.8',
+                                background: 'green',
                                 color: 'white',
                               }}>
                               Process Withdrawal
@@ -252,9 +261,17 @@ export const Withdrawal = () => {
                               </div>
                             </div>
                             <div className="nk-refwg-action">
-                              <NavLink onClick={handleShow} className="btn btn-primary">
+                              <button
+                                onClick={handleShow}
+                                style={{
+                                  color: 'white',
+                                  border: 'none',
+                                  padding: '0 0.5rem',
+                                  borderRadius: '.4rem',
+                                  backgroundColor: 'green',
+                                }}>
                                 Invite
-                              </NavLink>
+                              </button>
 
                               <div
                                 className="invite_links"
@@ -418,8 +435,6 @@ export const Withdrawal = () => {
               </div>
             </div>
           </div>
-
-          <Footer />
         </div>
       </div>
     </div>
