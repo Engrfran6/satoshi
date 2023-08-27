@@ -1,9 +1,10 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {userRequest} from '../../../components/Commons/HandleRequest';
+import {fetchData, userRequest} from '../../../components/Commons/HandleRequest';
 import {store} from '../../../redux/store';
 import {useDispatch, useSelector} from 'react-redux';
 import Swal from 'sweetalert2';
+import {useEffect} from 'react';
 
 export const Investment = () => {
   const token = useSelector((state) => state.user.user.token);
@@ -25,7 +26,7 @@ export const Investment = () => {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    if (selectedImage || thisDeposit) {
+    if (selectedImage) {
       const formData = new FormData();
       formData.append('photo', selectedImage);
       formData.append('depAmount', thisDeposit);
@@ -61,6 +62,26 @@ export const Investment = () => {
     });
   };
 
+  const [selectedPayment, setSelectedPayment] = useState(null);
+
+  const handlePaymentClick = (paymentType) => {
+    setSelectedPayment(paymentType);
+  };
+
+  const [wallets, setWallets] = useState([]);
+  useEffect(() => {
+    getWallets();
+  }, []);
+
+  const getWallets = async () => {
+    try {
+      const response = await fetchData('/all-payment-options');
+      setWallets(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   return (
     <div style={{paddingTop: '4rem'}}>
       <div className="nk-content nk-content-lg nk-content-fluid">
@@ -82,8 +103,9 @@ export const Investment = () => {
                   width: '100%',
                   textAlign: 'center',
                   margin: '3rem 0',
+                  borderRadius: '1rem',
                 }}>
-                <label>Deposit amount: $ {thisDeposit}</label>
+                <label style={{fontSize: '1.9rem'}}>Deposit amount: $ {thisDeposit}</label>
               </div>
 
               <form
@@ -96,18 +118,58 @@ export const Investment = () => {
                 onSubmit={handleUpload}>
                 <div>
                   <div>
-                    <label>PAY TO:</label>
+                    <h2>Select Payment Options</h2>
+                    <ul style={{display: 'flex', gap: '5%'}}>
+                      {Object.keys(wallets).map((paymentType) => (
+                        <li key={paymentType}>
+                          <p
+                            onClick={() => handlePaymentClick(paymentType)}
+                            style={{
+                              padding: '.5rem 3rem',
+                              color: 'white',
+                              backgroundColor: 'grey',
+                              fontSize: '1.6rem',
+                              border: 'none',
+                              borderRadius: '1rem',
+                              cursor: 'pointer',
+                            }}>
+                            {paymentType}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <br />
+                  <br />
+                  <div>
+                    <label style={{fontSize: '1.5rem'}}>PAY TO:</label>
                     <div
                       style={{
                         width: '100%',
-                        height: '10rem',
+                        height: '15rem',
                         marginBottom: '2rem',
-                        background: '',
-                      }}></div>
+                        border: '1px solid purple',
+                        fontSize: '1.8rem',
+                        padding: '.3rem 1rem',
+                        backgroundColor: 'white',
+                      }}>
+                      {selectedPayment && (
+                        <div>
+                          <p style={{textDecoration: 'underline', paddingBottom: '0.6rem '}}>
+                            {selectedPayment} deposit details :{' '}
+                          </p>
+                          <ul>
+                            {wallets[selectedPayment].map((payment) => (
+                              <li key={payment.payId}>{payment.name}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div
                     style={{
-                      width: '50%',
+                      width: '100%',
                       border: '1px solid purple',
                       contain: 'cover',
                     }}>

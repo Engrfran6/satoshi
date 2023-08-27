@@ -4,19 +4,20 @@ import {store} from '../../redux/store';
 import {calculateEndDate} from './Store/investmentDates';
 import {setInvestAmount} from '../../redux/user-slice';
 import {useDispatch, useSelector} from 'react-redux';
-import {userRequest} from '../../components/Commons/HandleRequest';
+import {fetchData, userRequest} from '../../components/Commons/HandleRequest';
 
 export const InvestForm = () => {
   const user = useSelector((state) => state.user.user.user);
   const token = useSelector((state) => state.user.user.token);
-
   let myPackage = store?.getState()?.user?.user?.selectedPackage || [];
+
   const dispatch = useDispatch();
 
   const [amount1, setAmount1] = useState(0);
   const [amount2, setAmount2] = useState(100);
   const navigate = useNavigate();
   const value = [100, 250, 500, 1000, 1500, 2000, 3000];
+
   const paymentOptions = [
     {name: 'STP wallet', walletBalance: user?.balance},
     {name: 'BTC wallet', walletBalance: 'not available'},

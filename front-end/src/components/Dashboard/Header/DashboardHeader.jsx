@@ -142,7 +142,7 @@ export const Header = () => {
           showConfirmButton: false,
           timer: 1500,
         }).then(() => {
-          window.location.replace('/');
+          window.location.replace('/login');
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         // Action cancelled, no action needed
@@ -167,7 +167,7 @@ export const Header = () => {
           </StyledBurger>
 
           <IMG className="nk-header-brand myhide">
-            <NavLink to="/dashboard#" className="logo-link">
+            <NavLink to="/dashboard" className="logo-link">
               <img width={90} src={logo} alt="logo" className="logo-light logo-img" />
               <span className="nio-version text-white">Dashboard</span>
             </NavLink>
@@ -179,14 +179,14 @@ export const Header = () => {
               className="nk-menu nk-menu-main "
               style={{display: 'flex', alignItems: 'center', padding: '0'}}>
               <li className="myclose" style={{paddingRight: '3rem'}}>
-                <NavLink to="/dashboard#">
+                <NavLink to="/dashboard">
                   <img width={90} src={logo} alt="logo" />
                   <span className="nio-version text-white">Dashboard</span>
                 </NavLink>
               </li>
 
               <li className="nk-menu-item ">
-                <NavLink to="/dashboard#" className="nk-menu-link" onClick={handleMenuItemClick}>
+                <NavLink to="/dashboard" className="nk-menu-link" onClick={handleMenuItemClick}>
                   <span className="nk-menu-text ">Overview</span>
                 </NavLink>
               </li>

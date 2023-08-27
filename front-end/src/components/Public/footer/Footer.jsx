@@ -76,10 +76,10 @@ export const Footer = () => {
             <h3 className="footer-title-style6">Get in Touch</h3>
             <ul className="footer-list-style3">
               <li>
-                <span class="d-inline-block vertical-align-top font-size18">
-                  <i class="fas fa-map-marker-alt"></i>
+                <span className="d-inline-block vertical-align-top font-size18">
+                  <i className="fas fa-map-marker-alt"></i>
                 </span>
-                <span class="d-inline-block width-85 vertical-align-top padding-10px-left">
+                <span className="d-inline-block width-85 vertical-align-top padding-10px-left">
                   27-29, LONDON, UK
                 </span>
               </li>
