@@ -10,14 +10,9 @@ import {fetchData} from '../../components/Commons/HandleRequest';
 export const DHome = () => {
   const [recipientEmail, setRecipientEmail] = useState();
   const [show, setShow] = useState(false);
-  let data = useSelector((state) => state?.user?.user?.user);
-  const [user, setUser] = useState();
+  let user = useSelector((state) => state?.user?.user?.user);
   const [showInner, setShowInner] = useState(false);
   const token = useSelector((state) => state?.user?.user?.token);
-
-  useEffect(() => {
-    setUser(data);
-  }, [user]);
 
   const [investments, setInvestments] = useState([]);
   let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
@@ -97,7 +92,7 @@ export const DHome = () => {
                 <div className="nk-news card card-bordered">
                   <div className="card-inner">
                     <div className="nk-news-list">
-                      <NavLink className="nk-news-item" to="/dashboard#">
+                      <NavLink className="nk-news-item" to="/dashboard">
                         <div className="nk-news-icon">
                           <em className="icon ni ni-card-view" />
                         </div>
@@ -278,7 +273,7 @@ export const DHome = () => {
                             </NavLink>
                             <div className="cta-extra">
                               Earn up to 25${' '}
-                              <NavLink to="/dashboard#" className="link link-dark">
+                              <NavLink to="/dashboard" className="link link-dark">
                                 Refer friend!
                               </NavLink>
                             </div>
@@ -326,8 +321,8 @@ export const DHome = () => {
                               See all Investment
                             </NavLink>
                             <div className="cta-extra">
-                              Check out{' '}
-                              <NavLink to="/dashboard#" className="link link-dark">
+                              Check out
+                              <NavLink to="/dashboard" className="link link-dark">
                                 Analytic Report
                               </NavLink>
                             </div>
