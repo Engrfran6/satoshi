@@ -39,6 +39,7 @@ export const AuthorizedApp = () => {
     {path: '/dashboard/investing', element: <Investment />},
     {path: '/dashboard/successful', element: <SuccessMessage />},
     {path: '/dashboard/support', element: <Support />},
+    {path: '*', element: <DHome />},
   ]);
 
   return (
