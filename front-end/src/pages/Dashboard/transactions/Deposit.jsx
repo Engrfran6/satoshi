@@ -282,7 +282,7 @@ export const Deposit = () => {
                                 <p
                                   onClick={handleShowInner}
                                   style={{
-                                    backgroundColor: 'rgb(43,55,130)',
+                                    backgroundColor: 'green',
                                     color: 'white',
                                     cursor: 'pointer',
                                     fontWeight: 'bolder',
@@ -323,7 +323,7 @@ export const Deposit = () => {
                                       style={{
                                         border: 'none',
                                         padding: '.3rem .4rem',
-                                        backgroundColor: 'rgb(43,55,130)',
+                                        backgroundColor: 'green',
                                         color: 'white',
                                         fontWeight: 'bolder',
                                         borderRadius: '.4rem',
