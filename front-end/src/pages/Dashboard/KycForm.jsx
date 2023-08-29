@@ -129,7 +129,7 @@ export const KycForm = () => {
                   <div className="nk-block-des">
                     <p>
                       To comply with regulation each participant will have to go through indentity
-                      verification (KYC/AML) to prevent fraud causes.{' '}
+                      verification (KYC/AML) to prevent fraud causes.
                     </p>
                   </div>
                 </div>

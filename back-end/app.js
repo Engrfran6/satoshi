@@ -8,10 +8,10 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const path = require('path');
+// const path = require('path');
 const app = express();
 
-app.use(express.static(path.join(__dirname + '/public')));
+// app.use(express.static(path.join(__dirname + '/public')));
 
 app.use(cors());
 app.use(logger('dev'));
@@ -47,7 +47,6 @@ routerConfig.forEach((rou) => {
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  console.log('process.env.PORT ===================', req.query)
   next(createError(404));
 });
 
