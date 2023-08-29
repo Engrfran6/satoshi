@@ -12,12 +12,17 @@ export const userSlice = createSlice({
     setToken(state, action) {
       state.user.token = action.payload;
     },
-    setInvestments(state, action) {
-      state.user.investments = action.payload;
-    },
     clearToken: (state) => {
       state = null;
       return state;
+    },
+    resetUser(state) {
+      state.user = undefined;
+      localStorage.setItem('persist:root', '');
+    },
+
+    setInvestments(state, action) {
+      state.user.investments = action.payload;
     },
     setSelectedPackage(state, action) {
       state.user.selectedPackage = action.payload;
@@ -30,10 +35,6 @@ export const userSlice = createSlice({
     },
     setSelectedDepositAmount(state, action) {
       state.user.selectedDepositAmount = action.payload;
-    },
-    resetUser(state) {
-      state.user = undefined;
-      localStorage.setItem('persist:root', '');
     },
   },
 });

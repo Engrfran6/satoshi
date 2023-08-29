@@ -142,7 +142,7 @@ export const Header = () => {
           showConfirmButton: false,
           timer: 1500,
         }).then(() => {
-          window.location.replace('/login');
+          window.location.replace('/');
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         // Action cancelled, no action needed
