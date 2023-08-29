@@ -183,7 +183,7 @@ export const ProfileSetting = () => {
                     </div>
                   </div>
                 </div>
-                <div className="nk-block-head nk-block-head-sm">
+                {/* <div className="nk-block-head nk-block-head-sm">
                   <div className="nk-block-head-content">
                     <div className="nk-block-title-group">
                       <h6 className="nk-block-title title">Recent Activity</h6>
@@ -195,10 +195,10 @@ export const ProfileSetting = () => {
                       <p>This information about the last login activity on your account.</p>
                     </div>
                   </div>
-                </div>
-                <div className="card card-bordered">
-                  <table className="table table-ulogs">
-                    <thead className="table-light">
+                </div> */}
+                {/* <div className="card card-bordered">
+                  <table className="table table-ulogs"> */}
+                {/* <thead className="table-light">
                       <tr>
                         <th className="tb-col-os">
                           <span className="overline-title">
@@ -215,8 +215,8 @@ export const ProfileSetting = () => {
                           <span className="overline-title">&nbsp;</span>
                         </th>
                       </tr>
-                    </thead>
-                    <tbody>
+                    </thead> */}
+                {/* <tbody>
                       <tr>
                         <td className="tb-col-os">Chrome on Window</td>
                         <td className="tb-col-ip">
@@ -259,9 +259,9 @@ export const ProfileSetting = () => {
                           </NavLink>
                         </td>
                       </tr>
-                    </tbody>
-                  </table>
-                </div>
+                    </tbody> */}
+                {/* </table>
+                </div> */}
               </div>
             </div>
           </div>

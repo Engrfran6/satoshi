@@ -5,6 +5,7 @@ import {store} from '../../../redux/store';
 import {useDispatch, useSelector} from 'react-redux';
 import Swal from 'sweetalert2';
 import {useEffect} from 'react';
+import axios from 'axios';
 
 export const Investment = () => {
   const token = useSelector((state) => state.user.user.token);
@@ -13,33 +14,113 @@ export const Investment = () => {
   let myDeposit = store?.getState()?.user?.user?.selectedPaymentOption || [];
   let user = store?.getState()?.user?.user?.user || [];
   let tDeposit = store?.getState()?.user?.user?.selectedPaymentOption || [];
+  const url = import.meta.env.VITE_API_BASE_URL;
 
   const deposit = myDeposit.toLocaleString();
   const thisDeposit = tDeposit.toLocaleString();
 
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState('');
 
   const handleImageChange = (event) => {
-    const image = event.target.files[0];
-    setSelectedImage(URL.createObjectURL(image));
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setImageUrl(event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    if (selectedImage) {
-      const formData = new FormData();
-      formData.append('photo', selectedImage);
-      formData.append('depAmount', thisDeposit);
-      try {
-        const response = await userRequest('/deposit/create', {depAmount: thisDeposit}, token);
-        if (response.status === 'success') {
-          successAlert();
-        }
-      } catch (error) {
-        showErrorAlert();
-      }
+    const formData = new FormData();
+    formData.append('photo', selectedFile);
+
+    try {
+      const response = await axios.post(`${url}/proof/image`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('Image uploaded:', response.data);
+    } catch (error) {
+      console.error('Error uploading image:', error);
     }
   };
+
+  // const [imageFile, setImageFile] = useState(null);
+  // const [imageUrl, setImageUrl] = useState('');
+
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setImageFile(file);
+
+  //     // Display the selected image
+  //     const reader = new FileReader();
+  //     reader.onload = (event) => {
+  //       setImageUrl(event.target.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   console.log('data=======', imageFile);
+  //   console.log('data=======', thisDeposit);
+  //   const formData = new FormData();
+  //   formData.append('photo', imageFile);
+  //   formData.append('depAmount', thisDeposit);
+
+  //   try {
+  //     console.log('deposit=============', formData);
+  //     const response = await userRequest(
+  //       '/deposit/create',
+  //       {
+  //         method: 'POST',
+  //         body: formData,
+  //       },
+  //       token
+  //     );
+
+  //     if (response.status === 'success') {
+  //       successAlert();
+  //     } else {
+  //       showErrorAlert();
+  //     }
+  //   } catch (error) {
+  //     networkError();
+  //   }
+  // };
+
+  // const [selectedImage, setSelectedImage] = useState(null);
+
+  // const handleImageChange = (event) => {
+  //   const image = event.target.files[0];
+  //   setSelectedImage(URL.createObjectURL(image));
+  // };
+
+  // const handleUpload = async (e) => {
+  //   e.preventDefault();
+  //   if (selectedImage) {
+  //     const formData = new FormData();
+  //     formData.append('photo', selectedImage);
+  //     formData.append('depAmount', thisDeposit);
+  //     try {
+  //       const response = await userRequest('/deposit/create', {depAmount: thisDeposit}, token);
+  //       if (response.status === 'success') {
+  //         successAlert();
+  //       }
+  //     } catch (error) {
+  //       showErrorAlert();
+  //     }
+  //   }
+  // };
 
   const successAlert = () => {
     Swal.fire({
@@ -54,11 +135,20 @@ export const Investment = () => {
 
   const showErrorAlert = () => {
     Swal.fire({
-      title: 'Deposit failed',
+      title: 'Error proccessing request',
       text: 'Please try again! !',
       icon: 'error',
       confirmButtonText: 'OK',
       confirmButtonColor: 'red',
+    });
+  };
+  const networkError = () => {
+    Swal.fire({
+      title: 'Network Error!',
+      text: 'Please try again! !',
+      icon: 'error',
+
+      timer: 2000,
     });
   };
 
@@ -97,15 +187,14 @@ export const Investment = () => {
               <div
                 style={{
                   backgroundColor: 'rgb(20,194,142)',
-                  fontSize: '1.3rem',
                   color: 'white',
-                  padding: '2rem 1rem',
+                  padding: '1rem 1rem',
                   width: '100%',
                   textAlign: 'center',
                   margin: '3rem 0',
                   borderRadius: '1rem',
                 }}>
-                <label style={{fontSize: '1.9rem'}}>Deposit amount: $ {thisDeposit}</label>
+                <label style={{fontSize: '1.3rem'}}>Deposit amount: $ {thisDeposit}</label>
               </div>
 
               <form
@@ -114,23 +203,22 @@ export const Investment = () => {
                   flexDirection: 'column',
                   alignItems: 'center',
                   justifyContent: 'center',
-                }}
-                onSubmit={handleUpload}>
+                }}>
                 <div>
                   <div>
-                    <h2>Select Payment Options</h2>
-                    <ul style={{display: 'flex', gap: '5%'}}>
+                    <h4>Select Payment Options</h4>
+                    <ul style={{display: 'flex', flexFlow: 'wrap', gap: '1rem'}}>
                       {Object.keys(wallets).map((paymentType) => (
                         <li key={paymentType}>
                           <p
                             onClick={() => handlePaymentClick(paymentType)}
                             style={{
-                              padding: '.5rem 3rem',
+                              padding: '.06rem 1.1rem',
                               color: 'white',
                               backgroundColor: 'grey',
-                              fontSize: '1.6rem',
+                              fontSize: '1.2rem',
                               border: 'none',
-                              borderRadius: '1rem',
+                              borderRadius: '.5rem',
                               cursor: 'pointer',
                             }}>
                             {paymentType}
@@ -140,17 +228,16 @@ export const Investment = () => {
                     </ul>
                   </div>
                   <br />
-                  <br />
                   <div>
                     <label style={{fontSize: '1.5rem'}}>PAY TO:</label>
                     <div
                       style={{
                         width: '100%',
-                        height: '15rem',
+                        height: 'max-content',
                         marginBottom: '2rem',
-                        border: '1px solid purple',
-                        fontSize: '1.8rem',
-                        padding: '.3rem 1rem',
+                        border: '1px solid white',
+                        fontSize: '1.1rem',
+                        padding: '.3rem .7rem',
                         backgroundColor: 'white',
                       }}>
                       {selectedPayment && (
@@ -173,22 +260,19 @@ export const Investment = () => {
                       border: '1px solid purple',
                       contain: 'cover',
                     }}>
-                    {selectedImage && <img src={selectedImage} alt="Uploaded" />}
+                    {imageUrl && <img src={imageUrl} alt="Uploaded" />}
                   </div>
-                  <input
-                    type="file"
-                    onChange={handleImageChange}
-                    placeholder="Upload payment receipt"
-                  />
+                  <input type="file" onChange={handleImageChange} />
                   <div style={{marginTop: '2rem', width: '100%'}}>
                     Click
                     <button
                       style={{margin: '0 .36rem'}}
-                      disabled={!selectedImage}
-                      className="btn btn-primary">
+                      disabled={!imageUrl}
+                      className="btn btn-primary"
+                      onClick={handleUpload}>
                       here
                     </button>
-                    to comfirm that your completed the payment of ${' '}
+                    to comfirm that your completed the payment of $
                     <p style={{color: 'green', display: 'inline-block'}}>{thisDeposit}</p> to your
                     wallet.
                   </div>

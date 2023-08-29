@@ -1,6 +1,49 @@
+import {useSelector} from 'react-redux';
 import {NavLink} from 'react-router-dom';
+import {fetchData} from '../../components/Commons/HandleRequest';
+import {useEffect, useState} from 'react';
+import {store} from '../../redux/store';
+import {stringToNumber} from './Store/convertStringToNumber';
+import {sumOfArray} from './calcAccountValues/Summation';
 
 export const SchemeDetails = () => {
+  let user = useSelector((state) => state?.user?.user?.user);
+  const token = useSelector((state) => state?.user?.user?.token);
+
+  const [investments, setInvestments] = useState([]);
+  let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
+  useEffect(() => {
+    getInvestment();
+  }, []);
+
+  const getInvestment = async () => {
+    try {
+      const response = await fetchData('/investment', token);
+      setInvestments(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const balance = stringToNumber(user?.balance);
+  const totalInvested = sumOfArray(investments, 'invAmount');
+  const totalProfits = sumOfArray(investments, 'dailyProfit');
+  const balanceInAccount = balance + totalInvested + totalProfits;
+
+  // ===============not working yet=============
+  const referalBonus = investments.reduce((total, document) => {
+    return total + (document.referalBonus || 0);
+  }, 0);
+  const rewards = investments.reduce((total, document) => {
+    return total + (document.referalBonus || 0);
+  }, 0);
+  const monthlyProfit = sumOfArray(investments, 'monthlyProfit');
+  const Total = monthlyProfit + referalBonus + rewards;
+  // ===========================================
+
+  const totalActiveInv = investments.length ? investments.length : 0;
+  const totalExpiredInv = expiredInvestments.length ? expiredInvestments.length : 0;
+
   return (
     <>
       <div className="nk-content nk-content-lg nk-content-fluid">
@@ -17,22 +60,44 @@ export const SchemeDetails = () => {
                   </div>
                   <div className="nk-block-between-md g-4">
                     <div className="nk-block-head-content">
-                      <h2 className="nk-block-title fw-normal">Silver - Daily 4.76% for 21 Days</h2>
+                      <h2 className="nk-block-title fw-normal">
+                        {investments[0]?.map((item, index) => (
+                          <h2 key={index}>
+                            <span className="item-label">
+                              <NavLink href="/dashboard/schemes">{item.package.name}</NavLink>
+                              <small>
+                                - {item.package.profitRate}% for {item.package.duration} Days
+                              </small>
+                            </span>
+                          </h2>
+                        ))}
+                      </h2>
                       <div className="nk-block-des">
                         <p>
-                          INV-498238 <span className="badge bg-outline bg-primary">Running</span>
+                          INV{investments[0]?._d?.substring(0, 5)}{' '}
+                          <span className="badge bg-outline bg-primary">
+                            {investments?.status == 'active' ? ' Running' : 'No Active Investment'}
+                          </span>
                         </p>
                       </div>
                     </div>
                     <div className="nk-block-head-content">
                       <ul className="nk-block-tools gx-3">
                         <li className="order-md-last">
-                          <NavLink to="/dashboard/scheme-details#" className="btn btn-danger">
-                            <em className="icon ni ni-cross" /> <span>Cancel this plan</span>{' '}
+                          <NavLink
+                            to="/dashboard/scheme-details#"
+                            className="btn btn-danger"
+                            style={{
+                              display: investments[0]?.status == 'active' ? 'block' : 'none',
+                            }}>
+                            <em className="icon ni ni-cross" /> <span>Cancel this plan</span>
                           </NavLink>
                         </li>
                         <li>
                           <NavLink
+                            style={{
+                              display: investments[0]?.status == 'active' ? 'block' : 'none',
+                            }}
                             to="/dashboard/scheme-details#"
                             className="btn btn-icon btn-light">
                             <em className="icon ni ni-reload" />
@@ -52,7 +117,7 @@ export const SchemeDetails = () => {
                           <div className="nk-iv-wg3-group flex-lg-nowrap gx-4">
                             <div className="nk-iv-wg3-sub">
                               <div className="nk-iv-wg3-amount">
-                                <div className="number">2,500.00</div>
+                                <div className="number">{totalInvested}</div>
                               </div>
                               <div className="nk-iv-wg3-subtitle">Invested Amount</div>
                             </div>
@@ -62,7 +127,8 @@ export const SchemeDetails = () => {
                               </span>
                               <div className="nk-iv-wg3-amount">
                                 <div className="number">
-                                  1,643.76 <span className="number-up">4.76 %</span>
+                                  {totalProfits}
+                                  <span className="number-up">--</span>
                                 </div>
                               </div>
                               <div className="nk-iv-wg3-subtitle">Profit Earned</div>
@@ -76,9 +142,8 @@ export const SchemeDetails = () => {
                             <div className="nk-iv-wg3-sub">
                               <div className="nk-iv-wg3-amount">
                                 <div className="number">
-                                  4,999.90{' '}
+                                  {totalInvested + totalProfits}
                                   <span className="number-down">
-                                    1017.14{' '}
                                     <em
                                       className="icon ni ni-info-fill"
                                       data-bs-toggle="tooltip"
@@ -165,7 +230,9 @@ export const SchemeDetails = () => {
                   </div>
                 </div>
               </div>
-              <div className="nk-block nk-block-lg">
+              {/* ============================================= */}
+
+              {/* <div className="nk-block nk-block-lg">
                 <div className="nk-block-head">
                   <h5 className="nk-block-title">Graph View</h5>
                 </div>
@@ -275,7 +342,9 @@ export const SchemeDetails = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
+
+              {/* =================================================== */}
               <div className="nk-block nk-block-lg">
                 <div className="nk-block-head">
                   <h5 className="nk-block-title">Transactions</h5>

@@ -1,6 +1,16 @@
 import {useState} from 'react';
+import {registerUser, updateUserData, userRequest} from '../../components/Commons/HandleRequest';
 
 export const KycForm = () => {
+  const [id, setId] = useState();
+  const [idFront, setIdFront] = useState(null);
+  const [frontUrl, setFrontUrl] = useState(null);
+  const [idBack, setIdBack] = useState(null);
+  const [backUrl, setBackUrl] = useState(null);
+  const [addressProof, setAddressProof] = useState(null);
+  const [addressUrl, setAddressUrl] = useState(null);
+  const [selfie, setSelfie] = useState(null);
+  const [selfieUrl, setSelfieUrl] = useState(null);
   const [formData, setFormData] = useState({
     fullName: '',
     occupation: '',
@@ -8,26 +18,53 @@ export const KycForm = () => {
     annualIncome: '',
     dateOfBirth: '',
     maritalStatus: '',
-    // ========
     address1: '',
     address2: '',
     city: '',
     state: '',
     nationality: '',
     zipCode: '',
-    // ========
-    idCardFront: null,
-    idCardBack: null,
-    proofOfAddress: null,
-    selfie: null,
+    idCardFront: idFront,
+    idCardBack: idBack,
+    proofOfAddress: addressProof,
+    selfie: selfie,
   });
 
-  const [uploadedImages, setUploadedImages] = useState({
-    idfront: null,
-    idback: null,
-    addressproof: null,
-    selfie: null,
-  });
+  const handleFrontId = (event) => {
+    const file1 = event.target.files[0];
+
+    if (file1) {
+      setIdFront(file1);
+      setFrontUrl(URL.createObjectURL(file1));
+    }
+  };
+
+  const handleBackId = (event) => {
+    const file2 = event.target.files[0];
+
+    if (file2) {
+      setIdBack(file2);
+      setBackUrl(URL.createObjectURL(file2));
+    }
+  };
+
+  const handleAddressProof = (event) => {
+    const file3 = event.target.files[0];
+
+    if (file3) {
+      setAddressProof(file3);
+      setAddressUrl(URL.createObjectURL(file3));
+    }
+  };
+
+  const handleSelfie = (event) => {
+    const file4 = event.target.files[0];
+
+    if (file4) {
+      setSelfie(file4);
+      setSelfieUrl(URL.createObjectURL(file4));
+    }
+  };
 
   const handleInputChange = (event) => {
     const {name, value} = event.target;
@@ -37,25 +74,25 @@ export const KycForm = () => {
     }));
   };
 
-  const handleFileUpload = (event) => {
-    const {name, files} = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: files[0],
-    }));
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    errorAlert();
-    console.log(formData);
-  };
+    const isFilesSelected = idFront && idBack && addressProof && selfie;
 
-  const renderImage = (image) => {
-    if (image) {
-      return <img src={URL.createObjectURL(image)} alt="ID Front" style={{maxWidth: '100%'}} />;
+    const isFormValid = Object.values(formData).every((value) => value !== '') && isFilesSelected;
+
+    try {
+      if (isFormValid) {
+        const response = registerUser('/auth/register', formData);
+        if (response.status == 'success') {
+          successAlert();
+        } else console.log('All fields are required!');
+      } else {
+        errorAlert();
+      }
+    } catch (error) {
+      console.log(error);
     }
-    return null;
   };
 
   const successAlert = () => {
@@ -134,7 +171,7 @@ export const KycForm = () => {
                               <input
                                 type="text"
                                 className="form-control"
-                                name="firstName"
+                                name="fullName"
                                 value={formData.fullName}
                                 onChange={handleInputChange}
                               />
@@ -170,7 +207,7 @@ export const KycForm = () => {
                               <input
                                 type="text"
                                 className="form-control"
-                                name="occupation"
+                                name="incomeSource"
                                 value={formData.incomeSource}
                                 onChange={handleInputChange}
                               />
@@ -393,7 +430,10 @@ export const KycForm = () => {
                             data-title="Passport"
                             defaultChecked=""
                           />
-                          <label className="nk-kycfm-label" htmlFor="passport">
+                          <label
+                            className="nk-kycfm-label"
+                            htmlFor="passport"
+                            onClick={() => setId('passport')}>
                             <span className="nk-kycfm-label-icon">
                               <span className="label-icon">
                                 <svg
@@ -418,7 +458,10 @@ export const KycForm = () => {
                             id="national-id"
                             data-title="National ID"
                           />
-                          <label className="nk-kycfm-label" htmlFor="national-id">
+                          <label
+                            className="nk-kycfm-label"
+                            htmlFor="national-id"
+                            onClick={() => setId('national')}>
                             <span className="nk-kycfm-label-icon">
                               <span className="label-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76 63">
@@ -441,7 +484,10 @@ export const KycForm = () => {
                             id="driver-licence"
                             data-title="Driving License"
                           />
-                          <label className="nk-kycfm-label" htmlFor="driver-licence">
+                          <label
+                            className="nk-kycfm-label"
+                            htmlFor="driver-licence"
+                            onClick={() => setId('license')}>
                             <span className="nk-kycfm-label-icon">
                               <span className="label-icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76 76">
@@ -466,7 +512,9 @@ export const KycForm = () => {
                         <li>Make sure that there is no light glare on the card.</li>
                       </ul>
                       <div className="nk-kycfm-upload">
-                        <h6 className="title nk-kycfm-upload-title">Upload Front Copy</h6>
+                        <h6 className="title nk-kycfm-upload-title">
+                          {id == 'passport' ? 'Upload Passport Photo Page' : 'Upload Front Copy'}
+                        </h6>
                         <div className="row align-items-center">
                           <div className="col-sm-8">
                             <div className="nk-kycfm-upload-box">
@@ -481,7 +529,7 @@ export const KycForm = () => {
                                     <input
                                       type="file"
                                       accept=".jpg, .png, .pdf"
-                                      onChange={(e) => handleFileUpload(e, 'idProof')}
+                                      onChange={handleFrontId}
                                       style={{display: 'none'}}
                                     />
                                   </label>
@@ -490,13 +538,14 @@ export const KycForm = () => {
                             </div>
                           </div>
                           <div
-                            style={{width: '30%', height: '6.5rem', border: '1px solid grey'}}
-                            className="col-sm-4 d-none d-sm-block">
-                            <div className="mx-md-4">{renderImage(uploadedImages.idProof)}</div>
+                            style={{width: '30%', height: 'max-content', border: '1px solid grey'}}>
+                            {frontUrl && <img src={frontUrl} alt="" width={100} />}
                           </div>
                         </div>
                       </div>
-                      <div className="nk-kycfm-upload">
+                      <div
+                        className="nk-kycfm-upload"
+                        style={{display: id == 'passport' ? 'none' : 'block'}}>
                         <h6 className="title nk-kycfm-upload-title">Upload Back Copy</h6>
                         <div className="row align-items-center">
                           <div className="col-sm-8">
@@ -511,8 +560,8 @@ export const KycForm = () => {
                                     SELECT
                                     <input
                                       type="file"
-                                      accept=".jpg, .png, .pdf"
-                                      onChange={(e) => handleFileUpload(e, 'idProof')}
+                                      accept="image/*"
+                                      onChange={handleBackId}
                                       style={{display: 'none'}}
                                     />
                                   </label>
@@ -521,11 +570,8 @@ export const KycForm = () => {
                             </div>
                           </div>
                           <div
-                            style={{width: '30%', height: '6.5rem', border: '1px solid grey'}}
-                            className="col-sm-4 d-none d-sm-block">
-                            <div className="mx-md-4">
-                              <div className="mx-md-4">{renderImage(uploadedImages.idProof)}</div>
-                            </div>
+                            style={{width: '30%', height: 'max-content', border: '1px solid grey'}}>
+                            <div className="mx-md-4">{backUrl && <img src={backUrl} alt="" />}</div>
                           </div>
                         </div>
                       </div>
@@ -545,7 +591,7 @@ export const KycForm = () => {
                                     <input
                                       type="file"
                                       accept=".jpg, .png, .pdf"
-                                      onChange={(e) => handleFileUpload(e, 'idProof')}
+                                      onChange={handleAddressProof}
                                       style={{display: 'none'}}
                                     />
                                   </label>
@@ -554,10 +600,9 @@ export const KycForm = () => {
                             </div>
                           </div>
                           <div
-                            style={{width: '30%', height: '6.5rem', border: '1px solid grey'}}
-                            className="col-sm-4 d-none d-sm-block">
+                            style={{width: '30%', height: 'max-content', border: '1px solid grey'}}>
                             <div className="mx-md-4">
-                              <div className="mx-md-4">{renderImage(uploadedImages.idProof)}</div>
+                              {addressUrl && <img src={addressUrl} alt="" />}
                             </div>
                           </div>
                         </div>
@@ -578,7 +623,7 @@ export const KycForm = () => {
                                     <input
                                       type="file"
                                       accept=".jpg, .png, .pdf"
-                                      onChange={(e) => handleFileUpload(e, 'idProof')}
+                                      onChange={handleSelfie}
                                       style={{display: 'none'}}
                                     />
                                   </label>
@@ -587,10 +632,9 @@ export const KycForm = () => {
                             </div>
                           </div>
                           <div
-                            style={{width: '30%', height: '6.5rem', border: '1px solid grey'}}
-                            className="col-sm-4 d-none d-sm-block">
+                            style={{width: '30%', height: 'max-content', border: '1px solid grey'}}>
                             <div className="mx-md-4">
-                              <div className="mx-md-4">{renderImage(uploadedImages.idProof)}</div>
+                              {selfieUrl && <img src={selfieUrl} alt="" />}
                             </div>
                           </div>
                         </div>
