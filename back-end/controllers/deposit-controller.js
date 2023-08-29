@@ -4,7 +4,7 @@ const Activity = require('../models/Activities/ActivityModel');
 
 const createUserSchema = Joi.object().keys({
   depAmount: Joi.required(),
-  // photo: Joi.string().required(),
+  photo: Joi.string().required(),
 });
 exports.createDeposit = async (req, res) => {
   try {

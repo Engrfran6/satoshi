@@ -228,14 +228,14 @@ export const Header = () => {
                     </NavLink>
                   </li>
 
-                  <li className="nk-menu-item">
+                  {/* <li className="nk-menu-item">
                     <NavLink
                       to="/dashboard/scheme-details"
                       className="nk-menu-link"
                       onClick={handleMenuItemClick}>
                       <span className="nk-menu-text ">Investment Details</span>
                     </NavLink>
-                  </li>
+                  </li> */}
                   <li className="nk-menu-item">
                     <NavLink
                       to="/dashboard/kyc-application"

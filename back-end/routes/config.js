@@ -6,6 +6,7 @@ const investRouter = require('./investment_routes');
 const paymentRoutes = require('./paymentOption_routes');
 const withdrawRouter = require('./withdraw_routes');
 const activityRouter = require('./activities_routes');
+const imageRouter = require('./uploadRoutes');
 
 module.exports = [
   ['/', indexRouter],
@@ -19,4 +20,5 @@ module.exports = [
   ['/bank', paymentRoutes.bankRouter],
   ['/usdt', paymentRoutes.usdtRouter],
   ['/all-payment-options', paymentRoutes.allPaymentOptionRouter],
+  ['/proof', imageRouter],
 ];

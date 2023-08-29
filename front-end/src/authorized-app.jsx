@@ -9,7 +9,7 @@ import {ProfileNotify} from './pages/Dashboard/ProfileNotify';
 import {ProfileSetting} from './pages/Dashboard/ProfileSetting';
 import {ProfileActivity} from './pages/Dashboard/ProfileActivity';
 import {ProfileConnected} from './pages/Dashboard/ProfileConnected';
-import {SchemeDetails} from './pages/Dashboard/SchemeDetails';
+// import {SchemeDetails} from './pages/Dashboard/SchemeDetails';
 import {Schemes} from './pages/Dashboard/Schemes';
 import {Profile} from './pages/Dashboard/Profile';
 import {Welcome} from './pages/Dashboard/Welcome';
@@ -33,7 +33,7 @@ export const AuthorizedApp = () => {
     {path: '/dashboard/profile-notify', element: <ProfileNotify />},
     {path: '/dashboard/profile', element: <Profile />},
     {path: '/dashboard/schemes', element: <Schemes />},
-    {path: '/dashboard/scheme-details', element: <SchemeDetails />},
+    // {path: '/dashboard/scheme-details', element: <SchemeDetails />},
     {path: '/dashboard/deposit', element: <Deposit />},
     {path: '/dashboard/withdraw', element: <Withdrawal />},
     {path: '/dashboard/investing', element: <Investment />},

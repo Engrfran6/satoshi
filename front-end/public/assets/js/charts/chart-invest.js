@@ -155,6 +155,7 @@
       },
     ],
   };
+
   function investProfit(selector, set_data) {
     var $selector = $(selector || '.chart-profit');
     $selector.each(function () {
