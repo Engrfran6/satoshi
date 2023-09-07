@@ -28,7 +28,7 @@ export const UnauthorizedApp = () => {
     {path: '/account/login', element: <Login />},
     {path: '/account/register', element: <Register />},
     {path: '/account/forgot-password', element: <ForgotPassword />},
-    {path: '/account/admin-register', element: <AdminRegister />},
+    {path: '/account/admin/register', element: <AdminRegister />},
     {path: '*', element: <PublicHome />},
   ]);
 

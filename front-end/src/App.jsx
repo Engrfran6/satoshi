@@ -9,7 +9,7 @@ const App = () => {
   useEffect(() => {
     userService.verifyToken().then((data) => {
       if (data.status === 'success') {
-        setAuthentictaed(true);
+        setAuthentictaed(false);
       } else {
         setAuthentictaed(false);
       }

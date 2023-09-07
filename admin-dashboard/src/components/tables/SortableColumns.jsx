@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import {useState} from 'react';
 
-export const SortingTable = ({ data, columns }) => {
+export const SortingTable = ({data, columns}) => {
   const [sortedField, setSortedField] = useState(null);
   const [ascending, setAscending] = useState(true);
 
@@ -27,9 +27,7 @@ export const SortingTable = ({ data, columns }) => {
           <tr>
             {columns.map((column) => (
               <th key={column.field}>
-                <button onClick={() => handleSort(column.field)}>
-                  {column.label}
-                </button>
+                <button onClick={() => handleSort(column.field)}>{column.label}</button>
               </th>
             ))}
           </tr>
@@ -49,22 +47,18 @@ export const SortingTable = ({ data, columns }) => {
         id="user-list-table"
         className="table table-striped"
         role="grid"
-        data-toggle="data-table"
-      >
+        data-toggle="data-table">
         <thead>
           <tr>
             <th>#</th>
             {columns.map((column) => (
               <th key={column.field}>
-                <button onClick={() => handleSort(column.field)}>
-                  {column.label}
-                </button>
+                <button onClick={() => handleSort(column.field)}>{column.label}</button>
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          
           {renderData.map((item, index) => (
             <tr key={index}>
               {columns.map((column) => (
@@ -79,4 +73,4 @@ export const SortingTable = ({ data, columns }) => {
       </table>
     </div>
   );
-}
+};

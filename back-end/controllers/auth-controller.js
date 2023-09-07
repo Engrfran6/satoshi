@@ -1,13 +1,9 @@
 const Joi = require('@hapi/joi');
 const bcrypt = require('bcryptjs');
-
 const User = require('../models/Users/UserModel');
-const Account = require('../models/Account/AccountModel');
-
-const Investment = require('../models/Investment/InvestmentModel');
-const Admin = require('../models/Users/UserModel');
 
 const createUserSchema = Joi.object().keys({
+  role: Joi.string(),
   fullName: Joi.string().required(),
   password: Joi.string().required(),
   username: Joi.string().required(),
@@ -26,16 +22,12 @@ exports.register = async (req, res) => {
       return res.status(400).json({error: error.details[0].message});
     }
 
-    // const package = await Package.findOne({_id: doc.packageId});
-    // if (!package) {
-    //   return res.status(400).json({error: `no package found with id ${doc.packageId}`});
-    // }
-
     const salt = await bcrypt.genSalt(10);
     const generatedPassword = await bcrypt.hash(doc.password, salt);
     const genrateReferal = generateRandomNumber() + doc.username;
 
     const params = {
+      role: doc.role,
       email: doc.email,
       fullName: doc.fullName,
       username: doc.username,
@@ -44,16 +36,6 @@ exports.register = async (req, res) => {
       referalId: genrateReferal,
     };
 
-    const accParams = {
-      name: doc.email,
-      fullName: doc.fullName,
-      username: doc.username,
-      phoneNumber: doc.phoneNumber,
-      password: generatedPassword,
-      referalId: genrateReferal,
-    };
-
-    const acc = new Account();
     const user = new User(params);
     await user.save();
     delete user.password;
@@ -97,7 +79,6 @@ exports.login = async (req, res) => {
       // const activity = new Activity({ title: 'logged in', user: user._id });
       // await activity.save();
       // const activities = await Activity.find({ user: user._id })
-      // const investments = await Investment.find({user: user._id}).populate('package');
       res.status(200).json({
         status: 'success',
         token,
@@ -119,10 +100,69 @@ exports.getUsers = async (req, res) => {
   const users = await User.retrievePaginated({
     ...req.query,
   });
-  res.status(200).json({
+  res.status(201).json({
     status: 'success',
     ...users,
   });
+};
+
+exports.deleteUser = async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const userToDelete = await User.findById(userId);
+
+    if (!userToDelete) {
+      return res.status(404).json({error: 'User not found'});
+    }
+
+    if (userToDelete.role === 'admin') {
+      return res.status(403).json({error: 'Admin user cannot be deleted'});
+    }
+
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({error: 'User not found'});
+    }
+
+    res.status(201).json({
+      status: 'success',
+      message: 'User deleted successfully',
+      deletedUser: deletedUser,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'failed',
+      message: 'Error deleting user',
+      error: error.message,
+    });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  const userId = req.params.userId;
+  const updatedData = req.body;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {new: true});
+
+    if (!updatedUser) {
+      return res.status(404).json({error: 'User not found'});
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'User updated successfully',
+      updatedUser: updatedUser,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'failed',
+      message: 'Error updating user',
+      error: error.message,
+    });
+  }
 };
 
 const generateRandomNumber = () => {
@@ -132,46 +172,3 @@ const generateRandomNumber = () => {
   }
   return randomNumbers.join('');
 };
-
-// // ============================ADMIN==================================================
-
-// const createAdminSchema = Joi.object().keys({
-//   password: Joi.string().required(),
-//   role: Joi.string(),
-//   email: Joi.string()
-//     .required()
-//     .email({tlds: {allow: false}}),
-// });
-
-// exports.registerAdmin = async (req, res) => {
-//   try {
-//     const adminDoc = req.body;
-//     const {error} = createAdminSchema.validate({...doc});
-//     if (error) {
-//       return res.status(400).json({error: error.details[0].message});
-//     }
-
-//     const saltAdmin = await bcrypt.genSalt(10);
-//     const generatedAdminPassword = await bcrypt.hash(doc.password, saltAdmin);
-
-//     const adminParams = {
-//       email: adminDoc.email,
-//       password: generatedAdminPassword,
-//     };
-
-//     const admin = new Admin(adminParams);
-//     await admin.save();
-//     delete admin.password;
-//     if (admin) {
-//       return res.status(201).json({
-//         status: 'success',
-//         data: admin,
-//       });
-//     }
-//   } catch (e) {
-//     res.status(500).json({
-//       status: 'failed',
-//       message: e.message,
-//     });
-//   }
-// };

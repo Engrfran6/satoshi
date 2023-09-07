@@ -39,6 +39,41 @@ export const userService = {
       throw e;
     }
   },
+  createUser: async (reqbody) => {
+    try {
+      const url = `${serverUrl}/auth/register`;
+      const method = 'POST';
+      const response = await client(url, method, {...reqbody});
+      if (!response) throw new Error('Not Authorized');
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  updateUser: async (userId, reqbody) => {
+    try {
+      const url = `${serverUrl}/auth/users/${userId}`;
+      const method = 'PATCH';
+      const response = await client(url, method, {...reqbody});
+      if (!response) throw new Error('Not Authorized');
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  deleteUser: async (userId) => {
+    try {
+      const url = `${serverUrl}/auth/users/${userId}`;
+      const method = 'DELETE';
+      const response = await client(url, method);
+      if (!response) throw new Error('Not Authorized');
+      return response;
+    } catch (e) {
+      throw e;
+    }
+  },
 
   fetchUserFromStore: () => {
     let user = store?.getState()?.user?.user;

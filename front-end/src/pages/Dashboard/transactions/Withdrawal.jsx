@@ -60,7 +60,6 @@ export const Withdrawal = () => {
           `Your withdrawal of $ -${withdrawal} was successful, Please hold while we proccess your withdrawal request!`
         );
       }
-      navigate('/dashboard'); // <-- redirect
     } catch (error) {
       console.error(error);
     }

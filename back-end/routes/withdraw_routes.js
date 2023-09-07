@@ -1,10 +1,10 @@
 const {Router} = require('express');
 const {protect} = require('../middlewares/auth-middleware');
-const {createWithdraw, getWithraws} = require('../controllers/withdrawal-controller');
+const {createWithdraw, getWithrawal} = require('../controllers/withdrawal-controller');
 
 const withdrawRouter = Router();
 
-withdrawRouter.get('/', protect, getWithraws);
+withdrawRouter.get('/', protect, getWithrawal);
 withdrawRouter.post('/create', protect, createWithdraw);
 
 module.exports = withdrawRouter;

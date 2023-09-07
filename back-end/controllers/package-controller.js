@@ -75,7 +75,7 @@ exports.createPackage = async (req, res) => {
   }
 };
 
-exports.getPackages = async (req, res) => {
+exports.getPackage = async (req, res) => {
   try {
     const package = await Package.find({});
     return res.status(200).json({
@@ -86,6 +86,65 @@ exports.getPackages = async (req, res) => {
     res.status(500).json({
       status: 'failed',
       message: e.message,
+    });
+  }
+};
+
+exports.getPackages = async (req, res) => {
+  const packages = await Package.retrievePaginated({
+    ...req.query,
+  });
+  res.status(200).json({
+    status: 'success',
+    ...packages,
+  });
+};
+
+exports.deletePackage = async (req, res) => {
+  const packageId = req.params.packageId;
+
+  try {
+    const deletedPackage = await Package.findByIdAndDelete(packageId);
+
+    if (!deletedPackage) {
+      return res.status(404).json({error: 'package not found'});
+    }
+
+    res.status(201).json({
+      status: 'success',
+      message: 'Package account deleted successfully',
+      deletedPackage: deletedPackage,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'failed',
+      message: 'Error deleting Package account',
+      error: error.message,
+    });
+  }
+};
+
+exports.updatePackage = async (req, res) => {
+  const packageId = req.params.packageId;
+  const updatedData = req.body;
+
+  try {
+    const updatedPackage = await Package.findByIdAndUpdate(packageId, updatedData, {new: true});
+
+    if (!updatedPackage) {
+      return res.status(404).json({error: 'Package account not found'});
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Package account updated successfully',
+      updatedPackage: updatedPackage,
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'failed',
+      message: 'Error updating Package account',
+      error: error.message,
     });
   }
 };
