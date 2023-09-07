@@ -1,26 +1,29 @@
 const {Router} = require('express');
 const {
   createBankTransfer,
+  getBank,
 } = require('../controllers/paymnet-controllers/deposit-transfer-controller');
-const {createBtcWallet} = require('../controllers/paymnet-controllers/btc-controller');
-const {createUsdtWallet} = require('../controllers/paymnet-controllers/usdt-controller');
-const {getAllPaymentOptions} = require('../controllers/paymnet-controllers/payment-controller');
+const {createBtcWallet, getBtc} = require('../controllers/paymnet-controllers/btc-controller');
+const {createUsdtWallet, getUsdt} = require('../controllers/paymnet-controllers/usdt-controller');
+const {protect} = require('../middlewares/auth-middleware');
 
 // Create routers for each payment option
-const bankRouter = Router();
 const btcRouter = Router();
 const usdtRouter = Router();
-const allPaymentOptionRouter = Router();
+const bankRouter = Router();
 
 // Define routes for each payment option
-bankRouter.post('/create', createBankTransfer);
-btcRouter.post('/create', createBtcWallet);
-usdtRouter.post('/create', createUsdtWallet);
-allPaymentOptionRouter.get('/', getAllPaymentOptions);
+bankRouter.get('/', protect, getBank);
+bankRouter.post('/create', protect, createBankTransfer);
+
+btcRouter.get('/', protect, getBtc);
+btcRouter.post('/create', protect, createBtcWallet);
+
+usdtRouter.get('/', protect, getUsdt);
+usdtRouter.post('/create', protect, createUsdtWallet);
 
 module.exports = {
-  bankRouter,
   btcRouter,
   usdtRouter,
-  allPaymentOptionRouter,
+  bankRouter,
 };

@@ -102,6 +102,7 @@ export const Login = () => {
       toastr.success('Login Successfully');
       setTimeout(() => setLoading(false), 1000);
       dispatch(setUser({token, user}));
+
       window.location.replace('/');
     }
   };
