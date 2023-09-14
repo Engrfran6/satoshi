@@ -1,9 +1,9 @@
 import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
-import {registerUser, userLogin} from '../../../components/Commons/HandleRequest';
 import Swal from 'sweetalert2';
 import logo from '../../../assets/stf-logo2.png';
 import {styled} from 'styled-components';
+import {userService} from '../../../services/userService';
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -100,8 +100,10 @@ export const Register = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    const email = formData.email;
+    const password = formData.password;
     try {
-      const response = await userLogin('/auth/login', formData);
+      const response = await userService.loginUser(email, password);
 
       const {token, user, investments} = response;
 
@@ -117,7 +119,7 @@ export const Register = () => {
     e.preventDefault();
 
     try {
-      const response = await registerUser('/auth/register', formData);
+      const response = await userService.registerUser(formData);
       if (response.status === 'success') {
         setMessage('success');
         showSuccessAlert();

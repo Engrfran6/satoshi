@@ -9,8 +9,9 @@ const imageSchema = new Schema(
       default: 'success',
     },
 
-    title: String,
-    imageUrl: String,
+    photo: {
+      type: String,
+    },
 
     user: {
       type: Schema.Types.String,
@@ -19,6 +20,8 @@ const imageSchema = new Schema(
   },
   {versionKey: false}
 );
+
+imageSchema.plugin(AutoGeneratePlugin);
 
 const Image = model('Image', imageSchema);
 module.exports = Image;

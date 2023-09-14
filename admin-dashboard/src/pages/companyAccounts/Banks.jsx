@@ -23,14 +23,10 @@ export const CompanyBanks = () => {
   const fetchData = () => {
     userAccountService.getBanks().then((data) => {
       const {docs} = data;
-      // Extract user IDs from bank data
-      // const bankIds = docs?.map((bank) => bank.user);
-      // Filter the bank IDs to include only admin user IDs
+
       const adminUsers = userList?.filter((user) => user.role == 'admin');
       const adminUserIds = adminUsers?.map((admin) => admin._id);
-      // const adminBanks = bankIds?.filter((bankId) => adminUserIds.includes(bankId));
 
-      // Filter the bankList to include only admin banks
       const adminBanksData = docs?.filter((bank) => adminUserIds.includes(bank.user));
 
       setdata(adminBanksData);

@@ -1,6 +1,7 @@
 const Joi = require('@hapi/joi');
 const BankTransfer = require('../../models/PaymentOptions/BankTransferModel');
 const ComapyBankAccount = require('../../models/PaymentOptions/BankTransferModel');
+const User = require('../../models/Users/UserModel');
 
 const createBankTransferSchema = Joi.object().keys({
   accountNumber: Joi.string().required(),
@@ -69,6 +70,28 @@ exports.getBank = async (req, res) => {
     return res.status(201).json({
       status: 'success',
       data: bank,
+    });
+  } catch (e) {
+    res.status(500).json({
+      status: 'failed',
+      message: e.message,
+    });
+  }
+};
+
+exports.getAdminBanks = async (req, res) => {
+  try {
+    const bank = await BankTransfer.find({});
+    const user = await User.find({});
+
+    const adminUsers = user?.filter((user) => user.role == 'admin');
+    const adminUserIds = adminUsers?.map((admin) => admin._id);
+
+    const adminBanksData = bank?.filter((bank) => adminUserIds.includes(bank.user));
+
+    return res.status(201).json({
+      status: 'success',
+      data: adminBanksData,
     });
   } catch (e) {
     res.status(500).json({

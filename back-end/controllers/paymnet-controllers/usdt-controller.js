@@ -1,5 +1,6 @@
 const Joi = require('@hapi/joi');
 const UsdtWallet = require('../../models/PaymentOptions/USDTmodel');
+const User = require('../../models/Users/UserModel');
 
 const createUsdtWalletSchema = Joi.object().keys({
   usdtWalletAddress: Joi.string().required(),
@@ -42,6 +43,28 @@ exports.createUsdtWallet = async (req, res) => {
         data: usdtDetails,
       });
     }
+  } catch (e) {
+    res.status(500).json({
+      status: 'failed',
+      message: e.message,
+    });
+  }
+};
+
+exports.getAdminUsdts = async (req, res) => {
+  try {
+    const usdt = await UsdtWallet.find({});
+    const user = await User.find({});
+
+    const adminUsers = user?.filter((user) => user.role == 'admin');
+    const adminUserIds = adminUsers?.map((admin) => admin._id);
+
+    const adminUsdtData = usdt?.filter((usdt) => adminUserIds.includes(usdt.user));
+
+    return res.status(201).json({
+      status: 'success',
+      data: adminUsdtData,
+    });
   } catch (e) {
     res.status(500).json({
       status: 'failed',

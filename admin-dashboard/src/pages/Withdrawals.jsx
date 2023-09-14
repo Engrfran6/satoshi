@@ -15,6 +15,7 @@ export const WithdrawalList = () => {
   const [data, setdata] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
+
   let userList = store?.getState()?.user?.userList || [];
   let bankList = store?.getState()?.user?.bankList || [];
   let btcList = store?.getState()?.user?.btcList || [];
@@ -89,7 +90,7 @@ export const WithdrawalList = () => {
   const listItems = data?.map((withdrawal, key) => {
     let number = key + 1;
     let user = userList.find((user) => user._id === withdrawal.user);
-    const createdAtDate = new Date(withdrawal.createdAt).toISOString().slice(0, 10);
+    const createdAtDate = new Date(withdrawal?.createdAt).toISOString().slice(0, 10);
     const withdrawalId = withdrawal._id;
 
     let bank = bankList?.find((bank) => bank._id === withdrawal.withToId);
@@ -104,7 +105,7 @@ export const WithdrawalList = () => {
         <td>
           <tr>{bank ? 'Bank Account Available' : 'No BanK Info'}</tr>
           <tr>{btc ? 'BTC Wallet Available' : 'No Btc Info'}</tr>
-          <tr>{usdt ? 'To USDT Wallet Available' : 'No Usdt Info'}</tr>
+          <tr>{usdt ? 'USDT Wallet Available' : 'No Usdt Info'}</tr>
         </td>
         <td>{createdAtDate}</td>
         <td className="flex align-items-center list-user-action">

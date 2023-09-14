@@ -5,44 +5,47 @@ import {calculateEndDate} from '../Dashboard/Store/investmentDates';
 import {sumOfArray} from './calcAccountValues/Summation';
 import {useSelector} from 'react-redux';
 import {useEffect, useState} from 'react';
-import {fetchData} from '../../components/Commons/HandleRequest';
+import {investmentService} from '../../services/investment-services';
+import {packageService} from '../../services/package-services';
 
 export const Schemes = () => {
   const user = useSelector((state) => state?.user?.user?.user);
-  const token = useSelector((state) => state?.user?.user?.token);
-
-  const [investments, setInvestments] = useState([]);
   let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
-  useEffect(() => {
-    getInvestment();
-  }, []);
+  const [data, setData] = useState([]);
+  const [packageData, setPackageData] = useState([]);
 
-  const getInvestment = async () => {
-    try {
-      const response = await fetchData('/investment', token);
-      setInvestments(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
+  const fetchData = () => {
+    investmentService.getInvestments().then((data) => {
+      // setData(data.data);
+      packageService.getPackages().then((data) => {
+        setPackageData(data.data);
+      });
+    });
   };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log('package', packageData);
+
   const balance = stringToNumber(user?.balance);
-  const totalInvested = sumOfArray(investments, 'invAmount');
-  const totalProfits = sumOfArray(investments, 'dailyProfit');
+  const totalInvested = sumOfArray(data, 'invAmount');
+  const totalProfits = sumOfArray(data, 'dailyProfit');
   const balanceInAccount = balance + totalInvested + totalProfits;
 
   // ===============not working yet=============
-  const referalBonus = investments.reduce((total, document) => {
+  const referalBonus = data.reduce((total, document) => {
     return total + (document.referalBonus || 0);
   }, 0);
-  const rewards = investments.reduce((total, document) => {
+  const rewards = data.reduce((total, document) => {
     return total + (document.referalBonus || 0);
   }, 0);
-  const monthlyProfit = sumOfArray(investments, 'monthlyProfit');
+  const monthlyProfit = sumOfArray(data, 'monthlyProfit');
   const Total = monthlyProfit + referalBonus + rewards;
   // ===========================================
 
-  const totalActiveInv = investments.length ? investments.length : 0;
+  const totalActiveInv = data.length ? data.length : 0;
   const totalExpiredInv = expiredInvestments.length ? expiredInvestments.length : 0;
 
   return (
@@ -221,59 +224,67 @@ export const Schemes = () => {
                 </div>
 
                 <div className="nk-iv-scheme-list">
-                  {investments.map((item, index) => (
-                    <div key={index} className="nk-iv-scheme-item">
-                      <div className="nk-iv-scheme-icon is-running">
-                        <em className="icon ni ni-update" />
-                      </div>
-                      <div className="nk-iv-scheme-info">
-                        <div className="nk-iv-scheme-name">
-                          {item.package.name} - Daily {item.package.profitRate}% for{' '}
-                          {item.package.duration} Days
+                  {data.map((investment, index) => {
+                    const packageName = packageList.find(
+                      (packageName) => packageName._id === investment.packageId
+                    );
+                    return (
+                      <div key={index} className="nk-iv-scheme-investment">
+                        <div className="nk-iv-scheme-icon is-running">
+                          <em className="icon ni ni-update" />
                         </div>
-                        <div className="nk-iv-scheme-desc">
-                          Invested Amount - <span className="amount">$ {item.invAmount}</span>
+                        <div className="nk-iv-scheme-info">
+                          <div className="nk-iv-scheme-name">
+                            {packageName} - Daily {investment.package.profitRate}% for{' '}
+                            {investment.package.duration} Days
+                          </div>
+                          <div className="nk-iv-scheme-desc">
+                            Invested Amount -{' '}
+                            <span className="amount">$ {investment.invAmount}</span>
+                          </div>
                         </div>
-                      </div>
-                      <div className="nk-iv-scheme-term">
-                        <div className="nk-iv-scheme-start nk-iv-scheme-order">
-                          <span className="nk-iv-scheme-label text-soft">Start Date</span>
-                          <span className="nk-iv-scheme-value date">{item.createdAt}</span>
-                        </div>
-                        <div className="nk-iv-scheme-end nk-iv-scheme-order">
-                          <span className="nk-iv-scheme-label text-soft">End Date</span>
-                          <span className="nk-iv-scheme-value date">
-                            {calculateEndDate(item.createdAt, item.package.duration)}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="nk-iv-scheme-amount">
-                        <div className="nk-iv-scheme-amount-a nk-iv-scheme-order">
-                          <span className="nk-iv-scheme-label text-soft">Total Return</span>
-                          <span className="nk-iv-scheme-value amount">{item.dailyProfit}</span>
-                        </div>
-                        <div className="nk-iv-scheme-amount-b nk-iv-scheme-order">
-                          <span className="nk-iv-scheme-label text-soft">Net Profit Earn</span>
-                          <span className="nk-iv-scheme-value amount">
-                            $ {item.netProfit}{' '}
-                            <span className="amount-ex">
-                              ~ $ {item.dailyProfit - item.dailyLoss}
+                        <div className="nk-iv-scheme-term">
+                          <div className="nk-iv-scheme-start nk-iv-scheme-order">
+                            <span className="nk-iv-scheme-label text-soft">Start Date</span>
+                            {/* <span className="nk-iv-scheme-value date">{investment.createdAt}</span> */}
+                          </div>
+                          <div className="nk-iv-scheme-end nk-iv-scheme-order">
+                            <span className="nk-iv-scheme-label text-soft">End Date</span>
+                            <span className="nk-iv-scheme-value date">
+                              {/* {calculateEndDate(investment.createdAt, investment.package.duration)} */}
                             </span>
-                          </span>
+                          </div>
+                        </div>
+                        <div className="nk-iv-scheme-amount">
+                          <div className="nk-iv-scheme-amount-a nk-iv-scheme-order">
+                            <span className="nk-iv-scheme-label text-soft">Total Return</span>
+                            <span className="nk-iv-scheme-value amount">
+                              {/* {investment.dailyProfit} */}
+                            </span>
+                          </div>
+                          <div className="nk-iv-scheme-amount-b nk-iv-scheme-order">
+                            <span className="nk-iv-scheme-label text-soft">Net Profit Earn</span>
+                            <span className="nk-iv-scheme-value amount">
+                              {/* $ {investment.netProfit}{' '} */}
+                              <span className="amount-ex">
+                                {/* ~ $ {investment.dailyProfit - investment.dailyLoss} */}
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                        <div className="nk-iv-scheme-more">
+                          <NavLink
+                            className="btn btn-icon btn-lg btn-round btn-trans"
+                            to="/dashboard/scheme-details">
+                            <em className="icon ni ni-forward-ios" />
+                          </NavLink>
+                        </div>
+                        <div className="nk-iv-scheme-progress">
+                          <div className="progress-bar" data-progress={90} />
                         </div>
                       </div>
-                      <div className="nk-iv-scheme-more">
-                        <NavLink
-                          className="btn btn-icon btn-lg btn-round btn-trans"
-                          to="/dashboard/scheme-details">
-                          <em className="icon ni ni-forward-ios" />
-                        </NavLink>
-                      </div>
-                      <div className="nk-iv-scheme-progress">
-                        <div className="progress-bar" data-progress={90} />
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
               <div className="nk-block nk-block-lg">
@@ -281,7 +292,7 @@ export const Schemes = () => {
                   <div className="nk-block-between">
                     <div className="nk-block-head-content">
                       <h5 className="nk-block-title">
-                        Recently End <span className="count text-base">({totalExpiredInv})</span>
+                        {/* Recently End <span className="count text-base">({totalExpiredInv})</span> */}
                       </h5>
                     </div>
                     <div className="nk-block-head-content">

@@ -46,6 +46,7 @@ export const App = () => {
       } else {
         setLoading(false);
         setAuthentictaed(true);
+        console.log('dis', data);
       }
     });
   }, [authenticated]);

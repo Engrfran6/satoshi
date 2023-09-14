@@ -44,9 +44,10 @@ const {deletePackage, updatePackage} = require('../controllers/package-controlle
 
 const authRouter = Router();
 
+authRouter.get('/authorize', protect, authorizeAccount);
+
 authRouter.post('/register', register);
 authRouter.post('/login', login);
-authRouter.get('/authorize', protect, authorizeAccount);
 
 authRouter.get('/users', protect, getUsers);
 authRouter.delete('/users/:userId', protect, deleteUser);

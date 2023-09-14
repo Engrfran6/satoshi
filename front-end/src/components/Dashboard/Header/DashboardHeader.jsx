@@ -3,9 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import {clearToken, resetUser} from '../../../redux/user-slice';
 import Swal from 'sweetalert2';
 import {useEffect, useState} from 'react';
-import {fetchData} from '../../Commons/HandleRequest';
 import logo from '../../../assets/stf-logo1.png';
 import {styled} from 'styled-components';
+import {activityService} from '../../../services/activity-servisces';
 
 const StyledBurger = styled.div`
   position: absolute;
@@ -102,21 +102,19 @@ const IMG = styled.div`
 export const Header = () => {
   const dispatch = useDispatch();
   let user = useSelector((state) => state?.user?.user?.user);
-  let token = useSelector((state) => state?.user?.user?.token);
+  const [data, setData] = useState([]);
 
-  const [activity, setActivity] = useState([]);
+  const fetchData = () => {
+    activityService.getActivity().then((data) => {
+      setData(data.data);
+    });
+  };
+
   useEffect(() => {
-    getActivity();
+    fetchData();
   }, []);
 
-  const getActivity = async () => {
-    try {
-      const response = await fetchData('/activity', token);
-      setActivity(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+  console.log('this data', data);
 
   const initials = user?.fullName
     .split(' ')
@@ -283,10 +281,10 @@ export const Header = () => {
 
                   <div className="dropdown-body">
                     <div className="nk-notification">
-                      {activity.length === 0 ? (
-                        <p>No activity data available.</p>
+                      {data.length === 0 ? (
+                        <p>No data data available.</p>
                       ) : (
-                        // activity?.map((item) => (
+                        // data?.map((item) => (
                         //   <div className="nk-notification-item dropdown-inner">
                         //     <div className="nk-notification-icon">
                         //       <em className="icon icon-circle bg-warning-dim ni ni-curve-down-right" />
@@ -379,8 +377,8 @@ export const Header = () => {
                         </NavLink>
                       </li>
                       <li>
-                        <NavLink to="/dashboard/profile-activity">
-                          <em className="icon ni ni-activity-alt" />
+                        <NavLink to="/dashboard/profile-data">
+                          <em className="icon ni ni-data-alt" />
                           <span>Login Activity</span>
                         </NavLink>
                       </li>

@@ -16,7 +16,7 @@ import {AdminRegister} from './pages/Public/account/AdminRegister';
 
 export const UnauthorizedApp = () => {
   const routes = useRoutes([
-    {path: '/', element: <PublicHome />},
+    {path: '/home', element: <PublicHome />},
     {path: '/crypto', element: <Crypto />},
     {path: '/realestate', element: <RealEstate />},
     {path: '/loan', element: <Loan />},

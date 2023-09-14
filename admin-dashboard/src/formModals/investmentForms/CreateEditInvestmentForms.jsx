@@ -25,6 +25,7 @@ export const CreateEditInvestmentForm = ({isEditTrue, isEdit, selectedUser, fetc
     }
   };
 
+  const [message, setmessage] = useState('');
   const [submitForm, setSubmitForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({
@@ -65,6 +66,7 @@ export const CreateEditInvestmentForm = ({isEditTrue, isEdit, selectedUser, fetc
     }
   };
 
+  const user = userList.find((user) => user._id == formValues?.targetUserId);
   const validateForm = (packageName, errors, value) => {
     switch (packageName) {
       case 'package':
@@ -79,8 +81,9 @@ export const CreateEditInvestmentForm = ({isEditTrue, isEdit, selectedUser, fetc
 
       case 'invAmount':
         errors.invAmount = '';
-        if (value.length && value.length <= 0) {
+        if (user?.balance < parseFloat(formValues.invAmount)) {
           errors.invAmount = 'you must enter an investment amount!';
+          setmessage('user balance is too low!');
           setSubmitForm(false);
         } else {
           setSubmitForm(true);
@@ -203,9 +206,20 @@ export const CreateEditInvestmentForm = ({isEditTrue, isEdit, selectedUser, fetc
                         ))}
                       </select>
                     </div>
+                    <br />
+                    <h6 style={{display: 'flex'}}>
+                      User Balance:
+                      <p
+                        style={{
+                          fontSize: '1rem',
+                          paddingLeft: '.5rem',
+                          color: user?.balance <= 0 ? 'red' : 'green',
+                        }}>
+                        {user?.balance}
+                      </p>
+                    </h6>
                   </div>
 
-                  <br />
                   <div className="row">
                     <div className="col">
                       <label class="form-label" for="exampleInputmonth">
@@ -232,6 +246,8 @@ export const CreateEditInvestmentForm = ({isEditTrue, isEdit, selectedUser, fetc
                       <label class="form-label" for="exampleInputmonth">
                         Investment Amount<small style={{color: 'red', fontSize: '1.2rem'}}>*</small>
                         ($)
+                        <br />
+                        <small style={{color: 'red'}}>{message}</small>
                       </label>
                       <input
                         type="number"

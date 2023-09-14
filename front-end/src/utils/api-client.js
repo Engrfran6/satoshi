@@ -1,12 +1,11 @@
-import { userService } from '../services/userService';
+import {userService} from '../services/userService';
 
-export const  client = async (url, method, reqBody = undefined) => {
-
-  const { token } = userService.fetchUserFromStore()
+export const client = async (url, method, reqBody = undefined) => {
+  const {token} = userService.fetchUserFromStore();
   const headers = {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${ token }`
-  }
+    Authorization: `Bearer ${token}`,
+  };
   const config = {
     method,
     body: reqBody ? JSON.stringify(reqBody) : undefined,
@@ -14,8 +13,26 @@ export const  client = async (url, method, reqBody = undefined) => {
   };
   try {
     const response = await window.fetch(url, config);
-    return response.json()
+    return response.json();
   } catch (err) {
-    console.log('Client Error -------> ', err)
+    console.log('Client Error -------> ', err);
   }
-}
+};
+
+export const imageClient = async (url, method, reqBody) => {
+  const {token} = userService.fetchUserFromStore();
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  const config = {
+    method,
+    body: reqBody,
+    headers,
+  };
+  try {
+    const response = await window.fetch(url, config);
+    return response.json();
+  } catch (err) {
+    console.log('Client Error -------> ', err);
+  }
+};

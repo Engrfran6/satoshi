@@ -1,19 +1,18 @@
 import {useState} from 'react';
-import {NavLink, useNavigate} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import logo from '../../../assets/stf-logo2.png';
 import {useDispatch} from 'react-redux';
 import {setUser} from '../../../redux/user-slice';
 import {styled} from 'styled-components';
 import Swal from 'sweetalert2';
-import {userLogin} from '../../../components/Commons/HandleRequest';
+import {userService} from '../../../services/userService';
+import toastr from 'toastr';
 
 export const Login = () => {
   const dispatch = useDispatch();
   const [message, setMessage] = useState('');
   const [emailValidationMessage, setEmailValidationMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
-  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -47,18 +46,20 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const {email, password} = formData;
 
     try {
-      const response = await userLogin('/auth/login', formData);
+      const response = await userService.loginUser(email, password);
       const {token, user, status, error} = response;
 
       if (status === 'success') {
-        dispatch(setUser({token, user}));
         const firstName = user.fullName.split(' ')[0];
+
+        toastr.success('Login Successfully');
+        dispatch(setUser({token, user}));
         successAlert(firstName);
         window.location.replace('/dashboard');
       } else if (error === 'invalid credentials') {
-        console.log('response error', error);
         setMessage('Invalid Email or Password, Try again!');
       } else {
         setMessage('An error occurred while processing your request. Please try again later.');

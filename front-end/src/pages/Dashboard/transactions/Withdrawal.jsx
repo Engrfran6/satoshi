@@ -1,16 +1,14 @@
-import {useState} from 'react';
-import {userRequest} from '../../../components/Commons/HandleRequest';
-import {NavLink, useNavigate} from 'react-router-dom';
-import {Footer} from '../../../components/Dashboard/Footer/DashboardFooter';
+import {useEffect, useState} from 'react';
+import {NavLink} from 'react-router-dom';
 import {Header} from '../../../components/Dashboard/Header/DashboardHeader';
 import {EmailIcon, WhatsappIcon, WhatsappShareButton} from 'react-share';
 import {store} from '../../../redux/store';
 import {stringToNumber} from '../../Dashboard/Store/convertStringToNumber';
 import {sumOfArray} from '../calcAccountValues/Summation';
-import {useDispatch, useSelector} from 'react-redux';
+import {withdrawalService} from '../../../services/withdrawal-services';
+import {userAccountService} from '../../../services/userAccount-services';
 
 export const Withdrawal = () => {
-  const navigate = useNavigate();
   const [message, setMessage] = useState('');
   const [withdrawal, setWithdrawal] = useState();
   const [recipientEmail, setRecipientEmail] = useState();
@@ -18,7 +16,6 @@ export const Withdrawal = () => {
   const [showInner, setShowInner] = useState(false);
   let user = store?.getState()?.user?.user?.user || [];
   let investments = store?.getState()?.user?.user?.investments || [];
-  const token = useSelector((state) => state.user.user.token);
 
   const fullName = user?.fullName.split(' ')[0];
   const balance = stringToNumber(user?.balance);
@@ -37,23 +34,22 @@ export const Withdrawal = () => {
     }
   };
 
+  console.log('withdraw', withdrawal);
+
   const [details, setDetails] = useState('process payment to this informations');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       if (user?.balance < withdrawal) {
         setMessage('withdrawal amount must be less than available balance');
       } else setMessage('');
 
-      const response = await userRequest(
-        '/withdraw/create',
-        {
-          withAmount: withdrawal,
-          withTo: details,
-        },
-        token
-      );
+      const response = await withdrawalService.createWithdrawals({
+        withAmount: withdrawal,
+        withTo: 'this',
+      });
 
       if (response.status == 'success') {
         setMessage(
@@ -64,6 +60,66 @@ export const Withdrawal = () => {
       console.error(error);
     }
   };
+
+  const [payType, setPayType] = useState('');
+
+  const [bankData, setBankData] = useState([]);
+  const [btcData, setBtcData] = useState([]);
+  const [usdtData, setUsdtData] = useState([]);
+
+  const fetchData = () => {
+    userAccountService.getAdminBanks().then((data) => {
+      const docs = data.data;
+      setBankData(docs);
+    });
+
+    userAccountService.getAdminBtcs().then((data) => {
+      const docs = data.data;
+      setBtcData(docs);
+    });
+
+    userAccountService.getAdminUsdts().then((data) => {
+      const docs = data.data;
+      setUsdtData(docs);
+    });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const bankListItem = bankData?.map((bank) => {
+    return (
+      <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr'}}>
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+          <small>{bank.bankName}</small>
+          <small>{bank.accountName}</small>
+          <small>{bank.accountNumber}</small>
+          <small>{bank.bankAddress}</small>
+          <small>{bank.clientAddress}</small>
+          <small>{bank.routingNumber}</small>
+        </div>
+      </div>
+    );
+  });
+
+  const btcListItem = btcData?.map((btc) => {
+    return (
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <small>{btc.btcWalletAddress}</small>
+        <small>{btc.btcNetwork}</small>
+      </div>
+    );
+  });
+
+  const usdtListItem = usdtData?.map((usdt) => {
+    return (
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <small>{usdt.usdtWalletAddress}</small>
+        <small>{usdt.usdtNetwork}</small>
+      </div>
+    );
+  });
 
   const handleShow = () => {
     setShow(!show);
@@ -197,49 +253,126 @@ export const Withdrawal = () => {
                           <form
                             onSubmit={handleSubmit}
                             style={{
-                              display: 'flex',
-                              flexDirection: 'column',
+                              display: 'grid',
+                              gridTemplateColumns: '1fr 1fr',
+                              gap: '5%',
                               width: '100%',
                               alignItems: 'start',
                               justifyContent: 'center',
-                              // margin: '0 auto',
                             }}>
-                            <label>Withdrawal:</label>
+                            <div>
+                              <label>Withdrawal:</label>
+                              <div
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  // justifyContent: 'center',
+                                  width: '55%',
+                                }}>
+                                <label style={{fontSize: '2rem', paddingTop: '.5rem'}}>$</label>
+                                <input
+                                  style={{
+                                    fontSize: '.9rem',
+                                    border: 'none',
+                                    borderBottom: '2px solid grey',
+                                    width: '100%',
+                                    height: '5vh',
+                                  }}
+                                  type="text"
+                                  value={withdrawal}
+                                  onChange={handleInputChange}
+                                  placeholder="Withdrawal amount"
+                                />
+                              </div>
+                              <p
+                                style={{
+                                  color: user?.balance < parseFloat(withdrawal) ? 'red' : '',
+                                }}>
+                                {message}
+                              </p>
+                              <button
+                                style={{
+                                  padding: '.5rem 1.5rem',
+                                  borderRadius: '.5rem',
+                                  border: 'none',
+                                  opacity: '.8',
+                                  background: 'green',
+                                  color: 'white',
+                                }}>
+                                Process Withdrawal
+                              </button>
+                            </div>
+
                             <div
                               style={{
                                 display: 'flex',
+                                flexDirection: 'column',
                                 alignItems: 'center',
-                                // justifyContent: 'center',
-                                width: '55%',
                               }}>
-                              <label style={{fontSize: '2rem', paddingTop: '.5rem'}}>$</label>
-                              <input
+                              <div style={{display: 'flex', gap: '5%', paddingTop: '1rem'}}>
+                                <div
+                                  onClick={() => setPayType('bank')}
+                                  style={{
+                                    padding: '.1rem .6rem',
+                                    color: 'green',
+                                    border: '2px solid green',
+                                    cursor: 'pointer',
+                                    borderRadius: '.4rem',
+                                  }}>
+                                  Bank
+                                </div>
+                                <div
+                                  onClick={() => setPayType('btc')}
+                                  style={{
+                                    padding: '.1rem .6rem',
+                                    color: 'green',
+                                    border: '2px solid green',
+                                    cursor: 'pointer',
+                                    borderRadius: '.4rem',
+                                  }}>
+                                  Btc
+                                </div>
+                                <div
+                                  onClick={() => setPayType('usdt')}
+                                  style={{
+                                    padding: '.1rem .6rem',
+                                    color: 'green',
+                                    border: '2px solid green',
+                                    cursor: 'pointer',
+                                    borderRadius: '.4rem',
+                                  }}>
+                                  Usdt
+                                </div>
+                              </div>
+                              <br />
+                              <div
                                 style={{
-                                  fontSize: '.9rem',
-                                  border: 'none',
-                                  borderBottom: '2px solid grey',
-                                  height: '5vh',
-                                }}
-                                type="text"
-                                value={withdrawal}
-                                onChange={handleInputChange}
-                                placeholder="Withdrawal amount"
-                              />
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                }}>
+                                <small style={{fontSize: '1rem', paddingLeft: '1.7rem'}}>
+                                  Withdraw To:
+                                </small>
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    width: '100%',
+                                    height: 'max-content',
+                                    marginBottom: '2rem',
+                                    border: '1px solid white',
+                                    fontSize: '1.1rem',
+                                    padding: '.3rem .7rem',
+                                    color: 'grey',
+                                  }}>
+                                  <div>{payType == 'bank' ? bankListItem : ''}</div>
+                                  <div>{payType == 'btc' ? btcListItem : ''}</div>
+                                  <div>{payType == 'usdt' ? usdtListItem : ''}</div>
+                                </div>
+                              </div>
                             </div>
-                            <p style={{color: user?.balance < parseFloat(withdrawal) ? 'red' : ''}}>
-                              {message}
-                            </p>
-                            <button
-                              style={{
-                                padding: '.5rem 1.5rem',
-                                borderRadius: '.5rem',
-                                border: 'none',
-                                opacity: '.8',
-                                background: 'green',
-                                color: 'white',
-                              }}>
-                              Process Withdrawal
-                            </button>
                           </form>
 
                           {/* </NavLink> */}
