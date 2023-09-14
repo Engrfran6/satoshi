@@ -1,8 +1,8 @@
 import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
-import {userRequest} from '../../../components/Commons/HandleRequest';
 import logo from '../../../assets/stf-logo2.png';
 import {styled} from 'styled-components';
+import {userService} from '../../../services/userService';
 
 export const ForgotPassword = () => {
   const [message, setMessage] = useState('pending');
@@ -34,7 +34,7 @@ export const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await userRequest('/auth/reset-password', formData);
+      const response = await userService.updateUser(formData);
 
       if (response.status === 200) {
         setMessage('success');

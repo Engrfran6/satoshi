@@ -4,12 +4,12 @@ import {store} from '../../redux/store';
 import {calculateEndDate} from './Store/investmentDates';
 import {setInvestAmount} from '../../redux/user-slice';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchData, userRequest} from '../../components/Commons/HandleRequest';
+import {investmentService} from '../../services/investment-services';
+import toastr from 'toastr';
 
 export const InvestForm = () => {
   const user = useSelector((state) => state.user.user.user);
-  const token = useSelector((state) => state.user.user.token);
-  let myPackage = store?.getState()?.user?.user?.selectedPackage || [];
+  let packageList = store?.getState()?.user?.user?.selectedPackage || [];
 
   const dispatch = useDispatch();
 
@@ -29,9 +29,9 @@ export const InvestForm = () => {
   };
   const amount = parseFloat(amount1) || parseFloat(amount2) || [];
 
-  const startDate = new Date(myPackage.createdAt).toLocaleDateString(); //format "MM/DD/YYYY"
+  const startDate = new Date(packageList.createdAt).toLocaleDateString(); //format "MM/DD/YYYY"
   const investmentStartDate = startDate.replace(/\//g, '-');
-  const investmentEndDate = calculateEndDate(startDate, myPackage.duration);
+  const investmentEndDate = calculateEndDate(startDate, packageList.duration);
 
   const [isChecked, setIsChecked] = useState(false);
   const [alert, setAlert] = useState('');
@@ -43,17 +43,27 @@ export const InvestForm = () => {
   const handleNextClick = async (e) => {
     e.preventDefault();
 
+    const invAmount = amount.toString();
+    const packageId = packageList._id;
+
     if (isChecked && user?.balance > amount) {
-      const response = userRequest(
-        '/investment/create',
-        {
-          invAmount: amount.toString(),
-          packageId: myPackage._id,
-        },
-        token
-      );
+      const response = await investmentService.createInvestment({
+        packageId,
+        invAmount,
+      });
+
+      if (response.status !== 'success') {
+        toastr.error('Error Handling Request');
+      } else {
+        toastr.success('Investment created successfully!');
+        navigate('/dashboard/successful');
+        fetchData();
+        setInterval(() => {
+          navigate('/dashboard');
+        }, 1500);
+      }
+
       dispatch(setInvestAmount(amount));
-      navigate('/dashboard/successful');
     } else if (isChecked && user?.balance < amount) {
       setAlert(
         'OOPS!! Account balance is too low, please click the button below to deposit funds into your account'
@@ -114,10 +124,10 @@ export const InvestForm = () => {
                               <em className="icon ni ni-offer-fill" />
                             </div>
                             <div className="coin-info">
-                              <span className="coin-name">{myPackage.name}</span>
+                              <span className="coin-name">{packageList.name}</span>
                               <span className="coin-text">
-                                Invest for {myPackage.duration} days and get daily profit{' '}
-                                {myPackage.dailyRoi}%
+                                Invest for {packageList.duration} days and get daily profit{' '}
+                                {packageList.dailyRoi}%
                               </span>
                             </div>
                           </div>
@@ -196,8 +206,8 @@ export const InvestForm = () => {
                         </p>
                       </h5>
                       <div className="form-note pt-2" style={{color: 'green'}}>
-                        Note: Minimum invest {myPackage.minDeposit} USD and upto{' '}
-                        {myPackage.maxDeposit} USD
+                        Note: Minimum invest {packageList.minDeposit} USD and upto{' '}
+                        {packageList.maxDeposit} USD
                       </div>
                     </div>
 
@@ -297,32 +307,32 @@ export const InvestForm = () => {
                           <ul className="nk-iv-wg4-overview g-2">
                             <li>
                               <div className="sub-text">Name of scheme</div>
-                              <div className="lead-text">{myPackage.name}</div>
+                              <div className="lead-text">{packageList.name}</div>
                             </li>
                             <li>
                               <div className="sub-text">Term of the scheme</div>
-                              <div className="lead-text">{myPackage.duration} days</div>
+                              <div className="lead-text">{packageList.duration} days</div>
                             </li>
                             <li>
                               <div className="sub-text">Daily profit</div>
-                              <div className="lead-text">$ {myPackage.dailyRoi}</div>
+                              <div className="lead-text">$ {packageList.dailyRoi}</div>
                             </li>
                             <li>
                               <div className="sub-text">Daily profit %</div>
-                              <div className="lead-text">{myPackage.profitRate} %</div>
+                              <div className="lead-text">{packageList.profitRate} %</div>
                             </li>
                             <li>
                               <div className="sub-text">Total net profit</div>
                               <div className="lead-text">
-                                $ {Number(myPackage.dailyRoi) * Number(myPackage.duration)}
+                                $ {Number(packageList.dailyRoi) * Number(packageList.duration)}
                               </div>
                             </li>
                             <li>
                               <div className="sub-text">Total Return</div>
                               <div className="lead-text">
                                 ${' '}
-                                {Number(myPackage.dailyRoi) *
-                                  Number(myPackage.duration) *
+                                {Number(packageList.dailyRoi) *
+                                  Number(packageList.duration) *
                                   Number(1.8384)}
                               </div>
                             </li>

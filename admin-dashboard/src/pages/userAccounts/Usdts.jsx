@@ -24,11 +24,12 @@ export const Usdts = () => {
     userAccountService.getUsdts().then((data) => {
       const {docs} = data;
 
-      const adminUsers = userList?.filter((user) => user.role == 'user');
+      const adminUsers = userList?.filter((user) => user.role === 'user');
       const adminUserIds = adminUsers?.map((admin) => admin._id);
       const adminUsdtData = docs?.filter((bank) => adminUserIds.includes(bank.user));
 
       setdata(adminUsdtData);
+      dispatch(setUsdtList(docs));
 
       setLoading(false);
     });
@@ -36,7 +37,7 @@ export const Usdts = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  });
 
   const createUsdt = () => {
     setSelectedUser({});

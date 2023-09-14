@@ -1,8 +1,5 @@
 import {NavLink} from 'react-router-dom';
 import {store} from '../../redux/store';
-import {Footer} from '../../components/Dashboard/Footer/DashboardFooter';
-import {Header} from '../../components/Dashboard/Header/DashboardHeader';
-import {updateUserData} from '../../components/Commons/HandleRequest';
 import {useState} from 'react';
 
 export const ProfileSetting = () => {

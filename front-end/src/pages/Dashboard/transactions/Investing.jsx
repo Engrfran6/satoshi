@@ -1,136 +1,109 @@
 import {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {fetchData, userRequest} from '../../../components/Commons/HandleRequest';
 import {store} from '../../../redux/store';
-import {useDispatch, useSelector} from 'react-redux';
 import Swal from 'sweetalert2';
 import {useEffect} from 'react';
-import axios from 'axios';
+import {userService} from '../../../services/userService';
+import {userAccountService} from '../../../services/userAccount-services';
 
 export const Investment = () => {
-  const token = useSelector((state) => state.user.user.token);
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
-  let myDeposit = store?.getState()?.user?.user?.selectedPaymentOption || [];
-  let user = store?.getState()?.user?.user?.user || [];
   let tDeposit = store?.getState()?.user?.user?.selectedPaymentOption || [];
-  const url = import.meta.env.VITE_API_BASE_URL;
+  const [payType, setPayType] = useState('');
 
-  const deposit = myDeposit.toLocaleString();
+  const [bankData, setBankData] = useState([]);
+  const [btcData, setBtcData] = useState([]);
+  const [usdtData, setUsdtData] = useState([]);
+
+  const fetchData = () => {
+    userAccountService.getAdminBanks().then((data) => {
+      const docs = data.data;
+      setBankData(docs);
+    });
+
+    userAccountService.getAdminBtcs().then((data) => {
+      const docs = data.data;
+      setBtcData(docs);
+    });
+
+    userAccountService.getAdminUsdts().then((data) => {
+      const docs = data.data;
+      setUsdtData(docs);
+    });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const bankListItem = bankData?.map((bank) => {
+    return (
+      <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr'}}>
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+          <small>{bank.bankName}</small>
+          <small>{bank.accountName}</small>
+          <small>{bank.accountNumber}</small>
+          <small>{bank.bankAddress}</small>
+          <small>{bank.clientAddress}</small>
+          <small>{bank.routingNumber}</small>
+        </div>
+      </div>
+    );
+  });
+
+  const btcListItem = btcData?.map((btc) => {
+    return (
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <small>{btc.btcWalletAddress}</small>
+        <small>{btc.btcNetwork}</small>
+      </div>
+    );
+  });
+
+  const usdtListItem = usdtData?.map((usdt) => {
+    return (
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <small>{usdt.usdtWalletAddress}</small>
+        <small>{usdt.usdtNetwork}</small>
+      </div>
+    );
+  });
+
   const thisDeposit = tDeposit.toLocaleString();
-
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImageUrl(event.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
+    event.preventDefault();
+    const image = event.target.files[0];
+    setImageFile(image);
+
+    // Create a preview URL for the selected image
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(image);
   };
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('photo', selectedFile);
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append('photo', imageFile);
 
-    try {
-      const response = await axios.post(`${url}/proof/image`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('Image uploaded:', response.data);
-    } catch (error) {
-      console.error('Error uploading image:', error);
+      try {
+        const response = await userService.uploadImage(formData);
+        if (response.image.status == 'success') {
+          successAlert();
+        } else {
+          showErrorAlert();
+        }
+      } catch (error) {
+        networkError();
+      }
     }
-  };
-
-  // const [imageFile, setImageFile] = useState(null);
-  // const [imageUrl, setImageUrl] = useState('');
-
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     setImageFile(file);
-
-  //     // Display the selected image
-  //     const reader = new FileReader();
-  //     reader.onload = (event) => {
-  //       setImageUrl(event.target.result);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   console.log('data=======', imageFile);
-  //   console.log('data=======', thisDeposit);
-  //   const formData = new FormData();
-  //   formData.append('photo', imageFile);
-  //   formData.append('depAmount', thisDeposit);
-
-  //   try {
-  //     console.log('deposit=============', formData);
-  //     const response = await userRequest(
-  //       '/deposit/create',
-  //       {
-  //         method: 'POST',
-  //         body: formData,
-  //       },
-  //       token
-  //     );
-
-  //     if (response.status === 'success') {
-  //       successAlert();
-  //     } else {
-  //       showErrorAlert();
-  //     }
-  //   } catch (error) {
-  //     networkError();
-  //   }
-  // };
-
-  // const [selectedImage, setSelectedImage] = useState(null);
-
-  // const handleImageChange = (event) => {
-  //   const image = event.target.files[0];
-  //   setSelectedImage(URL.createObjectURL(image));
-  // };
-
-  // const handleUpload = async (e) => {
-  //   e.preventDefault();
-  //   if (selectedImage) {
-  //     const formData = new FormData();
-  //     formData.append('photo', selectedImage);
-  //     formData.append('depAmount', thisDeposit);
-  //     try {
-  //       const response = await userRequest('/deposit/create', {depAmount: thisDeposit}, token);
-  //       if (response.status === 'success') {
-  //         successAlert();
-  //       }
-  //     } catch (error) {
-  //       showErrorAlert();
-  //     }
-  //   }
-  // };
-
-  const successAlert = () => {
-    Swal.fire({
-      title: `Good ${formData?.fullName.split(' ')[0]}!`,
-      text: `Your deposit ${thisAmount}is been proccessed`,
-      icon: 'success',
-      timer: 2000,
-    }).then(() => {
-      navigate('/dashboard');
-    });
   };
 
   const showErrorAlert = () => {
@@ -147,29 +120,21 @@ export const Investment = () => {
       title: 'Network Error!',
       text: 'Please try again! !',
       icon: 'error',
-
+      confirmButtonColor: 'red',
       timer: 2000,
     });
   };
 
-  const [selectedPayment, setSelectedPayment] = useState(null);
-
-  const handlePaymentClick = (paymentType) => {
-    setSelectedPayment(paymentType);
-  };
-
-  const [wallets, setWallets] = useState([]);
-  useEffect(() => {
-    getWallets();
-  }, []);
-
-  const getWallets = async () => {
-    try {
-      const response = await fetchData('/all-payment-options');
-      setWallets(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
+  const successAlert = () => {
+    Swal.fire({
+      title: `Successful!!!`,
+      text: `Your deposit of ${thisDeposit} is been proccessed`,
+      icon: 'success',
+      confirmButtonText: 'OK',
+      confirmButtonColor: 'green',
+    }).then(() => {
+      navigate('/dashboard');
+    });
   };
 
   return (
@@ -186,7 +151,7 @@ export const Investment = () => {
             <div>
               <div
                 style={{
-                  backgroundColor: 'rgb(20,194,142)',
+                  backgroundColor: 'rgb(38,155,71)',
                   color: 'white',
                   padding: '1rem 1rem',
                   width: '100%',
@@ -198,6 +163,7 @@ export const Investment = () => {
               </div>
 
               <form
+                // encType="multipart/form-data"
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
@@ -205,27 +171,38 @@ export const Investment = () => {
                   justifyContent: 'center',
                 }}>
                 <div>
-                  <div>
-                    <h4>Select Payment Options</h4>
-                    <ul style={{display: 'flex', flexFlow: 'wrap', gap: '1rem'}}>
-                      {Object.keys(wallets).map((paymentType) => (
-                        <li key={paymentType}>
-                          <p
-                            onClick={() => handlePaymentClick(paymentType)}
-                            style={{
-                              padding: '.06rem 1.1rem',
-                              color: 'white',
-                              backgroundColor: 'grey',
-                              fontSize: '1.2rem',
-                              border: 'none',
-                              borderRadius: '.5rem',
-                              cursor: 'pointer',
-                            }}>
-                            {paymentType}
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
+                  <h4>Select Payment Type</h4>
+                  <div style={{display: 'flex', gap: '5%', paddingTop: '1rem'}}>
+                    <div
+                      onClick={() => setPayType('bank')}
+                      style={{
+                        padding: '.1rem .6rem',
+                        color: 'green',
+                        border: '2px solid green',
+                        cursor: 'pointer',
+                      }}>
+                      Bank deposit
+                    </div>
+                    <div
+                      onClick={() => setPayType('btc')}
+                      style={{
+                        padding: '.1rem .6rem',
+                        color: 'green',
+                        border: '2px solid green',
+                        cursor: 'pointer',
+                      }}>
+                      Btc deposit
+                    </div>
+                    <div
+                      onClick={() => setPayType('usdt')}
+                      style={{
+                        padding: '.1rem .6rem',
+                        color: 'green',
+                        border: '2px solid green',
+                        cursor: 'pointer',
+                      }}>
+                      Usdt deposit
+                    </div>
                   </div>
                   <br />
                   <div>
@@ -240,18 +217,9 @@ export const Investment = () => {
                         padding: '.3rem .7rem',
                         backgroundColor: 'white',
                       }}>
-                      {selectedPayment && (
-                        <div>
-                          <p style={{textDecoration: 'underline', paddingBottom: '0.6rem '}}>
-                            {selectedPayment} deposit details :{' '}
-                          </p>
-                          <ul>
-                            {wallets[selectedPayment].map((payment) => (
-                              <li key={payment.payId}>{payment.name}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
+                      <div>{payType == 'bank' ? bankListItem : ''}</div>
+                      <div>{payType == 'btc' ? btcListItem : ''}</div>
+                      <div>{payType == 'usdt' ? usdtListItem : ''}</div>
                     </div>
                   </div>
                   <div
@@ -260,14 +228,17 @@ export const Investment = () => {
                       border: '1px solid purple',
                       contain: 'cover',
                     }}>
-                    {imageUrl && <img src={imageUrl} alt="Uploaded" />}
+                    {imagePreview && <img src={URL.createObjectURL(imageFile)} alt="Preview" />}
                   </div>
-                  <input type="file" onChange={handleImageChange} />
+                  <div>
+                    <input type="file" name="photo" accept="image/*" onChange={handleImageChange} />
+                  </div>
+
                   <div style={{marginTop: '2rem', width: '100%'}}>
                     Click
                     <button
                       style={{margin: '0 .36rem'}}
-                      disabled={!imageUrl}
+                      disabled={!imagePreview}
                       className="btn btn-primary"
                       onClick={handleUpload}>
                       here

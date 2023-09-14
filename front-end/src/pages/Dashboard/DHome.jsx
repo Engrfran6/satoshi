@@ -4,50 +4,57 @@ import {EmailIcon, WhatsappIcon, WhatsappShareButton} from 'react-share';
 import {store} from '../../redux/store';
 import {stringToNumber} from './Store/convertStringToNumber';
 import {sumOfArray} from './calcAccountValues/Summation';
-import {useSelector} from 'react-redux';
-import {fetchData} from '../../components/Commons/HandleRequest';
+import {useDispatch, useSelector} from 'react-redux';
+
+import {investmentService} from '../../services/investment-services';
+import {packageService} from '../../services/package-services';
+import {setPackageList} from '../../redux/user-slice';
 
 export const DHome = () => {
   const [recipientEmail, setRecipientEmail] = useState();
   const [show, setShow] = useState(false);
   let user = useSelector((state) => state?.user?.user?.user);
   const [showInner, setShowInner] = useState(false);
-  const token = useSelector((state) => state?.user?.user?.token);
 
-  const [investments, setInvestments] = useState([]);
   let expiredInvestments = store?.getState()?.user?.user?.expiredInvestments || [];
-  useEffect(() => {
-    getInvestment();
-  }, []);
 
-  const getInvestment = async () => {
-    try {
-      const response = await fetchData('/investment', token);
-      setInvestments(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
+  const [data, setData] = useState([]);
+  const [packageData, setPackageData] = useState([]);
+  const dispatch = useDispatch();
+
+  const fetchData = () => {
+    investmentService.getInvestments().then((data) => {
+      setData(data.data);
+    });
+    packageService.getPackages().then((data) => {
+      setPackageData(data.data);
+      dispatch(setPackageList(data.data));
+    });
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const fullName = user?.fullName;
   const balance = stringToNumber(user?.balance);
-  const totalInvested = sumOfArray(investments, 'invAmount');
-  const totalProfits = sumOfArray(investments, 'dailyProfit');
+  const totalInvested = data ? sumOfArray(data, 'invAmount') : [];
+  const totalProfits = data ? sumOfArray(data, 'dailyProfit') : [];
   const balanceInAccount = balance + totalInvested + totalProfits;
   const totalAvailableBalanceAndInv = balance + totalInvested;
 
-  const referalBonus = investments.reduce((total, document) => {
+  const referalBonus = data.reduce((total, document) => {
     return total + (document.referalBonus || 0);
   }, 0);
-  const rewards = investments.reduce((total, document) => {
+  const rewards = data.reduce((total, document) => {
     return total + (document.referalBonus || 0);
   }, 0);
-  const monthlyProfit = sumOfArray(investments, 'monthlyProfit');
+  const monthlyProfit = data ? sumOfArray(data, 'monthlyProfit') : [];
   const Total = monthlyProfit + referalBonus + rewards;
 
-  const totalJoined = investments?.referalBonus?.length || 0;
+  const totalJoined = data?.referalBonus?.length || 0;
 
-  const totalActiveInv = investments.length ? investments.length : 0;
+  const totalActiveInv = data.length ? data.length : 0;
   const totalExpiredInv = expiredInvestments.length ? expiredInvestments.length : 0;
   const totalInv = totalActiveInv + totalExpiredInv;
   const inviteLink = `https://www.satochitradepro.com/${user?.referalId}`;
@@ -58,6 +65,22 @@ export const DHome = () => {
   const handleShowInner = () => {
     setShowInner(!showInner);
   };
+
+  const listItems = data?.slice(-4).map((item, index) => {
+    let packageName = packageData.find((packageName) => packageName._id === item.packageId);
+
+    return (
+      <li key={index}>
+        <span className="item-label">
+          <a href="/dashboard/schemes">{packageName ? packageName.name : 'No package Found'}</a>
+          <small>
+            - {packageName.profitRate}% for {packageName.duration} Days
+          </small>
+        </span>
+        <span className="item-value">{item.invAmount.toLocaleString()}</span>
+      </li>
+    );
+  });
 
   return (
     <div style={{paddingTop: '4rem'}}>
@@ -296,22 +319,7 @@ export const DHome = () => {
                               <span className="sub">{totalActiveInv}</span> Active
                               <span className="sub">{totalExpiredInv}</span> Expired
                             </div>
-
-                            <ul className="nk-iv-wg2-list">
-                              {investments.slice(-4).map((item, index) => (
-                                <li key={index}>
-                                  <span className="item-label">
-                                    <a href="/dashboard/schemes">{item.package.name}</a>
-                                    <small>
-                                      - {item.package.profitRate}% for {item.package.duration} Days
-                                    </small>
-                                  </span>
-                                  <span className="item-value">
-                                    {item.invAmount.toLocaleString()}
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
+                            <ul className="nk-iv-wg2-list">{listItems}</ul>
                           </div>
 
                           <div className="nk-iv-wg2-cta">

@@ -6,10 +6,12 @@ import {withdrawalService} from '../../services/withdrawal-services';
 
 export const CreateEditWithForm = ({isEditTrue, isEdit, selectedUser, fetchData}) => {
   const [message, setmessage] = useState('');
+
   let userList = store?.getState()?.user?.userList || [];
   let bankList = store?.getState()?.user?.bankList || [];
   let btcList = store?.getState()?.user?.btcList || [];
   let usdtList = store?.getState()?.user?.usdtList || [];
+
   let title = isEditTrue ? 'Update Withdrawal' : 'Create Withdrawal';
 
   const initialFormFields = () => {
@@ -66,11 +68,16 @@ export const CreateEditWithForm = ({isEditTrue, isEdit, selectedUser, fetchData}
     }
   };
 
+  const user = userList.find((user) => user._id == formValues?.targetUserId);
+  const userBank = bankList.find((bank) => bank.user == formValues?.targetUserId);
+  const userBtc = btcList.find((btc) => btc.user == formValues?.targetUserId);
+  const userUsdt = usdtList.find((usdt) => usdt.user == formValues?.targetUserId);
+
   const validateForm = (withAmount, errors, value) => {
     switch (withAmount) {
       case 'withAmount':
         errors.withAmount = '';
-        if (parseFloat(selectedUser?.balance) < parseFloat(withAmount)) {
+        if (user?.balance < parseFloat(formValues.withAmount)) {
           errors.withAmount = 'withdrawal amount is required!';
           setmessage('withdrawal amount is required!');
           setSubmitForm(false);
@@ -226,9 +233,9 @@ export const CreateEditWithForm = ({isEditTrue, isEdit, selectedUser, fetchData}
                         className="form-control"
                         style={{width: 'max-content'}}>
                         <option>Select withdrawal account</option>
-                        <option value={formValues.withToId}>To Bank Account</option>
-                        <option value={formValues.withToId}>To Btc Address </option>
-                        <option value={formValues.withToId}>To Usdt Address </option>
+                        <option value={userBank?._id}>{userBank ? 'To Bank Account' : ''}</option>
+                        <option value={userBtc?._id}>{userBtc ? 'To BTC Address' : ''}</option>
+                        <option value={userUsdt?._id}>{userUsdt ? 'To Usdt Address' : ''}</option>
                       </select>
                     </div>
                   </div>
@@ -236,8 +243,10 @@ export const CreateEditWithForm = ({isEditTrue, isEdit, selectedUser, fetchData}
                   <div className="row">
                     <div className="col">
                       <label class="form-label" for="exampleInputmonth">
-                        Withdrawal Amount: <small>{message}</small>
+                        Withdrawal Amount:
                         <small style={{color: 'red', fontSize: '1.2rem'}}>*</small>
+                        <br />
+                        <small style={{color: 'red'}}>{message}</small>
                       </label>
                       <input
                         type="number"

@@ -1,5 +1,6 @@
 const Joi = require('@hapi/joi');
 const BtcWallet = require('../../models/PaymentOptions/BTCModel');
+const User = require('../../models/Users/UserModel');
 
 const createBtcWalletSchema = Joi.object().keys({
   btcWalletAddress: Joi.string().required(),
@@ -58,6 +59,28 @@ exports.getBtc = async (req, res) => {
     return res.status(201).json({
       status: 'success',
       data: btc,
+    });
+  } catch (e) {
+    res.status(500).json({
+      status: 'failed',
+      message: e.message,
+    });
+  }
+};
+
+exports.getAdminBtcs = async (req, res) => {
+  try {
+    const btc = await BtcWallet.find({});
+    const user = await User.find({});
+
+    const adminUsers = user?.filter((user) => user.role == 'admin');
+    const adminUserIds = adminUsers?.map((admin) => admin._id);
+
+    const adminBtcsData = btc?.filter((btc) => adminUserIds.includes(btc.user));
+
+    return res.status(201).json({
+      status: 'success',
+      data: adminBtcsData,
     });
   } catch (e) {
     res.status(500).json({

@@ -1,35 +1,31 @@
 import {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
 import {NavLink} from 'react-router-dom';
-import {deleteLoginActivity, fetchData} from '../../components/Commons/HandleRequest';
 import Swal from 'sweetalert2';
+import {activityService} from '../../services/activity-servisces';
+import toastr from 'toastr';
 
 export const ProfileActivity = () => {
-  let token = useSelector((state) => state?.user?.user?.token);
+  const [data, setData] = useState([]);
 
-  const [loginActivity, setLoginActivity] = useState([]);
   useEffect(() => {
-    getActivity();
+    fetchData();
   }, []);
 
-  const getActivity = async () => {
-    try {
-      const response = await fetchData('/activity', token);
-      setLoginActivity(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
+  const fetchData = () => {
+    activityService.getActivity().then((data) => {
+      setData(data.data);
+    });
   };
 
-  const deleteActivity = async () => {
-    if (loginActivity) {
-      try {
-        const response = await deleteLoginActivity('/activity', token);
-        if (response.status == 'success') {
-          deleteAlert;
-        }
-      } catch (error) {
+  const deleteActivity = (userId) => {
+    if (data) {
+      const response = activityService.deleteActivity(userId);
+
+      if (response.status !== 'success') {
+        toastr.error('Error Handling Request');
         errorAlert();
+      } else {
+        toastr.success(response.message);
       }
     }
   };
@@ -105,7 +101,7 @@ export const ProfileActivity = () => {
                     </thead>
 
                     <tbody>
-                      {loginActivity?.map((item) => (
+                      {data?.map((item) => (
                         <tr>
                           <td className="tb-col-os">{item.browser}</td>
                           <td className="tb-col-ip">

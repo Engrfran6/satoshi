@@ -1,6 +1,7 @@
 const Joi = require('@hapi/joi');
 const Investment = require('../models/Investment/InvestmentModel');
 const Activity = require('../models/Activities/ActivityModel');
+const User = require('../models/Users/UserModel');
 
 const createUserSchema = Joi.object().keys({
   invAmount: Joi.string().required(),
@@ -55,6 +56,10 @@ exports.createInvestment = async (req, res) => {
     const activity = new Activity({title: 'new investment', user: user._id});
     await activity.save();
     if (investment) {
+      const invAmount = doc.invAmount;
+      const userToUpdate = await User.findById(userId);
+      const newBalance = userToUpdate.balance;
+      await User.findByIdAndUpdate(userId, {balance: fullName}, {new: true});
       return res.status(201).json({
         status: 'success',
         data: investment,
@@ -89,6 +94,7 @@ exports.getInvestments = async (req, res) => {
   const investments = await Investment.retrievePaginated({
     ...req.query,
   });
+
   res.status(200).json({
     status: 'success',
     ...investments,

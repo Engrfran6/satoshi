@@ -24,19 +24,19 @@ export const Btcs = () => {
     userAccountService.getBtcs().then((data) => {
       const {docs} = data;
 
-      const adminUsers = userList?.filter((user) => user.role == 'user');
+      const adminUsers = userList?.filter((user) => user.role === 'user');
       const adminUserIds = adminUsers?.map((admin) => admin._id);
       const adminBtcsData = docs?.filter((bank) => adminUserIds.includes(bank.user));
 
       setdata(adminBtcsData);
-
+      dispatch(setBtcList(docs));
       setLoading(false);
     });
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  });
 
   const createBtc = () => {
     setSelectedUser({});

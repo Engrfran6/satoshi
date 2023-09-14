@@ -1,28 +1,25 @@
-import {getUserData} from '../../components/Commons/HandleRequest';
 import {useState, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {setSelectedPackage} from '../../redux/user-slice';
 import {NavLink, useNavigate} from 'react-router-dom';
+import {packageService} from '../../services/package-services';
 
 export const Invest = () => {
   const dispatch = useDispatch();
   const [clickedItem, setClickedItem] = useState(null);
   const [alert, setAlert] = useState('');
   const navigate = useNavigate();
-  const [packages, setPackages] = useState([]);
+  const [data, setData] = useState([]);
+
+  const fetchData = () => {
+    packageService.getPackages().then((data) => {
+      setData(data.data);
+    });
+  };
 
   useEffect(() => {
-    getPackage();
+    fetchData();
   }, []);
-
-  const getPackage = async () => {
-    try {
-      const response = await getUserData('/package');
-      setPackages(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
 
   const handleClick = (item) => {
     setClickedItem(item);
@@ -96,8 +93,8 @@ export const Invest = () => {
 
                   <div>
                     <ul style={priceStyle}>
-                      {packages &&
-                        packages.map((item, index) => (
+                      {data &&
+                        data.map((item, index) => (
                           <li key={index} className="plan-item" style={{width: '100%'}}>
                             <input className="plan-control" />
                             <div

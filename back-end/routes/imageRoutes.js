@@ -1,11 +1,14 @@
 const express = require('express');
-const router = express.Router();
+const {Router} = require('express');
 const imageController = require('../controllers/image-controller');
 const multer = require('multer');
+const {protect} = require('../middlewares/auth-middleware');
+
+const imageRouter = Router();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, '/Users/admin/Documents/project/satoshi/back-end/uploads');
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname);
@@ -14,6 +17,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage: storage});
 
-router.post('/upload', upload.single('image'), imageController.uploadImage);
+imageRouter.post('/', protect, upload.single('photo'), imageController.uploadImage);
 
-module.exports = router;
+module.exports = imageRouter;

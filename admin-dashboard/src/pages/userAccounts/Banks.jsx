@@ -24,11 +24,12 @@ export const Banks = () => {
     userAccountService.getBanks().then((data) => {
       const {docs} = data;
 
-      const adminUsers = userList?.filter((user) => user.role == 'user');
+      const adminUsers = userList?.filter((user) => user.role === 'user');
       const adminUserIds = adminUsers?.map((admin) => admin._id);
       const adminBanksData = docs?.filter((bank) => adminUserIds.includes(bank.user));
 
       setdata(adminBanksData);
+      dispatch(setBankList(docs));
 
       setLoading(false);
     });
@@ -36,7 +37,7 @@ export const Banks = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  });
 
   const createBank = () => {
     setSelectedUser({});

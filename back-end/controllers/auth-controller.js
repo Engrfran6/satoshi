@@ -96,6 +96,14 @@ exports.authorizeAccount = async (req, res) => {
   });
 };
 
+// exports.getUser = async (req, res) => {
+//   const userId = req.body;
+//   const user = await User.findById(userId);
+//   res.status(201).json({
+//     user: user,
+//   });
+// };
+
 exports.getUsers = async (req, res) => {
   const users = await User.retrievePaginated({
     ...req.query,

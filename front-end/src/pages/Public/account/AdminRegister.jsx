@@ -1,9 +1,9 @@
 import {useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
-import {registerUser} from '../../../components/Commons/HandleRequest';
 import Swal from 'sweetalert2';
 import logo from '../../../assets/stf-logo2.png';
 import {styled} from 'styled-components';
+import {userService} from '../../../services/userService';
 
 export const AdminRegister = () => {
   const navigate = useNavigate();
@@ -76,12 +76,11 @@ export const AdminRegister = () => {
     setConfirmPassword(newConfirmPassword);
   };
 
-  console.log('form', formData);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await registerUser('/auth/register', formData);
+      const response = await userService.registerUser(formData);
       if (response.status === 'success') {
         setMessage('success');
         showSuccessAlert();

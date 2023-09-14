@@ -1,23 +1,19 @@
 import {useEffect, useState} from 'react';
 import {NavLink} from 'react-router-dom';
-import {getUserData} from '../../Commons/HandleRequest';
+import {packageService} from '../../../services/package-services';
 
 export const Tabs = () => {
-  const [pricingOptions, setPricingOptions] = useState([]);
+  const [data, setData] = useState([]);
+
+  const fetchData = () => {
+    packageService.getPackages().then((data) => {
+      setData(data.data);
+    });
+  };
 
   useEffect(() => {
-    getPackage();
+    fetchData();
   }, []);
-
-  const getPackage = async () => {
-    try {
-      const response = await getUserData('/package');
-      setPricingOptions(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-  console.log(pricingOptions);
 
   return (
     <div className="container">
@@ -42,7 +38,7 @@ export const Tabs = () => {
             <div className="padding-30px-left sm-no-padding-left">
               <div className="hor_1">
                 <div className="row align-items-center">
-                  {pricingOptions.map((option, index) => (
+                  {data?.map((option, index) => (
                     <div className="col-md-6 col-lg-4" key={index}>
                       <div className={`price-table-style4`}>
                         <div className="pricing-header">

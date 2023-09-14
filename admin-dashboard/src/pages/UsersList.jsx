@@ -30,7 +30,7 @@ export const UserList = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  });
 
   const createNewUser = () => {
     setSelectedUser({});

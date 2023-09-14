@@ -2,7 +2,7 @@ import {NavLink} from 'react-router-dom';
 import {store} from '../../redux/store';
 import CountryTimeZone from '../../components/Commons/GetTimeZone';
 import {useState} from 'react';
-import {updateUserData} from '../../components/Commons/HandleRequest';
+import {userService} from '../../services/userService';
 
 export const Profile = () => {
   let user = store?.getState()?.user?.user.user;
@@ -31,9 +31,9 @@ export const Profile = () => {
 
   const handleSave = (e) => {
     e.preventDefault();
-    const data = updateUserData('/auth/user', updatedUser);
+    const response = userService.updateUser(updatedUser);
 
-    if (data.status == 200) {
+    if (response.status == 200) {
       setAlert('success');
     } else {
       setAlert('Failed');
