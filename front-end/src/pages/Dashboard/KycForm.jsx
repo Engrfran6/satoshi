@@ -106,17 +106,12 @@ export const KycForm = () => {
       formDataToSend.append('selfie', selfie);
       formDataToSend.append('passport', passport);
 
-      const response = await userService.kycVerification(formDataToSend);
-
-      console.log('the submit btton', 'i am clicked');
-
       if (isFormValid) {
-        if (response.status !== 'success') {
-          toastr.error('Error Handling Request');
-          errorAlert();
-        } else {
-          toastr.success('Investment account updated successfully!');
+        const response = await userService.kycVerification(formDataToSend);
+        if (response.status == 'success') {
           successAlert();
+        } else {
+          errorAlert();
         }
       }
     } catch (error) {

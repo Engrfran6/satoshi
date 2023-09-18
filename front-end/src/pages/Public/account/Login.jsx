@@ -54,11 +54,9 @@ export const Login = () => {
 
       if (status === 'success') {
         const firstName = user.fullName.split(' ')[0];
-
-        toastr.success('Login Successfully');
         dispatch(setUser({token, user}));
         successAlert(firstName);
-        window.location.replace('/dashboard');
+        window.location.replace('/');
       } else if (error === 'invalid credentials') {
         setMessage('Invalid Email or Password, Try again!');
       } else {

@@ -90,19 +90,23 @@ exports.login = async (req, res) => {
 
 exports.authorizeAccount = async (req, res) => {
   if (!req.user.username) res.status(401).json({error: 'expired token'});
+  // const user = req.user;
+  // const userId = user._id;
+  // const data = await User.findById(userId);
   res.status(200).json({
     status: 'success',
     user: req.user,
   });
 };
 
-// exports.getUser = async (req, res) => {
-//   const userId = req.body;
-//   const user = await User.findById(userId);
-//   res.status(201).json({
-//     user: user,
-//   });
-// };
+exports.getUser = async (req, res) => {
+  const user = req.user;
+  const userId = user._id;
+  const data = await User.findById(userId);
+  res.status(201).json({
+    user: user,
+  });
+};
 
 exports.getUsers = async (req, res) => {
   const users = await User.retrievePaginated({

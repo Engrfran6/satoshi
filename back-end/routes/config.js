@@ -16,14 +16,14 @@ const {
   adminUsdtRouter,
 } = require('./paymentOption_routes');
 const depositRouter = require('./deposit_routes');
-// const {getUser} = require('../controllers/auth-controller');
+const {getUser} = require('../controllers/auth-controller');
 const imageRouter = require('./imageRoutes');
 const verifiedUserRouter = require('./verified_user_routes');
 
 module.exports = [
-  ['/api', indexRouter],
+  ['/', indexRouter],
   ['/api/auth', authRouter],
-  // ['/api/user', getUser],
+  ['/api/user', getUser],
   ['/api/deposit', depositRouter],
   ['/api/withdraw', withdrawRouter],
   ['/api/investment', investRouter],

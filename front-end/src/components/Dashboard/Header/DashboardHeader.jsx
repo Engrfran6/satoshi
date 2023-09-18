@@ -1,6 +1,5 @@
 import {NavLink} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import {clearToken, resetUser} from '../../../redux/user-slice';
 import Swal from 'sweetalert2';
 import {useEffect, useState} from 'react';
 import logo from '../../../assets/stf-logo1.png';
@@ -131,8 +130,8 @@ export const Header = () => {
       cancelButtonText: 'No',
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(resetUser);
-        dispatch(clearToken);
+        dispatch(resetUser());
+        window.location.replace('/');
         Swal.fire({
           title: `GoodBye ${user?.fullName.split('')[0]} !`,
           text: 'You have been successfully logged out.',

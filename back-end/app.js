@@ -12,13 +12,14 @@ dotenv.config();
 const app = express();
 
 // app.use(express.static(path.join(__dirname + '/public')));
+app.use(express.static(__dirname, {dotfiles: 'allow'}));
 
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
-let envVariable = process.env.DOMAIN_URL || 3030;
+let envVariable = process.env.DOMAIN_URL;
 let domainUrl = envVariable.split('//');
 const options = {
   openapi: '3.0.0',
