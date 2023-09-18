@@ -89,7 +89,7 @@ export const WithdrawalList = () => {
 
   const listItems = data?.map((withdrawal, key) => {
     let number = key + 1;
-    let user = userList.find((user) => user._id === withdrawal.user);
+    let user = userList?.find((user) => user._id === withdrawal.user);
     const createdAtDate = new Date(withdrawal?.createdAt).toISOString().slice(0, 10);
     const withdrawalId = withdrawal._id;
 

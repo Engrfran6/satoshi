@@ -1,17 +1,15 @@
-import { useRoutes } from "react-router-dom";
-import { Login } from "./pages/Login";
+import {useRoutes} from 'react-router-dom';
+import {Login} from './pages/Login';
 
 export const UnauthorizedApp = () => {
   const routes = useRoutes([
-    { path: "/login", element: <Login /> },
-    { path: "*", element: <Login /> },
+    {path: '/admin', element: <Login />},
+    {path: '*', element: <Login />},
   ]);
 
   return (
     <>
-      <>
-          { routes }
-      </>
+      <>{routes}</>
     </>
   );
-}
+};
