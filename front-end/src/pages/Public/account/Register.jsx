@@ -4,10 +4,11 @@ import Swal from 'sweetalert2';
 import logo from '../../../assets/stf-logo2.png';
 import {styled} from 'styled-components';
 import {userService} from '../../../services/userService';
+import {DisabledButton, LoadingButton, SubmitButton} from '../../../components/Commons/Buttons';
 
 export const Register = () => {
   const navigate = useNavigate();
-  const [message, setMessage] = useState('Pending');
+  const [message, setMessage] = useState('');
   const [formData, setFormData] = useState({
     fullName: '',
     username: '',
@@ -22,6 +23,7 @@ export const Register = () => {
   const [passwordLenght, setPasswordLenght] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     setFormData({...formData, [e.target.name]: e.target.value});
@@ -109,7 +111,7 @@ export const Register = () => {
 
       dispatch(setUser({token: token, user, investments}));
 
-      navigate('/dashboard');
+      navigate('/');
     } catch (error) {
       setMessage('Invalid Email or Password, Try again!');
     }
@@ -117,23 +119,35 @@ export const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    try {
-      const response = await userService.registerUser(formData);
-      if (response.status === 'success') {
-        setMessage('success');
-        showSuccessAlert();
-      } else if (response.status === 'failed') {
-        const duplicateKeyErrorRegex = /index: (\w+)_1.*\{ (\w+): "([^"]+)" \}/;
-        const match = response.message.match(duplicateKeyErrorRegex);
+    // Check if formData contains data
+    if (Object.values(formData).every((value) => value !== '')) {
+      try {
+        const response = await userService.registerUser(formData);
 
-        if (match) {
-          const [, indexName, propertyName, propertyValue] = match;
-          showErrorAlert(propertyName, propertyValue, indexName);
+        if (response.status === 'success') {
+          setMessage('success');
+          showSuccessAlert();
+        } else if (response.status === 'failed') {
+          setLoading(false);
+          const duplicateKeyErrorRegex = /index: (\w+)_1.*\{ (\w+): "([^"]+)" \}/;
+          const match = response.message.match(duplicateKeyErrorRegex);
+
+          if (match) {
+            const [, indexName, propertyName, propertyValue] = match;
+            showErrorAlert(propertyName, propertyValue, indexName);
+          }
         }
+      } catch (error) {
+        setLoading(false);
+        networkErrorAlert();
       }
-    } catch (error) {
-      networkErrorAlert();
+    } else {
+      // Handle the case when formData is empty
+      setLoading(false);
+      // Show an error message or take appropriate action
+      setMessage('All field data are required!.');
     }
   };
 
@@ -358,14 +372,16 @@ export const Register = () => {
         <p style={{color: 'red'}}>{phoneNumberValidationMessage}</p>
 
         <br />
+        <p style={{color: 'red'}}>{message}</p>
         <br />
+        <div>
+          {!loading ? (
+            <SubmitButton onClick={handleSubmit} title={'Register'} />
+          ) : (
+            <LoadingButton />
+          )}
+        </div>
 
-        <button
-          className="btn  btn-primary btn-round"
-          style={{background: 'rgb(38,155,72)', color: 'white'}}
-          type="submit">
-          Register
-        </button>
         <div style={{borderBottom: '2px solid green', width: '100%'}}></div>
         <div className="mgm" style={{display: 'none'}}>
           <div className="txt" style={{color: 'black'}} />
