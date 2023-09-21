@@ -6,13 +6,14 @@ import {setUser} from '../../../redux/user-slice';
 import {styled} from 'styled-components';
 import Swal from 'sweetalert2';
 import {userService} from '../../../services/userService';
-import toastr from 'toastr';
+import {LoadingButton, SubmitButton} from '../../../components/Commons/Buttons';
 
 export const Login = () => {
   const dispatch = useDispatch();
   const [message, setMessage] = useState('');
   const [emailValidationMessage, setEmailValidationMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -46,23 +47,31 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // setLoading(true);
+
     const {email, password} = formData;
 
     try {
       const response = await userService.loginUser(email, password);
-      const {token, user, status, error} = response;
-
-      if (status === 'success') {
-        const firstName = user.fullName.split(' ')[0];
+      const {token, user} = response;
+      console.log('user', token);
+      if (response.status === 'success') {
         dispatch(setUser({token, user}));
+
+        const firstName = user.fullName.split('')[0];
         successAlert(firstName);
         window.location.replace('/');
-      } else if (error === 'invalid credentials') {
+      } else if (response.error === 'invalid credentials') {
+        // setLoading(false);
         setMessage('Invalid Email or Password, Try again!');
       } else {
+        // setLoading(false);
         setMessage('An error occurred while processing your request. Please try again later.');
       }
-    } catch (err) {
+    } catch (error) {
+      console.error('Login Error:', error); // Log the error for debugging
+      // setLoading(false);
       setMessage('Error connecting to the server, please try again later!');
     }
   };
@@ -184,9 +193,10 @@ export const Login = () => {
 
           <p style={{color: 'red', paddingBottom: '10%'}}>{message}</p>
 
-          <button className="btn btn-primary btn-round" type="submit">
+          {/* <button className="btn btn-primary btn-round" type="submit">
             Sign in
-          </button>
+          </button> */}
+          <div>{!loading ? <SubmitButton title={'Login'} /> : <LoadingButton />}</div>
           <div style={{borderBottom: '2px solid green', width: '100%'}}></div>
           <br />
           <br />
